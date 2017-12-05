@@ -1,4 +1,4 @@
-package eisenflow.app.com.eisenflow;
+package com.app.eisenflow;
 
 import org.junit.Test;
 

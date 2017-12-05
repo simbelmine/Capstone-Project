@@ -1,4 +1,4 @@
-package eisenflow.app.com.eisenflow;
+package com.app.eisenflow;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

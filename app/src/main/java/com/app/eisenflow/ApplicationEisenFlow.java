@@ -1,4 +1,4 @@
-package eisenflow.app.com.eisenflow;
+package com.app.eisenflow;
 
 import android.app.Application;
 import com.facebook.stetho.Stetho;
