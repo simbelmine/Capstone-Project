@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.app.eisenflow.utils.Utils;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -23,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        mToolbar.setPadding(0, Utils.getStatusBarHeight(getApplicationContext()), 0, 0);
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
