@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_view_all"
+            android:icon="@mipmap/view_all"
+            android:title="Show all tasks" />
+        <item
+            android:id="@+id/nav_show_do_it"
+            android:icon="@mipmap/do_it"
+            android:title="Do It Now" />
+        <item
+            android:id="@+id/nav_show_decide"
+            android:icon="@mipmap/decide"
+            android:title="Decide When" />
+        <item
+            android:id="@+id/nav_show_delegate"
+            android:icon="@mipmap/delegate"
+            android:title="Delegate It" />
+        <item
+            android:id="@+id/nav_show_drop_it"
+            android:icon="@mipmap/drop_it"
+            android:title="Drop It" />
+        <item
+            android:id="@+id/clear_all_done"
+            android:icon="@mipmap/clear_all"
+            android:title="Clear Done tasks"
+            />
+    </group>
+
+    <item android:title="More">
+        <menu>
+            <item
+                android:id="@+id/nav_open_tutorial"
+                android:icon="@mipmap/tutorial"
+                android:title="Tutorial" />
+            <item android:id="@+id/nav_rate_app"
+                android:icon="@mipmap/rate"
+                android:title="Rate Eisen Flow" />
+            <item android:id="@+id/nav_send_feedback"
+                android:icon="@mipmap/feedback"
+                android:title="Send feedback" />
+            <item
+                android:id="@+id/nav_info"
+                android:icon="@mipmap/information"
+                android:title="About" />
+        </menu>
+    </item>
+
+</menu>

@@ -6,4 +6,9 @@
 
     <color name="transparent">#00000000</color>
     <color name="white">#FFFFFF</color>
+
+    <!-- Navigation Bar-->
+    <color name="date">#2D93AD</color>
+    <color name="dark_blue">#154552</color>
+    <color name="lighter_dark_blue">#1D5E70</color>
 </resources>
