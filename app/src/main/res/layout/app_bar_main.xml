@@ -5,50 +5,88 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:expanded="false"
+        android:id="@+id/app_bar_layout">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbarLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:minHeight="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            style="@style/MyToolbarStyle">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:expandedTitleGravity="top"
+            app:expandedTitleMarginStart="64dp"
+            android:background="@color/white"
+        >
 
             <LinearLayout
-                android:id="@+id/main_toolbar_layout"
-                android:layout_width="wrap_content"
+                android:id="@+id/compactcalendar_view_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="left"
-                android:clickable="true"
-                android:orientation="horizontal"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                >
-                <TextView
-                    android:id="@+id/toolbar_month"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="top"
-                    tools:text="January"
-                    android:text="January"
-                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                    />
-                <ImageView
-                    android:id="@+id/toolbar_arrow"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:layout_gravity="top"
-                    android:src="@mipmap/ic_arrow_up_light"
+                android:paddingTop="?attr/actionBarSize"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="1.0"
+                android:layout_marginTop="24dp"
+                android:background="@color/white">
+
+                <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+                    android:id="@+id/material_calendar_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="16dp"
+                    app:mcv_selectionColor="@color/colorAccent"
+                    app:mcv_arrowColor="@color/arrow_color"
+                    app:mcv_headerTextAppearance="@style/MaterialCalendarHeader"
+                    app:mcv_weekDayTextAppearance="@style/MaterialCalendarWeekDay"
+                    app:mcv_dateTextAppearance="@style/MaterialCalendarDate"
+                    app:mcv_tileSize="@dimen/calendar_tile_size"
                     />
             </LinearLayout>
-        </android.support.v7.widget.Toolbar>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:minHeight="?attr/actionBarSize"
+                android:background="@color/white"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:layout_collapseMode="pin"
+                android:theme="@style/MyToolbarStyle">
+
+                <LinearLayout
+                    android:id="@+id/toolbar_month_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:clickable="true"
+                    android:orientation="horizontal"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    >
+                    <TextView
+                        android:id="@+id/toolbar_month"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="top"
+                        tools:text="January"
+                        android:text="January"
+                        style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                        />
+                    <ImageView
+                        android:id="@+id/toolbar_arrow"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_gravity="top"
+                        android:src="@mipmap/ic_arrow_up"
+                        />
+                </LinearLayout>
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 
