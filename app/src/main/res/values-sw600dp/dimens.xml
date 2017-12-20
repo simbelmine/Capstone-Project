@@ -1,0 +1,9 @@
+<resources>
+    <!-- Tutorial -->
+    <dimen name="splash_1_icon_size">90dp</dimen>
+    <dimen name="splash_1_title_text_size">44sp</dimen>
+    <dimen name="splash_title_text_size">28sp</dimen>
+    <dimen name="splash_content_text_size_big">26sp</dimen>
+    <dimen name="splash_content_text_size_small">22sp</dimen>
+    <dimen name="splash_2_square_size">44dp</dimen>
+</resources>

@@ -6,6 +6,7 @@
 
     <color name="transparent">#00000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 
     <!-- Navigation Bar-->
     <color name="date">#2D93AD</color>
@@ -14,4 +15,21 @@
 
     <!-- Calendar -->
     <color name="arrow_color">#80768082</color>
+
+    <!-- Tutorial -->
+    <color name="indicator_unselected">#4D000000</color>
+    <color name="cyan">#00BCD4</color>
+    <color name="tile">#009688</color>
+    <color name="green">#6C648B</color>
+
+    <color name="one">#0C374D</color>
+    <color name="two">#403F63</color>
+
+    <color name="firstQuadrant">#e97868</color>
+    <color name="secondQuadrant">#5ec4b6</color>
+    <color name="thirdQuadrant">#f5d564</color>
+    <color name="fourthQuadrant">#bcc8cd</color>
+    <color name="splashscreen_bg">#4A4A4A</color>
+    <color name="splascreen_text1">#9B9B9B</color>
+    <color name="splash_screen_header_text">#414749</color>
 </resources>

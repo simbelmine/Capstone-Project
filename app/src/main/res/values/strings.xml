@@ -2,6 +2,31 @@
     <string name="app_name">EisenFlow</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open drawer</string>
     <string name="navigation_drawer_close">Close drawer</string>
+
+    <!-- Tutorial -->
+    <string name="splash_app_name">EisenFlow</string>
+    <string name="splash_quote">“What is important is seldom urgent \nand what is urgent is seldom important.”</string>
+    <string name="splash_quote_author">― Dwight D. Eisenhower</string>
+    <string name="splash_2_title">Know your colors:</string>
+    <string name="splash_2_red_title">Do It Now!</string>
+    <string name="splash_2_red_content">Urgent - Important: tasks you will do immediately</string>
+    <string name="splash_2_green_title">Decide When</string>
+    <string name="splash_2_green_content">Important - Not Urgent: tasks you will schedule to \ndo later</string>
+    <string name="splash_2_yellow_title">Delegate It</string>
+    <string name="splash_2_yellow_content">Urgent - Not Important: tasks you will delegate to \nsomeone else</string>
+    <string name="splash_2_gray_title">Dump It!</string>
+    <string name="splash_2_gray_content">Not Urgent - Not Important: tasks you will dump.\nTime wasters!</string>
+    <string name="splash_3_title">In which Quadrant are you?</string>
+    <string name="splash_3_tips_title">Goals:</string>
+    <string name="splash_3_tip_1">* Be proactive: Plan your day in advance</string>
+    <string name="splash_3_tip_2">* Be Happy: Spend some time each day \n   doing a tasks from the Green Zone</string>
+
+    <string name="splash_3_tip_3">* Stay away from the Gray Zone</string>
+    <string name="splash_3_tip_4">* Keep your list small</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="got_it">Got It</string>
 </resources>

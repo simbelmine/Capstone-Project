@@ -2,6 +2,8 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="activity_horizontal_spacing">16dp</dimen>
     <dimen name="activity_vertical_spacing">16dp</dimen>
+    <dimen name="activity_half_spacing">8dp</dimen>
+    <dimen name="activity_double_spacing">32dp</dimen>
 
     <!-- Navigation Bar -->
     <dimen name="nav_header_height">104dp</dimen>
@@ -9,4 +11,17 @@
 
     <!-- Calendar -->
     <dimen name="calendar_tile_size">35dp</dimen>
+
+    <!-- Tutorial -->
+    <dimen name="splash_1_icon_size">70dp</dimen>
+    <dimen name="splash_1_title_text_size">38sp</dimen>
+    <dimen name="splash_title_text_size">25sp</dimen>
+    <dimen name="splash_content_text_size_big">20sp</dimen>
+    <dimen name="splash_content_text_size_small">16sp</dimen>
+    <dimen name="splash_2_square_size">40dp</dimen>
+    <dimen name="splash_2_margin_left">40dp</dimen>
+    <dimen name="splash_3_margin_right">0dp</dimen>
+    <dimen name="dots_height">30dp</dimen>
+    <dimen name="dots_margin_bottom">20dp</dimen>
+    <dimen name="splash_title_margin_top">24dp</dimen>
 </resources>
