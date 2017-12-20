@@ -1,9 +1,11 @@
-package com.app.eisenflow;
+package com.app.eisenflow.helpers;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.Log;
+
+import com.app.eisenflow.fragments.PlaceholderFragment;
 
 /**
  * Created on 12/18/17.

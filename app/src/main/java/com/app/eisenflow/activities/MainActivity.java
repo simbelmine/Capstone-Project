@@ -1,4 +1,4 @@
-package com.app.eisenflow;
+package com.app.eisenflow.activities;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.app.eisenflow.R;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import butterknife.BindView;
 import butterknife.ButterKnife;

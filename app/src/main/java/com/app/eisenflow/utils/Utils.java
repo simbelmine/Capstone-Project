@@ -3,7 +3,7 @@ package com.app.eisenflow.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import static com.app.eisenflow.LaunchActivity.PREF_FIRST_TIME_USER;
+import static com.app.eisenflow.activities.LaunchActivity.PREF_FIRST_TIME_USER;
 
 /**
  * Created on 12/19/17.

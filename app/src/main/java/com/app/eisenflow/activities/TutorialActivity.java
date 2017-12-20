@@ -1,4 +1,4 @@
-package com.app.eisenflow;
+package com.app.eisenflow.activities;
 
 import android.animation.ArgbEvaluator;
 import android.content.Intent;
@@ -13,12 +13,15 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.app.eisenflow.helpers.PagerAdapter;
+import com.app.eisenflow.helpers.ParallaxPageTransformer;
+import com.app.eisenflow.R;
 import com.app.eisenflow.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.app.eisenflow.LaunchActivity.PREF_FIRST_TIME_USER;
+import static com.app.eisenflow.activities.LaunchActivity.PREF_FIRST_TIME_USER;
 
 /**
  *  TutorialActivity should not contain UI elements that require user input,
