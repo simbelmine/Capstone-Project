@@ -2,6 +2,7 @@ package com.app.eisenflow.activities;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -146,36 +147,38 @@ public class MainActivity extends AppCompatActivity implements
                 break;
             case R.id.fab:
 
-                Task task = new Task();
-                task.setPriority(1);
-                task.setTitle("My New Task");
-                task.setDate("21/12/17");
-                task.setTime("10:49");
-                task.setReminderDate("22/12/17");
-                task.setReminderOccurrence("weekly");
-                task.setReminderTime("22:10");
-                task.setReminderWhen("Monday");
-                task.setNote("Something for the Soul");
+                startActivity(new Intent(MainActivity.this, SingleTaskActivity.class));
 
-                tasks = new ArrayList<>();
-                tasks.add(task);
+//                Task task = new Task();
+//                task.setPriority(1);
+//                task.setTitle("My New Task");
+//                task.setDate("21/12/17");
+//                task.setTime("10:49");
+//                task.setReminderDate("22/12/17");
+//                task.setReminderOccurrence("weekly");
+//                task.setReminderTime("22:10");
+//                task.setReminderWhen("Monday");
+//                task.setNote("Something for the Soul");
 //
-                Cursor c = getContentResolver().query(
-                        CONTENT_URI,
-                        new String[]{KEY_ROW_ID},
-                        null,
-                        null,
-                        null);
-//                if (c.getCount() == 0){
-//                    insertData();
-//                } else {
-//                    updateData();
-//                }
-
-                deleteData();
-
-                // initialize loader
-                getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+//                tasks = new ArrayList<>();
+//                tasks.add(task);
+////
+//                Cursor c = getContentResolver().query(
+//                        CONTENT_URI,
+//                        new String[]{KEY_ROW_ID},
+//                        null,
+//                        null,
+//                        null);
+////                if (c.getCount() == 0){
+////                    insertData();
+////                } else {
+////                    updateData();
+////                }
+//
+//                deleteData();
+//
+//                // initialize loader
+//                getSupportLoaderManager().initLoader(LOADER_ID, null, this);
                 break;
         }
     }
