@@ -29,4 +29,31 @@
     <string name="next">Next</string>
     <string name="skip">Skip</string>
     <string name="got_it">Got It</string>
+
+    <!-- Single Task Activity -->
+        <!-- Others -->
+    <string name="save_button_text">Save</string>
+    <string name="enter_task_hint">Enter task name...</string>
+    <string name="quadrantOne">Do It Now</string>
+    <string name="quadrantTwo">Decide When</string>
+    <string name="quadrantThree">Delegate It</string>
+    <string name="quadrantFour">Drop It</string>
+    <string name="due_date_txt">Due date</string>
+    <string name="reminder_txt">Repeating reminder</string>
+    <string name="daily_txt">Daily</string>
+    <string name="weekly_txt">Weekly</string>
+    <string name="monthly_txt">Monthly</string>
+    <string name="yearly_txt">Yearly</string>
+    <string name="mon_txt">Mon</string>
+    <string name="tue_txt">Tue</string>
+    <string name="wed_txt">Wed</string>
+    <string name="thu_txt">Thu</string>
+    <string name="fri_txt">Fri</string>
+    <string name="sat_txt">Sat</string>
+    <string name="sun_txt">Sun</string>
+    <string name="vibration_txt">Vibration</string>
+    <string name="note_txt">Notes</string>
+        <!-- Content Descriptions -->
+    <string name="close_button_description">Close Single Task Activity</string>
+    <string name="save_button_description">Save Task and Exit</string>
 </resources>

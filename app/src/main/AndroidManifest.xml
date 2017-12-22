@@ -24,6 +24,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name" />
         <activity android:name=".activities.TutorialActivity" />
+        <activity android:name=".activities.SingleTaskActivity"
+            android:windowSoftInputMode="adjustPan|stateAlwaysVisible"/>
 
         <provider
             android:name=".database.EisenContentProvider"
