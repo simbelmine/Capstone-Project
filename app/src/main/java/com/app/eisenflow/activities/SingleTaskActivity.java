@@ -1,25 +1,32 @@
 package com.app.eisenflow.activities;
 
 import android.animation.ValueAnimator;
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.Task;
+import com.app.eisenflow.utils.DateTimeUtils;
 import com.app.eisenflow.utils.Utils;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +48,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     @BindView(R.id.delegate_holder) FrameLayout mDelegateHolder;
     @BindView(R.id.dump_it_holder) FrameLayout mDumpItHolder;
     @BindView(R.id.date_holder) FrameLayout mDateHolder;
+    @BindView(R.id.date_txt) TextView mDate;
     @BindView(R.id.time_holder) FrameLayout mTimeHolder;
     @BindView(R.id.occurrence_holder) RadioGroup mOccurrenceHolder;
     @BindView(R.id.mon_cb) CheckBox mMonCheckBox;
@@ -135,6 +143,11 @@ public class SingleTaskActivity extends AppCompatActivity {
         mTask.setPriority(Priority.FOUR.getValue());
     }
 
+    @OnClick (R.id.date_holder)
+    public void onClickDateHolder() {
+        openDatePickerDialog();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.single_task_menu, menu);
@@ -144,7 +157,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-           finish();
+            finish();
         }
 
         switch (item.getItemId()) {
@@ -208,5 +221,41 @@ public class SingleTaskActivity extends AppCompatActivity {
             default:
                 return R.color.default_title_holder;
         }
+    }
+
+    private void openDatePickerDialog() {
+        Calendar dateToSet = getPickerCalendarDate();
+
+        DatePickerDialog mDatePickerDialog;
+        mDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day_of_month) {
+                setDate(year, month, day_of_month);
+            }
+        }, dateToSet.get(Calendar.YEAR), dateToSet.get(Calendar.MONTH), dateToSet.get(Calendar.DAY_OF_MONTH));
+        mDatePickerDialog.show();
+    }
+
+    private Calendar getPickerCalendarDate() {
+        Calendar calendar = Calendar.getInstance();
+        String date = mTask.getDate();
+        Date dateToReturn;
+        if (date != null) {
+            dateToReturn = DateTimeUtils.getDate(date);
+            calendar.setTime(dateToReturn);
+        }
+
+        return calendar;
+    }
+
+    private void setDate(int selectedYear, int selectedMonth, int selectedDayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, selectedYear);
+        c.set(Calendar.MONTH, selectedMonth);
+        c.set(Calendar.DAY_OF_MONTH, selectedDayOfMonth);
+        String date = DateTimeUtils.getDateString(c);
+
+        mTask.setDate(date);
+        mDate.setText(date);
     }
 }
