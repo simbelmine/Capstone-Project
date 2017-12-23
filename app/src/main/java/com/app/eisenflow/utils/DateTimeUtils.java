@@ -3,6 +3,8 @@ package com.app.eisenflow.utils;
 import android.content.Context;
 import android.util.Log;
 
+import com.app.eisenflow.ApplicationEisenFlow;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -94,7 +96,7 @@ public class DateTimeUtils {
         return true;
     }
 
-    public String getTimeString(Calendar cal) {
+    public static String getTimeString(Calendar cal) {
         SimpleDateFormat postFormatter;
         if(isSystem24hFormat()) {
             postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
@@ -130,13 +132,21 @@ public class DateTimeUtils {
         return null;
     }
 
-    public Date getTime(String timeStr) {
+    public static Date getTime(String timeStr) {
         SimpleDateFormat postFormatter;
         if(isSystem24hFormat()) {
-            postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
+            if(isString24(timeStr)) {
+                postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
+            } else {
+                postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM);
+            }
         }
         else {
-            postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM);
+            if(!isString24(timeStr)) {
+                postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM);
+            } else {
+                postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
+            }
         }
 
         try {
@@ -148,6 +158,14 @@ public class DateTimeUtils {
 
         return null;
     }
+
+    private static boolean isString24(String timeStr) {
+        String[] separated = timeStr.split(":");
+        String hours = separated[0];
+        int hoursValue = Integer.valueOf(hours);
+        return (hoursValue > 12 || hoursValue == 0) ? true : false;
+    }
+
 
     public Date getTime24(String timeStr) {
         SimpleDateFormat postFormatter;
@@ -177,10 +195,9 @@ public class DateTimeUtils {
         return null;
     }
 
-    public boolean isSystem24hFormat() {
-        if(android.text.format.DateFormat.is24HourFormat(context))
+    public static boolean isSystem24hFormat() {
+        if(android.text.format.DateFormat.is24HourFormat(ApplicationEisenFlow.getAppContext()))
             return true;
-
         return false;
     }
 

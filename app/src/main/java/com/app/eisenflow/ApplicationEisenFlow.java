@@ -1,6 +1,8 @@
 package com.app.eisenflow;
 
 import android.app.Application;
+import android.content.Context;
+
 import com.facebook.stetho.Stetho;
 
 /**
@@ -14,9 +16,12 @@ import com.facebook.stetho.Stetho;
  */
 
 public class ApplicationEisenFlow extends Application {
+    private static Context context;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        ApplicationEisenFlow.context = getApplicationContext();
 
         /**
          * Stetho is a debug bridge for Android applications. When enabled,
@@ -24,5 +29,9 @@ public class ApplicationEisenFlow extends Application {
          * natively part of the Chrome desktop browser.
          */
         Stetho.initializeWithDefaults(this);
+    }
+
+    public static Context getAppContext() {
+        return ApplicationEisenFlow.context;
     }
 }

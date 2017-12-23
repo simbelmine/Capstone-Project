@@ -2,12 +2,12 @@ package com.app.eisenflow.activities;
 
 import android.animation.ValueAnimator;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.app.eisenflow.R;
@@ -50,6 +51,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     @BindView(R.id.date_holder) FrameLayout mDateHolder;
     @BindView(R.id.date_txt) TextView mDate;
     @BindView(R.id.time_holder) FrameLayout mTimeHolder;
+    @BindView(R.id.time_txt) TextView mTime;
     @BindView(R.id.occurrence_holder) RadioGroup mOccurrenceHolder;
     @BindView(R.id.mon_cb) CheckBox mMonCheckBox;
     @BindView(R.id.tue_cb) CheckBox mTueCheckBox;
@@ -95,6 +97,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     }
     private Task mTask;
     private Priority mPriority;
+    private Calendar today;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,6 +116,28 @@ public class SingleTaskActivity extends AppCompatActivity {
     private void init() {
         mTask = new Task();
         mPriority = Priority.DEFAULT;
+        today = Calendar.getInstance();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initDateTime();
+    }
+
+    private void initDateTime() {
+        // Set Date.
+        if (mTask.getDate() == null) {
+            mDate.setText(DateTimeUtils.getDateString(today));
+        } else {
+            mDate.setText(mTask.getDate());
+        }
+        // Set Time.
+        if (mTask.getTime() == null) {
+            mTime.setText(DateTimeUtils.getTimeString(today));
+        } else {
+            mTime.setText(DateTimeUtils.getTimeString(getCalendarTime()));
+        }
     }
 
     @OnClick (R.id.do_it_holder)
@@ -146,6 +171,11 @@ public class SingleTaskActivity extends AppCompatActivity {
     @OnClick (R.id.date_holder)
     public void onClickDateHolder() {
         openDatePickerDialog();
+    }
+
+    @OnClick (R.id.time_holder)
+    public void onClickTimeHolder() {
+        openTimePickerDialog();
     }
 
     @Override
@@ -224,19 +254,19 @@ public class SingleTaskActivity extends AppCompatActivity {
     }
 
     private void openDatePickerDialog() {
-        Calendar dateToSet = getPickerCalendarDate();
+        Calendar dateToSet = getCalendarDate();
 
         DatePickerDialog mDatePickerDialog;
         mDatePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day_of_month) {
-                setDate(year, month, day_of_month);
+                setDateAfterPick(year, month, day_of_month);
             }
         }, dateToSet.get(Calendar.YEAR), dateToSet.get(Calendar.MONTH), dateToSet.get(Calendar.DAY_OF_MONTH));
         mDatePickerDialog.show();
     }
 
-    private Calendar getPickerCalendarDate() {
+    private Calendar getCalendarDate() {
         Calendar calendar = Calendar.getInstance();
         String date = mTask.getDate();
         Date dateToReturn;
@@ -248,7 +278,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         return calendar;
     }
 
-    private void setDate(int selectedYear, int selectedMonth, int selectedDayOfMonth) {
+    private void setDateAfterPick(int selectedYear, int selectedMonth, int selectedDayOfMonth) {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.YEAR, selectedYear);
         c.set(Calendar.MONTH, selectedMonth);
@@ -256,6 +286,51 @@ public class SingleTaskActivity extends AppCompatActivity {
         String date = DateTimeUtils.getDateString(c);
 
         mTask.setDate(date);
-        mDate.setText(date);
+        setDateText(date);
+    }
+
+    private void setDateText(String dateStr) {
+        mDate.setText(dateStr);
+    }
+
+    private void openTimePickerDialog() {
+        Calendar timeToSet = getCalendarTime();
+
+        TimePickerDialog mTimePicker;
+        mTimePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                setTimeAfterPick(selectedHour, selectedMinute);
+            }
+        }, timeToSet.get(Calendar.HOUR_OF_DAY), timeToSet.get(Calendar.MINUTE), DateTimeUtils.isSystem24hFormat());
+        mTimePicker.show();
+    }
+
+    private Calendar getCalendarTime() {
+        Calendar cal = Calendar.getInstance();
+        String time = mTask.getTime();
+        Date timeToReturn;
+        if(time != null) {
+            timeToReturn = DateTimeUtils.getTime(time);
+            if (timeToReturn == null) {
+                return cal;
+            }
+            cal.setTime(timeToReturn);
+        }
+        return cal;
+    }
+
+    private void setTimeAfterPick(int selectedHour, int selectedMinute) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, selectedHour);
+        c.set(Calendar.MINUTE, selectedMinute);
+        String time = DateTimeUtils.getTimeString(c);
+
+        mTask.setTime(time);
+        setTimeText(time);
+    }
+
+    private void setTimeText(String timeStr) {
+        mTime.setText(timeStr);
     }
 }
