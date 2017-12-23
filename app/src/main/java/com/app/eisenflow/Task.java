@@ -5,20 +5,20 @@ package com.app.eisenflow;
  */
 public class Task {
     private long mId = -1;
-    private int mPriority;
+    private int mPriority = -1;
     private String mTitle;
     private String mDate;
     private String mTime;
-    private int mDateMillis;
-    private double mTotalDaysPeriod;
+    private int mDateMillis = -1;
+    private double mTotalDaysPeriod = -1;
     private String mReminderOccurrence;
     private String mReminderWhen;
     private String mReminderDate;
     private String mReminderTime;
     private String mNote;
-    private int mProgress;
-    private int isDone;
-    private int isVibrationEnabled;
+    private int mProgress = -1;
+    private int isDone = -1;
+    private int isVibrationEnabled = -1;
 
     public long getId() {
         return mId;

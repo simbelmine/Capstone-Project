@@ -34,10 +34,10 @@
                     android:id="@+id/title_holder"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
+                    android:background="@color/default_title_holder"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@color/green" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
                     android:id="@+id/task_name"
@@ -54,7 +54,7 @@
                     android:paddingEnd="16dp"
                     android:paddingRight="16dp"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/fourthQuadrant"
+                    android:textColorHint="@color/hint_color"
                     android:textSize="20sp"
                     app:layout_constraintBottom_toBottomOf="@+id/title_holder"
                     app:layout_constraintLeft_toLeftOf="parent"
