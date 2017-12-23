@@ -5,17 +5,18 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -52,7 +53,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     @BindView(R.id.date_txt) TextView mDate;
     @BindView(R.id.time_holder) FrameLayout mTimeHolder;
     @BindView(R.id.time_txt) TextView mTime;
-    @BindView(R.id.occurrence_holder) RadioGroup mOccurrenceHolder;
+    @BindView(R.id.reminder_holder) ConstraintLayout mReminderHolder;
     @BindView(R.id.mon_cb) CheckBox mMonCheckBox;
     @BindView(R.id.tue_cb) CheckBox mTueCheckBox;
     @BindView(R.id.wed_cb) CheckBox mWedCheckBox;
@@ -145,6 +146,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         mPriority = Priority.ONE;
         setBgPriorityColor();
         mTask.setPriority(Priority.ONE.getValue());
+        setReminderVisibility(View.GONE);
     }
 
     @OnClick (R.id.decide_holder)
@@ -152,6 +154,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         mPriority = Priority.TWO;
         setBgPriorityColor();
         mTask.setPriority(Priority.TWO.getValue());
+        setReminderVisibility(View.VISIBLE);
     }
 
     @OnClick (R.id.delegate_holder)
@@ -159,6 +162,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         mPriority = Priority.THREE;
         setBgPriorityColor();
         mTask.setPriority(Priority.THREE.getValue());
+        setReminderVisibility(View.GONE);
     }
 
     @OnClick (R.id.dump_it_holder)
@@ -166,6 +170,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         mPriority = Priority.FOUR;
         setBgPriorityColor();
         mTask.setPriority(Priority.FOUR.getValue());
+        setReminderVisibility(View.GONE);
     }
 
     @OnClick (R.id.date_holder)
@@ -332,5 +337,9 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private void setTimeText(String timeStr) {
         mTime.setText(timeStr);
+    }
+
+    private void setReminderVisibility(int visibility) {
+        mReminderHolder.setVisibility(visibility);
     }
 }

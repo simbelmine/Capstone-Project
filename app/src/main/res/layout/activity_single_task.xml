@@ -311,7 +311,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginEnd="@dimen/activity_double_spacing"
+                android:layout_marginRight="@dimen/activity_double_spacing"
                 android:layout_marginStart="67dp"
+                android:layout_marginLeft="67dp"
                 android:layout_marginTop="44dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
@@ -336,192 +338,13 @@
             </FrameLayout>
 
             <ImageView
-                android:id="@+id/imageView12"
-                android:layout_width="@dimen/task_icon_size"
-                android:layout_height="@dimen/task_icon_size"
-                android:layout_marginStart="@dimen/activity_horizontal_spacing"
-                android:layout_marginLeft="@dimen/activity_horizontal_spacing"
-                android:layout_marginTop="@dimen/activity_vertical_spacing"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/date_holder"
-                app:srcCompat="@drawable/repeat_reminder" />
-
-            <TextView
-                android:id="@+id/textView12"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_half_spacing"
-                android:layout_marginLeft="@dimen/activity_half_spacing"
-                android:layout_marginTop="@dimen/activity_vertical_spacing"
-                android:text="@string/reminder_txt"
-                app:layout_constraintStart_toEndOf="@+id/imageView12"
-                app:layout_constraintTop_toBottomOf="@+id/date_holder" />
-
-            <RadioGroup
-                android:id="@+id/occurrence_holder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.501"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView12">
-
-                <RadioButton
-                    android:id="@+id/daily_rb"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/activity_half_spacing"
-                    android:layout_marginRight="@dimen/activity_half_spacing"
-                    android:layout_weight="1"
-                    android:checked="true"
-                    android:text="@string/daily_txt"
-                    android:textColor="@color/colorAccent" />
-
-                <RadioButton
-                    android:id="@+id/weekly_rb"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/activity_half_spacing"
-                    android:layout_weight="1"
-                    android:text="@string/weekly_txt"
-                    android:textColor="@color/colorAccent" android:layout_marginEnd="@dimen/activity_half_spacing" />
-
-                <RadioButton
-                    android:id="@+id/monthly_rb"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/activity_half_spacing"
-                    android:layout_weight="1"
-                    android:text="@string/monthly_txt"
-                    android:textColor="@color/colorAccent" android:layout_marginEnd="@dimen/activity_half_spacing" />
-
-                <RadioButton
-                    android:id="@+id/yearly_rb"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/yearly_txt"
-                    android:textColor="@color/colorAccent" />
-            </RadioGroup>
-
-            <TableLayout
-                android:id="@+id/week_days_holder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/occurrence_holder">
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/mon_cb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/mon_txt"
-                        android:textColor="@color/colorAccent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:layout_editor_absoluteX="0dp" />
-
-                    <CheckBox
-                        android:id="@+id/tue_cb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/activity_half_spacing"
-                        android:layout_marginLeft="@dimen/activity_half_spacing"
-                        android:text="@string/tue_txt"
-                        android:textColor="@color/colorAccent"
-                        app:layout_constraintStart_toEndOf="@+id/mon_cb"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <CheckBox
-                        android:id="@+id/wed_cb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/activity_half_spacing"
-                        android:layout_marginLeft="@dimen/activity_half_spacing"
-                        android:text="@string/wed_txt"
-                        android:textColor="@color/colorAccent"
-                        app:layout_constraintStart_toEndOf="@+id/tue_cb"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <CheckBox
-                        android:id="@+id/thu_cb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/activity_half_spacing"
-                        android:layout_marginLeft="@dimen/activity_half_spacing"
-                        android:text="@string/thu_txt"
-                        android:textColor="@color/colorAccent"
-                        app:layout_constraintStart_toEndOf="@+id/wed_cb"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <CheckBox
-                        android:id="@+id/fri_cb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/fri_txt"
-                        android:textColor="@color/colorAccent"
-                        app:layout_constraintEnd_toStartOf="@+id/sat_cb"
-                        app:layout_constraintStart_toStartOf="parent"
-                        tools:layout_editor_absoluteY="40dp" />
-
-                    <CheckBox
-                        android:id="@+id/sat_cb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/activity_half_spacing"
-                        android:layout_marginStart="@dimen/activity_half_spacing"
-                        android:text="@string/sat_txt"
-                        android:textColor="@color/colorAccent"
-                        app:layout_constraintEnd_toStartOf="@+id/sat_cb"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/fri_cb"
-                        tools:layout_editor_absoluteY="40dp" />
-
-                    <CheckBox
-                        android:id="@+id/sun_cb"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/activity_half_spacing"
-                        android:layout_marginStart="@dimen/activity_half_spacing"
-                        android:text="@string/sun_txt"
-                        android:textColor="@color/colorAccent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/sat_cb"
-                        tools:layout_editor_absoluteY="40dp" />
-                </TableRow>
-            </TableLayout>
-
-            <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="@dimen/task_icon_size"
                 android:layout_height="@dimen/task_icon_size"
                 android:layout_marginStart="@dimen/activity_horizontal_spacing"
-                android:layout_marginLeft="@dimen/activity_horizontal_spacing"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/week_days_holder"
+                app:layout_constraintTop_toBottomOf="@+id/reminder_holder"
                 app:srcCompat="@mipmap/ic_vibration_black" />
 
             <TextView
@@ -529,11 +352,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_half_spacing"
-                android:layout_marginLeft="@dimen/activity_half_spacing"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/vibration_txt"
+                android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView"
-                app:layout_constraintTop_toBottomOf="@+id/week_days_holder" />
+                app:layout_constraintTop_toBottomOf="@+id/reminder_holder" />
 
             <Switch
                 android:id="@+id/vibration_switch"
@@ -541,11 +364,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/activity_double_spacing"
                 android:layout_marginStart="101dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:checked="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView"
-                app:layout_constraintTop_toBottomOf="@+id/week_days_holder" />
+                app:layout_constraintTop_toBottomOf="@+id/reminder_holder" />
 
             <ImageView
                 android:id="@+id/imageView2"
@@ -563,10 +386,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/task_icon_size"
                 android:layout_marginStart="@dimen/activity_half_spacing"
-                android:layout_marginLeft="@dimen/activity_half_spacing"
                 android:layout_marginTop="24dp"
                 android:gravity="center"
                 android:text="@string/note_txt"
+                android:textSize="16sp"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -590,6 +413,196 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/reminder_holder"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/date_holder">
+
+                <ImageView
+                    android:id="@+id/reminder_icon"
+                    android:layout_width="@dimen/task_icon_size"
+                    android:layout_height="@dimen/task_icon_size"
+                    android:layout_marginLeft="@dimen/activity_horizontal_spacing"
+                    android:layout_marginStart="@dimen/activity_horizontal_spacing"
+                    android:layout_marginTop="@dimen/activity_vertical_spacing"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/repeat_reminder" />
+
+                <TextView
+                    android:id="@+id/reminder_lable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_half_spacing"
+                    android:layout_marginTop="@dimen/activity_vertical_spacing"
+                    android:text="@string/reminder_txt"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/reminder_icon" />
+
+                <RadioGroup
+                    android:id="@+id/occurrence_holder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.501"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/reminder_icon">
+
+                    <RadioButton
+                        android:id="@+id/daily_rb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/activity_half_spacing"
+                        android:layout_marginRight="@dimen/activity_half_spacing"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="@string/daily_txt"
+                        android:textColor="@color/colorAccent" />
+
+                    <RadioButton
+                        android:id="@+id/weekly_rb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/activity_half_spacing"
+                        android:layout_marginRight="@dimen/activity_half_spacing"
+                        android:layout_weight="1"
+                        android:text="@string/weekly_txt"
+                        android:textColor="@color/colorAccent" />
+
+                    <RadioButton
+                        android:id="@+id/monthly_rb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/activity_half_spacing"
+                        android:layout_marginRight="@dimen/activity_half_spacing"
+                        android:layout_weight="1"
+                        android:text="@string/monthly_txt"
+                        android:textColor="@color/colorAccent" />
+
+                    <RadioButton
+                        android:id="@+id/yearly_rb"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/yearly_txt"
+                        android:textColor="@color/colorAccent" />
+                </RadioGroup>
+
+                <TableLayout
+                    android:id="@+id/week_days_holder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/occurrence_holder">
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/mon_cb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/mon_txt"
+                            android:textColor="@color/colorAccent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:layout_editor_absoluteX="0dp" />
+
+                        <CheckBox
+                            android:id="@+id/tue_cb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/activity_half_spacing"
+                            android:layout_marginStart="@dimen/activity_half_spacing"
+                            android:text="@string/tue_txt"
+                            android:textColor="@color/colorAccent"
+                            app:layout_constraintStart_toEndOf="@+id/mon_cb"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <CheckBox
+                            android:id="@+id/wed_cb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/activity_half_spacing"
+                            android:layout_marginStart="@dimen/activity_half_spacing"
+                            android:text="@string/wed_txt"
+                            android:textColor="@color/colorAccent"
+                            app:layout_constraintStart_toEndOf="@+id/tue_cb"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <CheckBox
+                            android:id="@+id/thu_cb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/activity_half_spacing"
+                            android:layout_marginStart="@dimen/activity_half_spacing"
+                            android:text="@string/thu_txt"
+                            android:textColor="@color/colorAccent"
+                            app:layout_constraintStart_toEndOf="@+id/wed_cb"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </TableRow>
+
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/fri_cb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/fri_txt"
+                            android:textColor="@color/colorAccent"
+                            app:layout_constraintEnd_toStartOf="@+id/sat_cb"
+                            app:layout_constraintStart_toStartOf="parent"
+                            tools:layout_editor_absoluteY="40dp" />
+
+                        <CheckBox
+                            android:id="@+id/sat_cb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/activity_half_spacing"
+                            android:layout_marginStart="@dimen/activity_half_spacing"
+                            android:text="@string/sat_txt"
+                            android:textColor="@color/colorAccent"
+                            app:layout_constraintEnd_toStartOf="@+id/sat_cb"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/fri_cb"
+                            tools:layout_editor_absoluteY="40dp" />
+
+                        <CheckBox
+                            android:id="@+id/sun_cb"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/activity_half_spacing"
+                            android:layout_marginStart="@dimen/activity_half_spacing"
+                            android:text="@string/sun_txt"
+                            android:textColor="@color/colorAccent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/sat_cb"
+                            tools:layout_editor_absoluteY="40dp" />
+                    </TableRow>
+                </TableLayout>
+            </android.support.constraint.ConstraintLayout>
 
 
         </android.support.constraint.ConstraintLayout>
