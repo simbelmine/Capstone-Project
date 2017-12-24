@@ -357,7 +357,6 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private void saveTask() {
         if(isDataValid()) {
-            //ToDO: Add to Validation - if GREEN and ReminderWhen is not checked (list is empty) show Alert message.
             //ToDo: Save ReminderWhen's list to mTask
         }
     }
@@ -372,6 +371,11 @@ public class SingleTaskActivity extends AppCompatActivity {
             showAlertMessage(mSingleTaskHolder, getString(R.string.add_task_priority_alert), R.color.alert_color);
             return false;
         }
+
+        if (DataUtils.Priority.valueOf(mTask.getPriority()) == DataUtils.Priority.TWO && mCheckedDaysOfWeek.isEmpty()) {
+            showAlertMessage(mSingleTaskHolder, getString(R.string.add_task_reminder_when_alert), R.color.alert_color);
+        }
+
         if(!checkDateTime()) {
             return false;
         }

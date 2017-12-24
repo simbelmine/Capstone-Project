@@ -56,6 +56,7 @@
     <string name="add_task_alert_title">Alert</string>
     <string name="add_task_priority_alert">Choose task priority.</string>
     <string name="add_task_name_alert">Missing task name.</string>
+    <string name="add_task_reminder_when_alert">Missing repeating day/s for your reminder.</string>
     <string name="add_task_date_alert">Your date is in the past.</string>
     <string name="add_task_time_alert">Your time is in the past.</string>
         <!-- Content Descriptions -->
