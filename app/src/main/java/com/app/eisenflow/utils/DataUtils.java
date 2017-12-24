@@ -1,5 +1,7 @@
 package com.app.eisenflow.utils;
 
+import android.view.View;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,5 +57,9 @@ public class DataUtils {
         }
 
         return sb.toString();
+    }
+
+    public static void setViewVisibility(View view, int visibility) {
+        view.setVisibility(visibility);
     }
 }

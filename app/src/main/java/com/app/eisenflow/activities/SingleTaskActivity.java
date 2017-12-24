@@ -13,7 +13,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,6 +24,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Switch;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -38,7 +38,6 @@ import com.app.eisenflow.utils.Utils;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -58,6 +57,7 @@ import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.buildFlavorsUri;
+import static com.app.eisenflow.utils.DataUtils.setViewVisibility;
 import static com.app.eisenflow.utils.Utils.showAlertMessage;
 
 /**
@@ -80,6 +80,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     @BindView(R.id.time_txt) TextView mTime;
     @BindView(R.id.reminder_holder) ConstraintLayout mReminderHolder;
     @BindView(R.id.occurrence_holder) RadioGroup mOccurrenceHolder;
+    @BindView(R.id.week_days_holder) TableLayout mWeekDaysHolder;
     @BindView(R.id.mon_cb) CheckBox mMonCheckBox;
     @BindView(R.id.tue_cb) CheckBox mTueCheckBox;
     @BindView(R.id.wed_cb) CheckBox mWedCheckBox;
@@ -87,6 +88,11 @@ public class SingleTaskActivity extends AppCompatActivity {
     @BindView(R.id.fri_cb) CheckBox mFriCheckBox;
     @BindView(R.id.sat_cb) CheckBox mSatCheckBox;
     @BindView(R.id.sun_cb) CheckBox mSunCheckBox;
+    @BindView(R.id.reminder_date_time_holder) ConstraintLayout mReminderDateTimeHolder;
+    @BindView(R.id.reminder_date_holder) FrameLayout mReminderDateHolder;
+    @BindView(R.id.reminder_date_txt) TextView mReminderDate;
+    @BindView(R.id.reminder_time_holder) FrameLayout mReminderTimeHolder;
+    @BindView(R.id.reminder_time_txt) TextView mReminderTime;
     @BindView(R.id.vibration_switch) Switch mVibrationSwitch;
     @BindView(R.id.note_edit_text) EditText mNoteEditText;
 
@@ -114,7 +120,8 @@ public class SingleTaskActivity extends AppCompatActivity {
         mPriority = DataUtils.Priority.DEFAULT;
         mToday = Calendar.getInstance();
         mCheckedDaysOfWeek = new HashSet<>();
-        setReminderVisibility(View.GONE);
+        setViewVisibility(mReminderHolder, View.GONE);
+        setViewVisibility(mReminderDateTimeHolder, View.GONE);
     }
 
     @Override
@@ -143,7 +150,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         mPriority = DataUtils.Priority.ONE;
         setBgPriorityColor();
         mTask.setPriority(DataUtils.Priority.ONE.getValue());
-        setReminderVisibility(View.GONE);
+        setViewVisibility(mReminderHolder, View.GONE);
     }
 
     @OnClick (R.id.decide_holder)
@@ -151,7 +158,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         mPriority = DataUtils.Priority.TWO;
         setBgPriorityColor();
         mTask.setPriority(DataUtils.Priority.TWO.getValue());
-        setReminderVisibility(View.VISIBLE);
+        setViewVisibility(mReminderHolder, View.VISIBLE);
     }
 
     @OnClick (R.id.delegate_holder)
@@ -159,7 +166,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         mPriority = DataUtils.Priority.THREE;
         setBgPriorityColor();
         mTask.setPriority(DataUtils.Priority.THREE.getValue());
-        setReminderVisibility(View.GONE);
+        setViewVisibility(mReminderHolder, View.GONE);
     }
 
     @OnClick (R.id.dump_it_holder)
@@ -167,7 +174,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         mPriority = DataUtils.Priority.FOUR;
         setBgPriorityColor();
         mTask.setPriority(DataUtils.Priority.FOUR.getValue());
-        setReminderVisibility(View.GONE);
+        setViewVisibility(mReminderHolder, View.GONE);
     }
 
     @OnClick (R.id.date_holder)
@@ -190,6 +197,13 @@ public class SingleTaskActivity extends AppCompatActivity {
             if (checked) {
                 int buttonIdx = mOccurrenceHolder.indexOfChild(button);
                 mTask.setReminderOccurrence(buttonIdx);
+                if (button.getId() == R.id.daily_rb) {
+                    setViewVisibility(mReminderDateTimeHolder, View.GONE);
+                    setViewVisibility(mWeekDaysHolder, View.VISIBLE);
+                } else {
+                    setViewVisibility(mWeekDaysHolder, View.GONE);
+                    setViewVisibility(mReminderDateTimeHolder, View.VISIBLE);
+                }
             }
         }
     }
@@ -364,10 +378,6 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private void setTimeText(String timeStr) {
         mTime.setText(timeStr);
-    }
-
-    private void setReminderVisibility(int visibility) {
-        mReminderHolder.setVisibility(visibility);
     }
 
     private void saveTask() {
