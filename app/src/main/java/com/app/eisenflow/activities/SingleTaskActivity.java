@@ -100,6 +100,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         initDateTime();
+        setReminderVisibility(View.GONE);
     }
 
     private void initDateTime() {
