@@ -11,7 +11,7 @@ public class Task {
     private String mTime;
     private int mDateMillis = -1;
     private double mTotalDaysPeriod = -1;
-    private String mReminderOccurrence;
+    private int mReminderOccurrence;
     private String mReminderWhen;
     private String mReminderDate;
     private String mReminderTime;
@@ -76,11 +76,11 @@ public class Task {
         this.mTotalDaysPeriod = totalDaysPeriod;
     }
 
-    public String getReminderOccurrence() {
+    public int getReminderOccurrence() {
         return mReminderOccurrence;
     }
 
-    public void setReminderOccurrence(String reminderOccurrence) {
+    public void setReminderOccurrence(int reminderOccurrence) {
         this.mReminderOccurrence = reminderOccurrence;
     }
 
