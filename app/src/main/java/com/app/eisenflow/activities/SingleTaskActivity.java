@@ -33,6 +33,8 @@ import com.app.eisenflow.utils.Utils;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,7 +76,8 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private Task mTask;
     private DataUtils.Priority mPriority;
-    private Calendar today;
+    private Calendar mToday;
+    private Set<Integer> mCheckedDaysOfWeek;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,7 +96,8 @@ public class SingleTaskActivity extends AppCompatActivity {
     private void init() {
         mTask = new Task();
         mPriority = DataUtils.Priority.DEFAULT;
-        today = Calendar.getInstance();
+        mToday = Calendar.getInstance();
+        mCheckedDaysOfWeek = new HashSet<>();
     }
 
     @Override
@@ -106,13 +110,13 @@ public class SingleTaskActivity extends AppCompatActivity {
     private void initDateTime() {
         // Set Date.
         if (mTask.getDate() == null) {
-            mDate.setText(DateTimeUtils.getDateString(today));
+            mDate.setText(DateTimeUtils.getDateString(mToday));
         } else {
             mDate.setText(mTask.getDate());
         }
         // Set Time.
         if (mTask.getTime() == null) {
-            mTime.setText(DateTimeUtils.getTimeString(today));
+            mTime.setText(DateTimeUtils.getTimeString(mToday));
         } else {
             mTime.setText(DateTimeUtils.getTimeString(getCalendarTime()));
         }
@@ -167,20 +171,28 @@ public class SingleTaskActivity extends AppCompatActivity {
             //ToDo: +before+ : int radioButtonID = radioButtonGroup.getCheckedRadioButtonId();
             //ToDo:                 View radioButton = radioButtonGroup.findViewById(radioButtonID);
 
-            //ToDo: When Save add Daily occurrence as default.
-
             if (checked) {
                 int buttonIdx = mOccurrenceHolder.indexOfChild(button);
                 mTask.setReminderOccurrence(buttonIdx);
             }
         }
     }
+
+    @OnCheckedChanged ({R.id.mon_cb, R.id.tue_cb, R.id.wed_cb, R.id.thu_cb, R.id.fri_cb, R.id.sat_cb, R.id.sun_cb})
+    public void onDayOfWeekChecked(CompoundButton button, boolean checked) {
+        int buttonIdx = Integer.valueOf(button.getTag().toString());
+        if (checked) {
+            mCheckedDaysOfWeek.add(buttonIdx);
+        } else {
+            mCheckedDaysOfWeek.remove(buttonIdx);
+        }
+    }
+
     @OnCheckedChanged ({R.id.vibration_switch})
     public void onVibrationSwitchChecked(CompoundButton button, boolean checked) {
         // ToDo: When Save add ON as default.
         mTask.setVibrationEnabled(DataUtils.getVibrationStateValue(checked));
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -345,7 +357,8 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private void saveTask() {
         if(isDataValid()) {
-
+            //ToDO: Add to Validation - if GREEN and ReminderWhen is not checked (list is empty) show Alert message.
+            //ToDo: Save ReminderWhen's list to mTask
         }
     }
 
