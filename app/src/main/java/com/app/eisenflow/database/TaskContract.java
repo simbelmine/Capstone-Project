@@ -26,8 +26,6 @@ public class TaskContract {
         public static final String KEY_TIME = "time";
         public static final String KEY_REMINDER_OCCURRENCE = "reminderOccurrence";
         public static final String KEY_REMINDER_WHEN = "reminderWhen";
-        public static final String KEY_REMINDER_DATE = "reminderDate";
-        public static final String KEY_REMINDER_TIME = "reminderTime";
         public static final String KEY_NOTE = "note";
         public static final String KEY_PROGRESS = "progress";
         public static final String KEY_IS_DONE = "done";

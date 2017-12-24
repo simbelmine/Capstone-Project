@@ -3,6 +3,9 @@ package com.app.eisenflow.activities;
 import android.animation.ValueAnimator;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -10,6 +13,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +38,7 @@ import com.app.eisenflow.utils.Utils;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -42,6 +47,17 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 import static android.text.TextUtils.isEmpty;
+import static com.app.eisenflow.database.TaskContract.TaskEntry.CONTENT_URI;
+import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_DATE;
+import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_IS_VIBRATION_ENABLED;
+import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_NOTE;
+import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_PRIORITY;
+import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
+import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_WHEN;
+import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_ROW_ID;
+import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TIME;
+import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TITLE;
+import static com.app.eisenflow.database.TaskContract.TaskEntry.buildFlavorsUri;
 import static com.app.eisenflow.utils.Utils.showAlertMessage;
 
 /**
@@ -98,13 +114,13 @@ public class SingleTaskActivity extends AppCompatActivity {
         mPriority = DataUtils.Priority.DEFAULT;
         mToday = Calendar.getInstance();
         mCheckedDaysOfWeek = new HashSet<>();
+        setReminderVisibility(View.GONE);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         initDateTime();
-        setReminderVisibility(View.GONE);
     }
 
     private void initDateTime() {
@@ -190,7 +206,6 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     @OnCheckedChanged ({R.id.vibration_switch})
     public void onVibrationSwitchChecked(CompoundButton button, boolean checked) {
-        // ToDo: When Save add ON as default.
         mTask.setVibrationEnabled(DataUtils.getVibrationStateValue(checked));
     }
 
@@ -357,7 +372,17 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private void saveTask() {
         if(isDataValid()) {
-            //ToDo: Save ReminderWhen's list to mTask
+            mTask.setTitle(mTaskTitle.getText().toString());
+            mTask.setReminderWhen(DataUtils.integerCollectionToString(mCheckedDaysOfWeek));
+            mTask.setNote(mNoteEditText.getText().toString());
+
+            Cursor c = getCursor();
+                if (c.getCount() == 0){
+                    insertData();
+                } else {
+                    updateData();
+                }
+            finish();
         }
     }
 
@@ -395,5 +420,42 @@ public class SingleTaskActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private Cursor getCursor() {
+        return getContentResolver().query(
+                CONTENT_URI,
+                new String[]{KEY_ROW_ID},
+                null,
+                null,
+                null);
+    }
+
+    private void updateData() {
+        // *** Example ***
+        ContentValues values = new ContentValues();
+        values.put(KEY_PRIORITY, 2);
+        // ***************
+
+        Uri uri = buildFlavorsUri(mTask.getId());
+
+        // Update record in the DB.
+        getContentResolver().update(uri, values, null, null);
+    }
+
+    public void insertData(){
+        ContentValues values;
+        values = new ContentValues();
+        values.put(KEY_PRIORITY, mTask.getPriority());
+        values.put(KEY_TITLE, mTask.getTitle());
+        values.put(KEY_DATE, mTask.getDate());
+        values.put(KEY_TIME, mTask.getTime());
+        values.put(KEY_REMINDER_OCCURRENCE, mTask.getReminderOccurrence());
+        values.put(KEY_REMINDER_WHEN, mTask.getReminderWhen());
+        values.put(KEY_IS_VIBRATION_ENABLED, mTask.isVibrationEnabled());
+        values.put(KEY_NOTE, mTask.getNote());
+
+        // Insert our ContentValues.
+        getContentResolver().insert(CONTENT_URI, values);
     }
 }

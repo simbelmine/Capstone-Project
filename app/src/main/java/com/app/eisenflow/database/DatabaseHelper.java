@@ -11,9 +11,7 @@ import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_IS_VIBRATION
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_NOTE;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_PROGRESS;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_DATE;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_TIME;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_WHEN;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TIME;
@@ -53,8 +51,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + KEY_DATE_MILLIS + " integer, "
                     + KEY_REMINDER_OCCURRENCE + " text not null, "
                     + KEY_REMINDER_WHEN + " text not null, "
-                    + KEY_REMINDER_DATE + " text not null, "
-                    + KEY_REMINDER_TIME + " text not null, "
                     + KEY_NOTE + " text not null, "
                     + KEY_PROGRESS + " integer default 0, "
                     + KEY_IS_DONE + " integer default 0, "

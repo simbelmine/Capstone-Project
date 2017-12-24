@@ -39,9 +39,7 @@ import static com.app.eisenflow.database.TaskContract.TaskEntry.CONTENT_URI;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_DATE;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_NOTE;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_PRIORITY;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_DATE;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_TIME;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_WHEN;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TIME;
@@ -183,52 +181,52 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void deleteData() {
-        Uri uri = buildFlavorsUri(id);
-        Log.v("eisen", "DELETE: Uri with Id --> " + uri);
+//    private void deleteData() {
+//        Uri uri = buildFlavorsUri(id);
+//        Log.v("eisen", "DELETE: Uri with Id --> " + uri);
+//
+//        // Delete record in the DB.
+//        getContentResolver().delete(uri, null, null);
+//    }
+//
+//    private void updateData() {
+//        ContentValues values = new ContentValues();
+//        values.put(KEY_PRIORITY, 2);
+//
+//        Uri uri = buildFlavorsUri(id);
+//        Log.v("eisen", "UPDATE: Uri with Id --> " + uri);
+//
+//
+//        // Update record in the DB.
+//        getContentResolver().update(uri, values, null, null);
+//    }
 
-        // Delete record in the DB.
-        getContentResolver().delete(uri, null, null);
-    }
-
-    private void updateData() {
-        ContentValues values = new ContentValues();
-        values.put(KEY_PRIORITY, 2);
-
-        Uri uri = buildFlavorsUri(id);
-        Log.v("eisen", "UPDATE: Uri with Id --> " + uri);
-
-
-        // Update record in the DB.
-        getContentResolver().update(uri, values, null, null);
-    }
-
-    List<Task> tasks;
-    long id = -1;
-    public void insertData(){
-        ContentValues valuesArr;
-        // Loop through static array of Flavors, add each to an instance of ContentValues
-        // in the array of ContentValues
-        //for(int i = 0; i < tasks.size(); i++){
-        valuesArr = new ContentValues();
-        valuesArr.put(KEY_PRIORITY, tasks.get(0).getPriority());
-        valuesArr.put(KEY_TITLE, tasks.get(0).getTitle());
-        valuesArr.put(KEY_DATE, tasks.get(0).getDate());
-        valuesArr.put(KEY_TIME, tasks.get(0).getTime());
-        valuesArr.put(KEY_REMINDER_DATE, tasks.get(0).getReminderDate());
-        valuesArr.put(KEY_REMINDER_TIME, tasks.get(0).getReminderTime());
-        valuesArr.put(KEY_REMINDER_WHEN, tasks.get(0).getReminderWhen());
-        valuesArr.put(KEY_REMINDER_OCCURRENCE, tasks.get(0).getReminderOccurrence());
-        valuesArr.put(KEY_NOTE, tasks.get(0).getNote());
-        //}
-
-        Log.v("eisen", "URI = " + CONTENT_URI);
-
-        // Insert our ContentValues.
-        Uri uri = getContentResolver().insert(CONTENT_URI, valuesArr);
-
-        id = Long.valueOf(uri.getLastPathSegment());
-    }
+//    List<Task> tasks;
+//    long id = -1;
+//    public void insertData(){
+//        ContentValues valuesArr;
+//        // Loop through static array of Flavors, add each to an instance of ContentValues
+//        // in the array of ContentValues
+//        //for(int i = 0; i < tasks.size(); i++){
+//        valuesArr = new ContentValues();
+//        valuesArr.put(KEY_PRIORITY, tasks.get(0).getPriority());
+//        valuesArr.put(KEY_TITLE, tasks.get(0).getTitle());
+//        valuesArr.put(KEY_DATE, tasks.get(0).getDate());
+//        valuesArr.put(KEY_TIME, tasks.get(0).getTime());
+//        valuesArr.put(KEY_REMINDER_DATE, tasks.get(0).getReminderDate());
+//        valuesArr.put(KEY_REMINDER_TIME, tasks.get(0).getReminderTime());
+//        valuesArr.put(KEY_REMINDER_WHEN, tasks.get(0).getReminderWhen());
+//        valuesArr.put(KEY_REMINDER_OCCURRENCE, tasks.get(0).getReminderOccurrence());
+//        valuesArr.put(KEY_NOTE, tasks.get(0).getNote());
+//        //}
+//
+//        Log.v("eisen", "URI = " + CONTENT_URI);
+//
+//        // Insert our ContentValues.
+//        Uri uri = getContentResolver().insert(CONTENT_URI, valuesArr);
+//
+//        id = Long.valueOf(uri.getLastPathSegment());
+//    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

@@ -18,7 +18,7 @@ public class Task {
     private String mNote;
     private int mProgress = -1;
     private int isDone = -1;
-    private int isVibrationEnabled = -1;
+    private int isVibrationEnabled = 1;
 
     public long getId() {
         return mId;

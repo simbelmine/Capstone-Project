@@ -1,5 +1,6 @@
 package com.app.eisenflow.utils;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,5 +44,16 @@ public class DataUtils {
 
     public static int getVibrationStateValue(boolean state) {
         return state? 1 : 0;
+    }
+
+    public static String integerCollectionToString(Collection<?> collection) {
+        StringBuilder sb = new StringBuilder();
+        for (Object s : collection)
+        {
+            sb.append(String.valueOf(s));
+            sb.append("\t");
+        }
+
+        return sb.toString();
     }
 }
