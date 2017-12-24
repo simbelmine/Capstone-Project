@@ -166,8 +166,10 @@ public class SingleTaskActivity extends AppCompatActivity {
 
            //ToDo: When Save add Daily occurrence as default.
 
-           int buttonIdx = mOccurrenceHolder.indexOfChild(button);
-           mTask.setReminderOccurrence(buttonIdx);
+           if (checked) {
+               int buttonIdx = mOccurrenceHolder.indexOfChild(button);
+               mTask.setReminderOccurrence(buttonIdx);
+           }
        }
     }
 
