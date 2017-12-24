@@ -39,4 +39,5 @@
     <color name="gray_transparent">#036a7275</color>
     <color name="hint_color">#E8E8E8</color>
     <color name="default_title_holder">#6c648b</color>
+    <color name="alert_color">#e97868</color>
 </resources>

@@ -8,6 +8,7 @@ import java.util.Map;
  */
 
 public class DataUtils {
+    // Enum to set priority highest to lowest (1 to 4).
     public enum Priority {
         DEFAULT(0),
         ONE(1),

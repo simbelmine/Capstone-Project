@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,11 +39,15 @@ import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
+import static android.text.TextUtils.isEmpty;
+import static com.app.eisenflow.utils.Utils.showAlertMessage;
+
 /**
  * Created on 12/21/17.
  */
 
 public class SingleTaskActivity extends AppCompatActivity {
+    @BindView(R.id.single_task_holder) CoordinatorLayout mSingleTaskHolder;
     @BindView(R.id.single_task_app_bar) AppBarLayout mAppBarLayout;
     @BindView(R.id.single_task_toolbar) Toolbar mToolbar;
     @BindView(R.id.title_holder) ImageView mTitleHolder;
@@ -67,8 +71,6 @@ public class SingleTaskActivity extends AppCompatActivity {
     @BindView(R.id.sun_cb) CheckBox mSunCheckBox;
     @BindView(R.id.vibration_switch) Switch mVibrationSwitch;
     @BindView(R.id.note_edit_text) EditText mNoteEditText;
-
-    // Enum to set priority highest to lowest (1 to 4).
 
     private Task mTask;
     private DataUtils.Priority mPriority;
@@ -159,18 +161,18 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     @OnCheckedChanged ({R.id.daily_rb, R.id.weekly_rb, R.id.monthly_rb, R.id.yearly_rb})
     public void onOccurrenceChecked(CompoundButton button, boolean checked) {
-       if (checked) {
-           //ToDo: Add Occurrence from task like that:  mOccurrenceHolder.indexOfChild(button));
-           //ToDo: +before+ : int radioButtonID = radioButtonGroup.getCheckedRadioButtonId();
-           //ToDo:                 View radioButton = radioButtonGroup.findViewById(radioButtonID);
+        if (checked) {
+            //ToDo: Add Occurrence from task like that:  mOccurrenceHolder.indexOfChild(button));
+            //ToDo: +before+ : int radioButtonID = radioButtonGroup.getCheckedRadioButtonId();
+            //ToDo:                 View radioButton = radioButtonGroup.findViewById(radioButtonID);
 
-           //ToDo: When Save add Daily occurrence as default.
+            //ToDo: When Save add Daily occurrence as default.
 
-           if (checked) {
-               int buttonIdx = mOccurrenceHolder.indexOfChild(button);
-               mTask.setReminderOccurrence(buttonIdx);
-           }
-       }
+            if (checked) {
+                int buttonIdx = mOccurrenceHolder.indexOfChild(button);
+                mTask.setReminderOccurrence(buttonIdx);
+            }
+        }
     }
     @OnCheckedChanged ({R.id.vibration_switch})
     public void onVibrationSwitchChecked(CompoundButton button, boolean checked) {
@@ -197,6 +199,7 @@ public class SingleTaskActivity extends AppCompatActivity {
                 break;
             case R.id.action_save_task:
                 Toast.makeText(SingleTaskActivity.this, "TASK SAVED", Toast.LENGTH_SHORT).show();
+                saveTask();
                 break;
         }
 
@@ -337,5 +340,42 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private void setReminderVisibility(int visibility) {
         mReminderHolder.setVisibility(visibility);
+    }
+
+    private void saveTask() {
+        if(isDataValid()) {
+
+        }
+    }
+
+    private boolean isDataValid() {
+        String taskTitle = mTaskTitle.getText().toString();
+        if (isEmpty(taskTitle)) {
+            showAlertMessage(mSingleTaskHolder, getString(R.string.add_task_name_alert), R.color.alert_color);
+            return false;
+        }
+        if(mTask.getPriority() == -1) {
+            showAlertMessage(mSingleTaskHolder, getString(R.string.add_task_priority_alert), R.color.alert_color);
+            return false;
+        }
+        if(!checkDateTime()) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean checkDateTime() {
+        String dateStr = mDate.getText().toString();
+        String timeS = mTime.getText().toString();
+
+        if (!DateTimeUtils.isDateValid(dateStr)) {
+            showAlertMessage(mSingleTaskHolder, getResources().getString(R.string.add_task_date_alert), R.color.alert_color);
+            return false;
+        }
+        if (!DateTimeUtils.isTimeValid(dateStr, timeS)) {
+            showAlertMessage(mSingleTaskHolder, getResources().getString(R.string.add_task_time_alert), R.color.alert_color);
+            return false;
+        }
+        return true;
     }
 }

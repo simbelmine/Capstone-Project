@@ -47,19 +47,6 @@ public class DateTimeUtils {
         dayOfMonthsMap.put("Sun", Calendar.SUNDAY);
     }
 
-    public boolean isDateValid(String dateStr) {
-        Calendar currDate = Calendar.getInstance();
-        Calendar date  = Calendar.getInstance();
-        date.setTime(getDate(dateStr));
-
-        if(date.get(Calendar.MONTH) == currDate.get(Calendar.MONTH) &&
-                date.get(Calendar.DAY_OF_MONTH) < currDate.get(Calendar.DAY_OF_MONTH)) {
-            return false;
-        }
-
-        return true;
-    }
-
     public static Date getDate(String dateStr) {
         if(dateStr != null && !"".equals(dateStr)) {
             SimpleDateFormat postFormatter = new SimpleDateFormat(DATE_FORMAT);
@@ -78,7 +65,20 @@ public class DateTimeUtils {
         return postFormatter.format(cal.getTime());
     }
 
-    public boolean isTimeValid(String dateStr, String timeStr) {
+    public static boolean isDateValid(String dateStr) {
+        Calendar currDate = Calendar.getInstance();
+        Calendar date  = Calendar.getInstance();
+        date.setTime(getDate(dateStr));
+
+        if(date.get(Calendar.MONTH) == currDate.get(Calendar.MONTH) &&
+                date.get(Calendar.DAY_OF_MONTH) < currDate.get(Calendar.DAY_OF_MONTH)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static boolean isTimeValid(String dateStr, String timeStr) {
         Calendar currDate = Calendar.getInstance();
         Calendar currTime = Calendar.getInstance();
         currTime.setTime(getTime(getTimeString(Calendar.getInstance())));
@@ -86,6 +86,13 @@ public class DateTimeUtils {
         date.setTime(getDate(dateStr));
         Calendar time  = Calendar.getInstance();
         time.setTime(getTime(timeStr));
+
+        Log.v("eisen", "\nDate: " + dateStr);
+        Log.v("eisen", "\nTime: " + timeStr);
+
+//        Log.v("eisen", "\nCurrent: " + currTime);
+//        Log.v("eisen", "\nDate: " + date);
+//        Log.v("eisen", "\nTime: " + time);
 
         if(date.get(Calendar.MONTH) == currDate.get(Calendar.MONTH) &&
                 date.get(Calendar.DAY_OF_MONTH) == currDate.get(Calendar.DAY_OF_MONTH) &&

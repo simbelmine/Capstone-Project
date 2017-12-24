@@ -11,7 +11,7 @@ public class Task {
     private String mTime;
     private int mDateMillis = -1;
     private double mTotalDaysPeriod = -1;
-    private int mReminderOccurrence;
+    private int mReminderOccurrence = -1;
     private String mReminderWhen;
     private String mReminderDate;
     private String mReminderTime;
