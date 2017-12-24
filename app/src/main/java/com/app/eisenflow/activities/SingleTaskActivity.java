@@ -88,11 +88,6 @@ public class SingleTaskActivity extends AppCompatActivity {
     @BindView(R.id.fri_cb) CheckBox mFriCheckBox;
     @BindView(R.id.sat_cb) CheckBox mSatCheckBox;
     @BindView(R.id.sun_cb) CheckBox mSunCheckBox;
-    @BindView(R.id.reminder_date_time_holder) ConstraintLayout mReminderDateTimeHolder;
-    @BindView(R.id.reminder_date_holder) FrameLayout mReminderDateHolder;
-    @BindView(R.id.reminder_date_txt) TextView mReminderDate;
-    @BindView(R.id.reminder_time_holder) FrameLayout mReminderTimeHolder;
-    @BindView(R.id.reminder_time_txt) TextView mReminderTime;
     @BindView(R.id.vibration_switch) Switch mVibrationSwitch;
     @BindView(R.id.note_edit_text) EditText mNoteEditText;
 
@@ -121,7 +116,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         mToday = Calendar.getInstance();
         mCheckedDaysOfWeek = new HashSet<>();
         setViewVisibility(mReminderHolder, View.GONE);
-        setViewVisibility(mReminderDateTimeHolder, View.GONE);
+        setViewVisibility(mWeekDaysHolder, View.GONE);
     }
 
     @Override
@@ -146,7 +141,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     }
 
     @OnClick (R.id.do_it_holder)
-    public void onClickDoItHolder() {
+    public void onDoItHolderClick() {
         mPriority = DataUtils.Priority.ONE;
         setBgPriorityColor();
         mTask.setPriority(DataUtils.Priority.ONE.getValue());
@@ -154,7 +149,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     }
 
     @OnClick (R.id.decide_holder)
-    public void onClickDecideHolder() {
+    public void onDecideHolderClick() {
         mPriority = DataUtils.Priority.TWO;
         setBgPriorityColor();
         mTask.setPriority(DataUtils.Priority.TWO.getValue());
@@ -162,7 +157,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     }
 
     @OnClick (R.id.delegate_holder)
-    public void onClickDelegateHolder() {
+    public void onDelegateHolderClick() {
         mPriority = DataUtils.Priority.THREE;
         setBgPriorityColor();
         mTask.setPriority(DataUtils.Priority.THREE.getValue());
@@ -170,7 +165,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     }
 
     @OnClick (R.id.dump_it_holder)
-    public void onClickDumpItHolder() {
+    public void onDumpItHolderClick() {
         mPriority = DataUtils.Priority.FOUR;
         setBgPriorityColor();
         mTask.setPriority(DataUtils.Priority.FOUR.getValue());
@@ -178,12 +173,12 @@ public class SingleTaskActivity extends AppCompatActivity {
     }
 
     @OnClick (R.id.date_holder)
-    public void onClickDateHolder() {
+    public void onDateHolderClick() {
         openDatePickerDialog();
     }
 
     @OnClick (R.id.time_holder)
-    public void onClickTimeHolder() {
+    public void onTimeHolderClick() {
         openTimePickerDialog();
     }
 
@@ -197,12 +192,10 @@ public class SingleTaskActivity extends AppCompatActivity {
             if (checked) {
                 int buttonIdx = mOccurrenceHolder.indexOfChild(button);
                 mTask.setReminderOccurrence(buttonIdx);
-                if (button.getId() == R.id.daily_rb) {
-                    setViewVisibility(mReminderDateTimeHolder, View.GONE);
+                if (button.getId() == R.id.weekly_rb) {
                     setViewVisibility(mWeekDaysHolder, View.VISIBLE);
                 } else {
                     setViewVisibility(mWeekDaysHolder, View.GONE);
-                    setViewVisibility(mReminderDateTimeHolder, View.VISIBLE);
                 }
             }
         }
