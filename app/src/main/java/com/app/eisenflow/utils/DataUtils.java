@@ -39,4 +39,8 @@ public class DataUtils {
             return value;
         }
     }
+
+    public static int getVibrationStateValue(boolean state) {
+        return state? 1 : 0;
+    }
 }

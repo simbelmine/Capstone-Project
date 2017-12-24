@@ -172,6 +172,12 @@ public class SingleTaskActivity extends AppCompatActivity {
            }
        }
     }
+    @OnCheckedChanged ({R.id.vibration_switch})
+    public void onVibrationSwitchChecked(CompoundButton button, boolean checked) {
+        // ToDo: When Save add ON as default.
+        mTask.setVibrationEnabled(DataUtils.getVibrationStateValue(checked));
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
