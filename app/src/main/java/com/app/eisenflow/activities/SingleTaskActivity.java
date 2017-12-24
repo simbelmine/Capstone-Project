@@ -9,14 +9,17 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -24,16 +27,16 @@ import android.widget.Toast;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.Task;
+import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.DateTimeUtils;
 import com.app.eisenflow.utils.Utils;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 /**
@@ -54,6 +57,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     @BindView(R.id.time_holder) FrameLayout mTimeHolder;
     @BindView(R.id.time_txt) TextView mTime;
     @BindView(R.id.reminder_holder) ConstraintLayout mReminderHolder;
+    @BindView(R.id.occurrence_holder) RadioGroup mOccurrenceHolder;
     @BindView(R.id.mon_cb) CheckBox mMonCheckBox;
     @BindView(R.id.tue_cb) CheckBox mTueCheckBox;
     @BindView(R.id.wed_cb) CheckBox mWedCheckBox;
@@ -65,39 +69,9 @@ public class SingleTaskActivity extends AppCompatActivity {
     @BindView(R.id.note_edit_text) EditText mNoteEditText;
 
     // Enum to set priority highest to lowest (1 to 4).
-    private enum Priority {
-        DEFAULT(0),
-        ONE(1),
-        TWO(2),
-        THREE(3),
-        FOUR(4);
 
-        private static Map map = new HashMap<>();
-        private int value;
-        Priority(int value) {
-            this.value = value;
-        }
-
-        static {
-            for (Priority pageType : Priority.values()) {
-                map.put(pageType.value, pageType);
-            }
-        }
-
-        public static Priority valueOf(int pageType) {
-            Priority priority = (Priority) map.get(pageType);
-            if (priority == null) {
-                return DEFAULT;
-            }
-            return priority ;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
     private Task mTask;
-    private Priority mPriority;
+    private DataUtils.Priority mPriority;
     private Calendar today;
 
     @Override
@@ -116,7 +90,7 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private void init() {
         mTask = new Task();
-        mPriority = Priority.DEFAULT;
+        mPriority = DataUtils.Priority.DEFAULT;
         today = Calendar.getInstance();
     }
 
@@ -143,33 +117,33 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     @OnClick (R.id.do_it_holder)
     public void onClickDoItHolder() {
-        mPriority = Priority.ONE;
+        mPriority = DataUtils.Priority.ONE;
         setBgPriorityColor();
-        mTask.setPriority(Priority.ONE.getValue());
+        mTask.setPriority(DataUtils.Priority.ONE.getValue());
         setReminderVisibility(View.GONE);
     }
 
     @OnClick (R.id.decide_holder)
     public void onClickDecideHolder() {
-        mPriority = Priority.TWO;
+        mPriority = DataUtils.Priority.TWO;
         setBgPriorityColor();
-        mTask.setPriority(Priority.TWO.getValue());
+        mTask.setPriority(DataUtils.Priority.TWO.getValue());
         setReminderVisibility(View.VISIBLE);
     }
 
     @OnClick (R.id.delegate_holder)
     public void onClickDelegateHolder() {
-        mPriority = Priority.THREE;
+        mPriority = DataUtils.Priority.THREE;
         setBgPriorityColor();
-        mTask.setPriority(Priority.THREE.getValue());
+        mTask.setPriority(DataUtils.Priority.THREE.getValue());
         setReminderVisibility(View.GONE);
     }
 
     @OnClick (R.id.dump_it_holder)
     public void onClickDumpItHolder() {
-        mPriority = Priority.FOUR;
+        mPriority = DataUtils.Priority.FOUR;
         setBgPriorityColor();
-        mTask.setPriority(Priority.FOUR.getValue());
+        mTask.setPriority(DataUtils.Priority.FOUR.getValue());
         setReminderVisibility(View.GONE);
     }
 
@@ -181,6 +155,20 @@ public class SingleTaskActivity extends AppCompatActivity {
     @OnClick (R.id.time_holder)
     public void onClickTimeHolder() {
         openTimePickerDialog();
+    }
+
+    @OnCheckedChanged ({R.id.daily_rb, R.id.weekly_rb, R.id.monthly_rb, R.id.yearly_rb})
+    public void onOccurrenceChecked(CompoundButton button, boolean checked) {
+       if (checked) {
+           //ToDo: Add Occurrence from task like that:  mOccurrenceHolder.indexOfChild(button));
+           //ToDo: +before+ : int radioButtonID = radioButtonGroup.getCheckedRadioButtonId();
+           //ToDo:                 View radioButton = radioButtonGroup.findViewById(radioButtonID);
+
+           //ToDo: When Save add Daily occurrence as default.
+
+           int buttonIdx = mOccurrenceHolder.indexOfChild(button);
+           mTask.setReminderOccurrence(buttonIdx);
+       }
     }
 
     @Override
@@ -226,7 +214,7 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private void setBackgroundWithAnimation() {
         final int priority = mTask.getPriority();
-        final int fromColor = getBackgroundColorByPriority(Priority.valueOf(priority));
+        final int fromColor = getBackgroundColorByPriority(DataUtils.Priority.valueOf(priority));
         final int toColor = getBackgroundColorByPriority(mPriority);
 
         ValueAnimator anim = ValueAnimator.ofFloat(0f, 1f);
@@ -243,7 +231,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         anim.start();
     }
 
-    private int getBackgroundColorByPriority(Priority priority) {
+    private int getBackgroundColorByPriority(DataUtils.Priority priority) {
         switch (priority) {
             case ONE:
                 return R.color.firstQuadrant;
