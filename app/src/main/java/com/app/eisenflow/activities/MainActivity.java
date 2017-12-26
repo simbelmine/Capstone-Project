@@ -1,10 +1,9 @@
 package com.app.eisenflow.activities;
 
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
+import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -17,6 +16,8 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -26,25 +27,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.app.eisenflow.R;
-import com.app.eisenflow.Task;
+import com.app.eisenflow.database.EisenContract;
+import com.app.eisenflow.helpers.TasksCursorRecyclerViewAdapter;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.app.eisenflow.database.TaskContract.TaskEntry.CONTENT_URI;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_DATE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_NOTE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_PRIORITY;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_WHEN;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_ROW_ID;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TIME;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TITLE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.buildFlavorsUri;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.getDataRow;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -59,10 +50,13 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.toolbar_month_container) LinearLayout mToolbarMonthContainer;
     @BindView(R.id.toolbar_arrow) ImageView mToolbarArrow;
     @BindView(R.id.material_calendar_view) MaterialCalendarView mMaterialCalendarView;
+    @BindView(R.id.tasks_recycler_view) RecyclerView mTasksRecyclerView;
 
     private static final int LOADER_ID = 0x02;
     private ContentResolver mContentResolver;
     private ActionBarDrawerToggle mToggle;
+    private RecyclerView.LayoutManager mLinearLayoutManager;
+    private TasksCursorRecyclerViewAdapter mTasksAdapter;
 
     public enum State {
         EXPANDED,
@@ -81,7 +75,10 @@ public class MainActivity extends AppCompatActivity implements
 
         initViews();
         rotateMonthArrow(false);
-//        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+
+
+        int itemsCountLocal = getItemsCountLocal();
     }
 
     private void initViews() {
@@ -94,6 +91,12 @@ public class MainActivity extends AppCompatActivity implements
         mFab.setOnClickListener(this);
         mToolbarMonthContainer.setOnClickListener(this);
         mAppBarLayout.addOnOffsetChangedListener(this);
+
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mTasksAdapter = new TasksCursorRecyclerViewAdapter(this, null);
+
+        mTasksRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mTasksRecyclerView.setAdapter(mTasksAdapter);
     }
 
     @Override
@@ -230,26 +233,49 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(
-                this,
-                CONTENT_URI,
-                null,
-                null,
-                null,
-                null
-        );
+        switch (id) {
+            case LOADER_ID:
+                return new CursorLoader(
+                        this,
+                        CONTENT_URI,
+                        null,
+                        null,
+                        null,
+                        null
+                );
+            default:
+                throw new IllegalArgumentException("no id handled!");
+        }
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         // ToDo: Add -> ((SimpleCursorAdapter) getListAdapter()).swapCursor(c);
         // mFlavorAdapter.swapCursor(data);
-        if (cursor != null) {
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Log.v("eisen", cursor.getString(cursor.getColumnIndex(KEY_TITLE)));
-                cursor.moveToNext();
-            }
+
+        switch (loader.getId()) {
+            case LOADER_ID:
+                Cursor cursor = ((TasksCursorRecyclerViewAdapter) mTasksRecyclerView.getAdapter()).getCursor();
+                MatrixCursor mx = new MatrixCursor(EisenContract.TaskEntry.Columns);
+                fillMx(cursor, mx);
+
+                //fill all existing in adapter
+                ((TasksCursorRecyclerViewAdapter) mTasksRecyclerView.getAdapter()).swapCursor(mx);
+                //fill with additional result
+                fillMx(data, mx);
+                break;
+            default:
+                throw new IllegalArgumentException("no loader id handled!");
+        }
+    }
+
+    private void fillMx(Cursor data, MatrixCursor mx) {
+        if (data == null)
+            return;
+
+        data.moveToPosition(-1);
+        while (data.moveToNext()) {
+            mx.addRow(getDataRow(data));
         }
     }
 
@@ -262,5 +288,18 @@ public class MainActivity extends AppCompatActivity implements
     private void rotateMonthArrow(boolean isExpanded) {
         float rotation = isExpanded ? 0 : 180;
         ViewCompat.animate(mToolbarArrow).rotation(rotation).start();
+    }
+
+    private int getItemsCountLocal() {
+        int itemCount = 0;
+        Cursor query = getContentResolver().query(CONTENT_URI, null, null, null, null);
+        if (query != null) {
+            itemCount = query.getCount();
+            query.close();
+        }
+
+        Log.v("eisen", "Items Count = " + itemCount);
+
+        return itemCount;
     }
 }
