@@ -46,17 +46,17 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 import static android.text.TextUtils.isEmpty;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.CONTENT_URI;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_DATE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_IS_VIBRATION_ENABLED;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_NOTE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_PRIORITY;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_WHEN;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_ROW_ID;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TIME;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TITLE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.buildFlavorsUri;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_VIBRATION_ENABLED;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_NOTE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_WHEN;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
 import static com.app.eisenflow.utils.DataUtils.setViewVisibility;
 import static com.app.eisenflow.utils.Utils.showAlertMessage;
 

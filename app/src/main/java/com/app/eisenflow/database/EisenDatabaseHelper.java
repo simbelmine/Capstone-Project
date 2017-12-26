@@ -4,39 +4,39 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_DATE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_DATE_MILLIS;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_IS_DONE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_IS_VIBRATION_ENABLED;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_NOTE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_PRIORITY;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_PROGRESS;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_REMINDER_WHEN;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_ROW_ID;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TIME;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TITLE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.TABLE_NAME;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE_MILLIS;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_VIBRATION_ENABLED;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_NOTE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PROGRESS;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_WHEN;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.TABLE_NAME;
 
 /**
  * Created on 12/20/17.
  */
 
-public class DatabaseHelper extends SQLiteOpenHelper {
+public class EisenDatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "EisenFlowDb";
 
     private final Context context;
-    private static DatabaseHelper sSingletonHelper;
-    public static DatabaseHelper getInstance(final Context context) {
+    private static EisenDatabaseHelper sSingletonHelper;
+    public static EisenDatabaseHelper getInstance(final Context context) {
         if(sSingletonHelper == null) {
-            sSingletonHelper = new DatabaseHelper(context);
+            sSingletonHelper = new EisenDatabaseHelper(context);
         }
         return sSingletonHelper;
     }
 
-    private DatabaseHelper(Context context) {
+    private EisenDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context.getApplicationContext();
     }

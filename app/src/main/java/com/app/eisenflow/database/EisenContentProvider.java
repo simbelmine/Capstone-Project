@@ -9,12 +9,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
-import static com.app.eisenflow.database.TaskContract.AUTHORITY;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.CONTENT_DIR_TYPE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.CONTENT_ITEM_TYPE;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.KEY_ROW_ID;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.TABLE_NAME;
-import static com.app.eisenflow.database.TaskContract.TaskEntry.buildFlavorsUri;
+import static com.app.eisenflow.database.EisenContract.AUTHORITY;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_DIR_TYPE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_ITEM_TYPE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.TABLE_NAME;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
 
 /**
  * Created on 12/21/17.
@@ -24,7 +24,7 @@ public class EisenContentProvider extends ContentProvider {
     private static final int TASK = 100;
     private static final int TASK_ID = 101;
 
-    private DatabaseHelper mDatabaseHelper;
+    private EisenDatabaseHelper mDatabaseHelper;
     private static UriMatcher sUriMatcher = buildUriMatcher();
     private static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -43,7 +43,7 @@ public class EisenContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         Log.v("eisen", "Provider -> onCreate()");
-        mDatabaseHelper = DatabaseHelper.getInstance(getContext());
+        mDatabaseHelper = EisenDatabaseHelper.getInstance(getContext());
         return true;
     }
 
