@@ -33,6 +33,7 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getDataRow;
@@ -40,8 +41,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.getDataRow;
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         AppBarLayout.OnOffsetChangedListener,
-        LoaderManager.LoaderCallbacks<Cursor>,
-        View.OnClickListener {
+        LoaderManager.LoaderCallbacks<Cursor> {
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.fab) FloatingActionButton mFab;
     @BindView(R.id.drawer_layout) DrawerLayout mDrawer;
@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.tasks_recycler_view) RecyclerView mTasksRecyclerView;
 
     private static final int LOADER_ID = 0x02;
-    private ContentResolver mContentResolver;
     private ActionBarDrawerToggle mToggle;
     private RecyclerView.LayoutManager mLinearLayoutManager;
     private TasksCursorRecyclerViewAdapter mTasksAdapter;
@@ -87,9 +86,6 @@ public class MainActivity extends AppCompatActivity implements
         mToggle.syncState();
         // Set listener to navigation drawer.
         mNavigationView.setNavigationItemSelectedListener(this);
-        // Set listener to the floating action button.
-        mFab.setOnClickListener(this);
-        mToolbarMonthContainer.setOnClickListener(this);
         mAppBarLayout.addOnOffsetChangedListener(this);
 
         mLinearLayoutManager = new LinearLayoutManager(this);
@@ -137,18 +133,17 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.toolbar_month_container:
-                boolean isExpanded = mCurrentState == State.EXPANDED ? true : false;
-                rotateMonthArrow(isExpanded);
-                isExpanded = !isExpanded;
-                mAppBarLayout.setExpanded(isExpanded, true);
-                break;
-            case R.id.fab:
+    @OnClick (R.id.toolbar_month_container)
+    public void onToolbarCalendarClick() {
+        boolean isExpanded = mCurrentState == State.EXPANDED ? true : false;
+        rotateMonthArrow(isExpanded);
+        isExpanded = !isExpanded;
+        mAppBarLayout.setExpanded(isExpanded, true);
+    }
 
-                startActivity(new Intent(MainActivity.this, SingleTaskActivity.class));
+    @OnClick (R.id.fab)
+    public void onFabClick() {
+        startActivity(new Intent(MainActivity.this, SingleTaskActivity.class));
 
 //                Task task = new Task();
 //                task.setPriority(1);
@@ -180,9 +175,10 @@ public class MainActivity extends AppCompatActivity implements
 //
 //                // initialize loader
 //                getSupportLoaderManager().initLoader(LOADER_ID, null, this);
-                break;
-        }
     }
+
+
+
 
 //    private void deleteData() {
 //        Uri uri = buildFlavorsUri(id);
