@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mTasksRecyclerView.setLayoutManager(mLinearLayoutManager);
         mTasksRecyclerView.setAdapter(mTasksAdapter);
+        ViewCompat.setNestedScrollingEnabled(mTasksRecyclerView, false);
     }
 
     @Override
@@ -125,17 +126,20 @@ public class MainActivity extends AppCompatActivity implements
         if (verticalOffset == 0) {
             mCurrentState = State.EXPANDED;
             rotateMonthArrow(true);
+            ViewCompat.setNestedScrollingEnabled(mTasksRecyclerView, true);
         } else if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
             mCurrentState = State.COLLAPSED;
             rotateMonthArrow(false);
+            ViewCompat.setNestedScrollingEnabled(mTasksRecyclerView, false);
         }
     }
 
     @OnClick (R.id.toolbar_month_container)
-    public void onToolbarCalendarClick() {
+    public void onToolbarMonthClick() {
         boolean isExpanded = mCurrentState == State.EXPANDED ? true : false;
         rotateMonthArrow(isExpanded);
         isExpanded = !isExpanded;
+        ViewCompat.setNestedScrollingEnabled(mTasksRecyclerView, isExpanded);
         mAppBarLayout.setExpanded(isExpanded, true);
     }
 
