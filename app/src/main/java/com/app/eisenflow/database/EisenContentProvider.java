@@ -13,6 +13,7 @@ import static com.app.eisenflow.database.EisenContract.AUTHORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_DIR_TYPE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_ITEM_TYPE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.ORDER_BY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.TABLE_NAME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
 
@@ -102,7 +103,7 @@ public class EisenContentProvider extends ContentProvider {
                         selectionArgs,
                         null,
                         null,
-                        sortOrder);
+                        ORDER_BY);
                 return retCursor;
             case TASK_ID:
                 retCursor = db.query(

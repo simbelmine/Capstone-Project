@@ -48,6 +48,7 @@ import butterknife.OnClick;
 import static android.text.TextUtils.isEmpty;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE_MILLIS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_VIBRATION_ENABLED;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_NOTE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
@@ -387,6 +388,8 @@ public class SingleTaskActivity extends AppCompatActivity {
             if (mTask.getTime() == null) {
                 mTask.setTime(DateTimeUtils.getTimeString(Calendar.getInstance()));
             }
+            Calendar cal = DateTimeUtils.getCalendar(mTask.getDate(), mTask.getTime());
+            mTask.setDateMillis((int)cal.getTimeInMillis());
 
             Cursor c = getCursor();
                 //if (c.getCount() == 0){
@@ -464,6 +467,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         values.put(KEY_TITLE, mTask.getTitle());
         values.put(KEY_DATE, mTask.getDate());
         values.put(KEY_TIME, mTask.getTime());
+        values.put(KEY_DATE_MILLIS, mTask.getDateMillis());
         values.put(KEY_REMINDER_OCCURRENCE, mTask.getReminderOccurrence());
         values.put(KEY_REMINDER_WHEN, mTask.getReminderWhen());
         values.put(KEY_IS_VIBRATION_ENABLED, mTask.isVibrationEnabled());

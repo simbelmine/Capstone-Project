@@ -54,6 +54,8 @@ public class EisenContract {
                 KEY_PROGRESS, KEY_IS_DONE, KEY_TOTAL_DAYS_PERIOD, KEY_IS_VIBRATION_ENABLED
         };
 
+        public static final String ORDER_BY =  KEY_DATE_MILLIS + " ASC";
+
         public static Object[] getDataRow(Cursor cursor) {
             return new Object[]{
                     cursor.getString(cursor.getColumnIndex(KEY_ROW_ID)),
