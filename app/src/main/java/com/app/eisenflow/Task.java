@@ -12,7 +12,7 @@ public class Task {
     private int mDateMillis = -1;
     private double mTotalDaysPeriod = -1;
     private int mReminderOccurrence = 0; //Daily occurrence by default.
-    private String mReminderWhen;
+    private String mReminderWhen = "";
     private String mReminderDate;
     private String mReminderTime;
     private String mNote;

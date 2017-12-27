@@ -91,6 +91,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     @BindView(R.id.vibration_switch) Switch mVibrationSwitch;
     @BindView(R.id.note_edit_text) EditText mNoteEditText;
 
+    private static final int WEEKLY_OCCURRENCE = 1;
     private Task mTask;
     private DataUtils.Priority mPriority;
     private Calendar mToday;
@@ -376,11 +377,20 @@ public class SingleTaskActivity extends AppCompatActivity {
     private void saveTask() {
         if(isDataValid()) {
             mTask.setTitle(mTaskTitle.getText().toString());
-            mTask.setReminderWhen(DataUtils.integerCollectionToString(mCheckedDaysOfWeek));
             mTask.setNote(mNoteEditText.getText().toString());
+            if (!mCheckedDaysOfWeek.isEmpty()) {
+                mTask.setReminderWhen(DataUtils.integerCollectionToString(mCheckedDaysOfWeek));
+            }
+            if (mTask.getDate() == null) {
+                mTask.setDate(DateTimeUtils.getDateString(Calendar.getInstance()));
+            }
+            if (mTask.getTime() == null) {
+                mTask.setTime(DateTimeUtils.getTimeString(Calendar.getInstance()));
+            }
 
             Cursor c = getCursor();
-                if (c.getCount() == 0){
+                //if (c.getCount() == 0){
+                if (mTask.getId() == -1) {
                     insertData();
                 } else {
                     updateData();
@@ -400,8 +410,9 @@ public class SingleTaskActivity extends AppCompatActivity {
             return false;
         }
 
-        if (DataUtils.Priority.valueOf(mTask.getPriority()) == DataUtils.Priority.TWO && mCheckedDaysOfWeek.isEmpty()) {
+        if (DataUtils.Priority.valueOf(mTask.getPriority()) == DataUtils.Priority.TWO && mCheckedDaysOfWeek.isEmpty() && mTask.getReminderOccurrence() == WEEKLY_OCCURRENCE) {
             showAlertMessage(mSingleTaskHolder, getString(R.string.add_task_reminder_when_alert), R.color.alert_color);
+            return false;
         }
 
         if(!checkDateTime()) {
@@ -436,14 +447,14 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private void updateData() {
         // *** Example ***
-        ContentValues values = new ContentValues();
-        values.put(KEY_PRIORITY, 2);
+//        ContentValues values = new ContentValues();
+//        values.put(KEY_PRIORITY, 2);
         // ***************
 
         Uri uri = buildFlavorsUri(mTask.getId());
 
         // Update record in the DB.
-        getContentResolver().update(uri, values, null, null);
+//        getContentResolver().update(uri, values, null, null);
     }
 
     public void insertData(){
