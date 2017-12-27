@@ -27,8 +27,8 @@
 
     <!-- Quadrants -->
     <color name="firstQuadrant">#e97868</color>
-    <color name="secondQuadrant">#20A39E</color>
-    <color name="thirdQuadrant">#EEC643</color>
+    <color name="secondQuadrant">#4abdad</color>
+    <color name="thirdQuadrant">#f5d564</color>
     <color name="fourthQuadrant">#5D737E</color>
 
     <!-- Single Task Activity -->
