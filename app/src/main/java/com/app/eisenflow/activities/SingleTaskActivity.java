@@ -106,7 +106,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.close_small);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.close_vector);
 
         init();
     }
