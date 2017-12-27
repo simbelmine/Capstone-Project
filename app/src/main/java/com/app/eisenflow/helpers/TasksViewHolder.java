@@ -64,17 +64,20 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
 
     private static int MAX_PROGRESS = 100;
     private Activity mContext;
-    private String lastSeenDate;
+    private TasksCursorRecyclerViewAdapter mAdapter;
 
-    public TasksViewHolder(Activity context, View itemView) {
+    public TasksViewHolder(Activity context, TasksCursorRecyclerViewAdapter adapter, View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.mContext = context;
+        this.mAdapter = adapter;
     }
 
     public void setData(Cursor cursor) {
         if (cursor != null) {
             String taskTitle = cursor.getString(cursor.getColumnIndex(KEY_TITLE));
+
+            Log.v("eisen", "Task Name: " + taskTitle);
 
             if (!TextUtils.isEmpty(taskTitle)) {
                 // Task Row.
@@ -106,6 +109,16 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
 
         mTaskTime.setVisibility(View.VISIBLE);
         mCardView.setOnTouchListener(new RecyclerItemSwipeDetector(mContext, cursor, this));
+
+        CardView.LayoutParams params = new CardView.LayoutParams(
+                CardView.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.rightMargin = (int)mContext.getResources().getDimension(R.dimen.activity_horizontal_spacing);
+        mCardView.setLayoutParams(params);
+        ((RelativeLayout)(mTaskTitle.getParent())).setGravity(Gravity.BOTTOM);
+
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        p.setMargins(32, 16, 0, 5);
+        ((RelativeLayout)(mTaskTitle).getParent()).setLayoutParams(p);
     }
 
     private void setTaskBackgroundByPriority(int priority) {
@@ -154,11 +167,12 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
         String taskDate = cursor.getString(cursor.getColumnIndex(KEY_DATE));
         String taskTime = cursor.getString(cursor.getColumnIndex(KEY_TIME));
         String taskActualTime = DateTimeUtils.getActualTime(taskTime);
-        if(lastSeenDate == null || !lastSeenDate.equals(taskDate) || isTaskDone(cursor)) {
+
+        if(mAdapter.getLastSeenDate() == null || !mAdapter.getLastSeenDate().equals(taskDate) || isTaskDone(cursor)) {
             Calendar cal = DateTimeUtils.getCalendar(taskDate, taskActualTime);
             mDayOfMonth.setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
             mDayOfWeek.setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
-            lastSeenDate = taskDate;
+            mAdapter.setLastSeenDate(taskDate);
         }
         else {
             mDayOfMonth.setText("");
@@ -245,7 +259,6 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
 
         mTaskTime.setVisibility(View.GONE);
         mTaskHolder.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-
 
         CardView.LayoutParams params = new CardView.LayoutParams(
                 CardView.LayoutParams.MATCH_PARENT, (int) Utils.convertDpToPixel(mContext, 40));

@@ -15,6 +15,7 @@ import com.app.eisenflow.R;
 
 public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter {
     private Activity mContext;
+    private String mLastSeenDate;
 
     public TasksCursorRecyclerViewAdapter(Activity context, Cursor cursor) {
         super(context, cursor);
@@ -29,7 +30,7 @@ public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mContext).inflate(R.layout.task_list_item, parent, false);
-        return new TasksViewHolder(mContext, v);
+        return new TasksViewHolder(mContext, this, v);
     }
 
     @Override
@@ -47,5 +48,12 @@ public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter {
     @Override
     public int getItemViewType(int position) {
         return super.getItemViewType(position);
+    }
+
+    public void setLastSeenDate(String lastSeenDate) {
+        this.mLastSeenDate = lastSeenDate;
+    }
+    public String getLastSeenDate() {
+        return this.mLastSeenDate;
     }
 }

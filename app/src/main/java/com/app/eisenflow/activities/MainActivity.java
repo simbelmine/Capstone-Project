@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements
         mNavigationView.setNavigationItemSelectedListener(this);
         mAppBarLayout.addOnOffsetChangedListener(this);
 
-        mLinearLayoutManager = new LinearLayoutManager(this);
+        mLinearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mTasksAdapter = new TasksCursorRecyclerViewAdapter(this, null);
 
         mTasksRecyclerView.setLayoutManager(mLinearLayoutManager);
