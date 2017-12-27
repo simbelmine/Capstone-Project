@@ -31,7 +31,7 @@
     <color name="thirdQuadrant">#EEC643</color>
     <color name="fourthQuadrant">#5D737E</color>
 
-    <!-- SIngle Task Activity -->
+    <!-- Single Task Activity -->
     <color name="splashscreen_bg">#4A4A4A</color>
     <color name="splascreen_text1">#9B9B9B</color>
     <color name="splash_screen_header_text">#414749</color>
@@ -40,4 +40,7 @@
     <color name="hint_color">#E8E8E8</color>
     <color name="default_title_holder">#6c648b</color>
     <color name="alert_color">#e97868</color>
+
+    <!-- Main Activity -->
+    <color name="list_item_bg">#ffebeff1</color>
 </resources>
