@@ -1,6 +1,5 @@
 package com.app.eisenflow.activities;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.MatrixCursor;
@@ -22,7 +21,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 

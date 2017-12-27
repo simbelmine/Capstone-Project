@@ -2,11 +2,13 @@ package com.app.eisenflow.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.text.Layout;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
 
@@ -89,5 +91,12 @@ public class Utils {
         builder.setMessage(messageToShow);
         builder.setPositiveButton(ApplicationEisenFlow.getAppContext().getResources().getString(android.R.string.ok), null);
         builder.show();
+    }
+
+    public static float convertDpToPixel(Context context, int dp){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
     }
 }

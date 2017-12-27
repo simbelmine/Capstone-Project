@@ -1,20 +1,22 @@
 package com.app.eisenflow.helpers;
 
-import android.content.Context;
+import android.app.Activity;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.eisenflow.R;
+
 /**
  * Created on 12/25/17.
  */
 
 public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter {
-    private Context mContext;
+    private Activity mContext;
 
-    public TasksCursorRecyclerViewAdapter(Context context, Cursor cursor) {
+    public TasksCursorRecyclerViewAdapter(Activity context, Cursor cursor) {
         super(context, cursor);
         mContext = context;
     }
@@ -26,8 +28,8 @@ public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(mContext).inflate(android.R.layout.simple_list_item_1, parent, false);
-        return new TasksViewHolder(v);
+        View v = LayoutInflater.from(mContext).inflate(R.layout.task_list_item, parent, false);
+        return new TasksViewHolder(mContext, v);
     }
 
     @Override

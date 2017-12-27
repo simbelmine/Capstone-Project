@@ -48,6 +48,10 @@ public class DataUtils {
         return state? 1 : 0;
     }
 
+    public static boolean getBooleanValue(int value) {
+        return (value == 1) ? true : false;
+    }
+
     public static String integerCollectionToString(Collection<?> collection) {
         StringBuilder sb = new StringBuilder();
         for (Object s : collection)
@@ -61,5 +65,16 @@ public class DataUtils {
 
     public static void setViewVisibility(View view, int visibility) {
         view.setVisibility(visibility);
+    }
+
+    public static int getTaskTextWidth(View view) {
+        int totalWidth = 0;
+        View chView = view;
+        chView.measure(
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        totalWidth += chView.getMeasuredWidth();
+
+        return totalWidth;
     }
 }

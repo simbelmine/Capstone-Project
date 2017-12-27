@@ -174,7 +174,7 @@ public class DateTimeUtils {
     }
 
 
-    public Date getTime24(String timeStr) {
+    public static Date getTime24(String timeStr) {
         SimpleDateFormat postFormatter;
         postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
 
@@ -188,7 +188,7 @@ public class DateTimeUtils {
         return null;
     }
 
-    public Date getTime12(String timeStr) {
+    public static Date getTime12(String timeStr) {
         SimpleDateFormat postFormatter;
         postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM);
 
@@ -208,7 +208,7 @@ public class DateTimeUtils {
         return false;
     }
 
-    public Calendar getCalendar(String date, String time) {
+    public static Calendar getCalendar(String date, String time) {
         return strToCalendar(date + " " + time);
     }
 
@@ -228,7 +228,7 @@ public class DateTimeUtils {
         return postFormatter.format(cal.getTime());
     }
 
-    public Calendar strToCalendar(String calStr) {
+    public static Calendar strToCalendar(String calStr) {
         SimpleDateFormat postFormatter;
         String newFormat;
         if(isSystem24hFormat()) {
@@ -276,7 +276,7 @@ public class DateTimeUtils {
         return cal.get(Calendar.DAY_OF_MONTH);
     }
 
-    public Calendar getCalendarTime(String time) {
+    public static Calendar getCalendarTime(String time) {
         Calendar cal = Calendar.getInstance();
         String[] splitTimeStr = time.split(":");
         String hours = getNonLeadingZero(splitTimeStr[0]);
@@ -298,13 +298,13 @@ public class DateTimeUtils {
         return cal;
     }
 
-    private String get12HoursMins(String s) {
+    private static String get12HoursMins(String s) {
         String[] split = s.split(" ");
         return split[0];
     }
 
 
-    private int get12HoursAM_PM(String s) {
+    private static int get12HoursAM_PM(String s) {
         String[] split = s.split(" ");
         if("AM".equals(split[1])) return Calendar.AM;
         else if("PM".equals(split[1])) return Calendar.PM;
@@ -313,7 +313,7 @@ public class DateTimeUtils {
     }
 
     // Thu, Aug 18, 2016
-    public Calendar getCalendarDateWithTime(String date, String time) {
+    public static Calendar getCalendarDateWithTime(String date, String time) {
         Calendar cal = getCalendarTime(time);
 
         Calendar dateCal = Calendar.getInstance();
@@ -328,7 +328,7 @@ public class DateTimeUtils {
         return cal;
     }
 
-    private String getNonLeadingZero(String str) {
+    private static String getNonLeadingZero(String str) {
         return str.replaceFirst("^0+(?!$)", "");
     }
 
@@ -357,7 +357,7 @@ public class DateTimeUtils {
         return weekDays;
     }
 
-    public boolean isPastDate(Calendar calDate){
+    public static boolean isPastDate(Calendar calDate){
         Calendar now = Calendar.getInstance();
         if(calDate.get(Calendar.MONTH) == now.get(Calendar.MONTH)
                 && calDate.get(Calendar.DAY_OF_MONTH) == now.get(Calendar.DAY_OF_MONTH)
@@ -391,7 +391,7 @@ public class DateTimeUtils {
     private static final String TIME24HOURS_PATTERN =
             "([01]?[0-9]|2[0-3]):[0-5][0-9]";
 
-    public String getActualTime(String time) {
+    public static String getActualTime(String time) {
         if(time != null && time.length() != 0) {
             Pattern pattern = Pattern.compile(TIME24HOURS_PATTERN);
             Matcher matcher = pattern.matcher(time);
