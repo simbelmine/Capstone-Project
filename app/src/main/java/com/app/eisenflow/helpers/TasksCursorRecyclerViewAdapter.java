@@ -16,6 +16,7 @@ import com.app.eisenflow.R;
 public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter {
     private Activity mContext;
     private String mLastSeenDate;
+    private String mLastSeenMonth;
 
     public TasksCursorRecyclerViewAdapter(Activity context, Cursor cursor) {
         super(context, cursor);
@@ -55,5 +56,12 @@ public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter {
     }
     public String getLastSeenDate() {
         return this.mLastSeenDate;
+    }
+
+    public void setLastSeenMonth(String lastSeenMonth) {
+        this.mLastSeenMonth = lastSeenMonth;
+    }
+    public String getLastSeenMonth() {
+        return this.mLastSeenMonth;
     }
 }

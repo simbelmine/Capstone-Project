@@ -27,6 +27,7 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -48,7 +49,7 @@ import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 
 public class TasksViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.card_view) CardView mCardView;
-    @BindView(R.id.task_card_mainview) LinearLayout mTaskHolder;
+    @BindView(R.id.task_card_mainview) RelativeLayout mTaskHolder;
     @BindView(R.id.task_title) TextView mTaskTitle;
     @BindView(R.id.task_time_txt) TextView mTaskTime;
     @BindView(R.id.right_action_icon) ImageView mRightActionIcon;
@@ -61,6 +62,7 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.undo_layout) RelativeLayout mUndoLayout;
     @BindView(R.id.undo_btn) TextView mUndoButton;
     @BindView(R.id.action_undo_btn) TextView mUndoActionBtn;
+    @BindView(R.id.month_name) TextView mMonthName;
 
     private static int MAX_PROGRESS = 100;
     private Activity mContext;
@@ -75,23 +77,22 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
 
     public void setData(Cursor cursor) {
         if (cursor != null) {
-            String taskTitle = cursor.getString(cursor.getColumnIndex(KEY_TITLE));
-
-            Log.v("eisen", "Task Name: " + taskTitle);
-
-            if (!TextUtils.isEmpty(taskTitle)) {
-                // Task Row.
-                mTaskTitle.setText(taskTitle);
-                mTaskTime.setText(cursor.getString(cursor.getColumnIndex(KEY_TIME)));
-                setTaskDetails(cursor);
-            } else {
-                // Month Row.
-                setMonthDetails(cursor);
+            // Task Row.
+            setTaskDetails(cursor);
+            // Month Row.
+            String monthName = getMonthName(cursor);
+            if(mAdapter.getLastSeenMonth() == null || !mAdapter.getLastSeenMonth().equals(monthName)) {
+                setMonthDetails(monthName);
             }
         }
     }
 
     private void setTaskDetails(Cursor cursor) {
+        String taskTitle = cursor.getString(cursor.getColumnIndex(KEY_TITLE));
+        mMonthName.setVisibility(View.GONE);
+        mTaskTitle.setText(taskTitle);
+        mTaskTime.setText(cursor.getString(cursor.getColumnIndex(KEY_TIME)));
+
         // Set 'Priority' connected resources.
         int priority = cursor.getInt(cursor.getColumnIndex(KEY_PRIORITY));
         setTaskBackgroundByPriority(priority);
@@ -109,16 +110,6 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
 
         mTaskTime.setVisibility(View.VISIBLE);
         mCardView.setOnTouchListener(new RecyclerItemSwipeDetector(mContext, cursor, this));
-
-        CardView.LayoutParams params = new CardView.LayoutParams(
-                CardView.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.rightMargin = (int)mContext.getResources().getDimension(R.dimen.activity_horizontal_spacing);
-        mCardView.setLayoutParams(params);
-        ((RelativeLayout)(mTaskTitle.getParent())).setGravity(Gravity.BOTTOM);
-
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        p.setMargins(32, 16, 0, 5);
-        ((RelativeLayout)(mTaskTitle).getParent()).setLayoutParams(p);
     }
 
     private void setTaskBackgroundByPriority(int priority) {
@@ -249,25 +240,18 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private void setMonthDetails(Cursor cursor) {
-        String date = cursor.getString(cursor.getColumnIndex(KEY_DATE));
-        mTaskTitle.setText(date);
-        mTaskTitle.setTextColor(mContext.getResources().getColor(R.color.date));
+    private void setMonthDetails(String monthName) {
+        mMonthName.setText(monthName);
+        mMonthName.setVisibility(View.VISIBLE);
+        mAdapter.setLastSeenMonth(monthName);
+    }
 
-        mDayOfMonth.setText("");
-        mDayOfWeek.setText("");
-
-        mTaskTime.setVisibility(View.GONE);
-        mTaskHolder.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-
-        CardView.LayoutParams params = new CardView.LayoutParams(
-                CardView.LayoutParams.MATCH_PARENT, (int) Utils.convertDpToPixel(mContext, 40));
-        mCardView.setLayoutParams(params);
-
-        ((RelativeLayout)(mTaskTitle.getParent())).setGravity(Gravity.TOP);
-        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        p.setMargins(0, 16, 0, 0);
-        ((RelativeLayout)(mTaskTitle.getParent())).setLayoutParams(p);
+    private String getMonthName(Cursor cursor) {
+        String monthStr = cursor.getString(cursor.getColumnIndex(KEY_DATE));
+        Date date = DateTimeUtils.getDate(monthStr);
+        Calendar calendarDate = Calendar.getInstance();
+        calendarDate.setTime(date);
+        return DateTimeUtils.getMonthName(calendarDate);
     }
 
     private String getTimeLeft(Cursor cursor) {

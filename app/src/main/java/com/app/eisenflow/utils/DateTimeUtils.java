@@ -1,6 +1,7 @@
 package com.app.eisenflow.utils;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 
 import com.app.eisenflow.ApplicationEisenFlow;
@@ -255,8 +256,18 @@ public class DateTimeUtils {
         return null;
     }
 
-    public String getMonthName(Calendar cal) {
-        return cal.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+    public static String getMonthName(Calendar cal) {
+        return cal.getDisplayName(Calendar.MONTH, Calendar.LONG, getLocale());
+    }
+
+    private static Locale getLocale() {
+        Context context = ApplicationEisenFlow.getAppContext();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            return context.getResources().getConfiguration().getLocales().get(0);
+        } else{
+            //noinspection deprecation
+            return context.getResources().getConfiguration().locale;
+        }
     }
 
     public int getMonthDays(String date, int monthToAdd) {

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -185,7 +186,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 
     private void swipe(View v, int distance) {
         View animationView = holder.mTaskHolder;
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) animationView.getLayoutParams();
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) animationView.getLayoutParams();
         int rightMargin, leftMargin;
 
         if(distance == 0)  holder.mDeleteActionIcon.startAnimation(animZoomOut);
