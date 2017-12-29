@@ -8,7 +8,9 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,6 +31,7 @@ import butterknife.ButterKnife;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 
 /**
@@ -43,6 +46,8 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     private static final int ICON_SHOW_DELAY = 300;
     private static final int DISMISS_DELAY = 3000;
     private static final int ACTION_DELAY = 1500;
+    public static final String EXTRA_TRANSITION_NAME = "ExtraTransitionName";
+    public static final int OPEN_TASK_CODE = 0x03;
     int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
     private Activity context;
     private boolean motionInterceptDisallowed = false;
@@ -332,13 +337,15 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 //        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-    private void startActivity(Class<?> activityClass, View view, int[] flags, String[] extras_names, long[] extras_values) {
+    private void startActivity(Class<?> activityClass, String[] extras_names, long[] extras_values) {
         Intent intent = new Intent(context, activityClass);
-        if(flags != null) {
-            for(int i = 0; i < flags.length; i++) {
-                intent.addFlags(flags[i]);
-            }
-        }
+        // Set flags.
+//        if(flags != null) {
+//            for(int i = 0; i < flags.length; i++) {
+//                intent.addFlags(flags[i]);
+//            }
+//        }
+        // Set necessary extras.
         if(extras_names != null && extras_values != null) {
             if(extras_names.length == extras_values.length) {
                 for(int i = 0; i < extras_names.length; i++) {
@@ -349,11 +356,20 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 
         Bundle b;
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            b = ActivityOptions.makeScaleUpAnimation(view, 0, 0, view.getWidth(), view.getHeight()).toBundle();
-            context.startActivity(intent, b);
+            // Use Task name to transition from MainActivity's list item to SingleTaskActivity.
+            String transitionName = mCursor.getColumnName(mCursor.getColumnIndex(KEY_TITLE));
+            // Set transition name to the view we want to transform.
+            ViewCompat.setTransitionName(holder.mTaskHolder, transitionName);
+            // Pass the transition name to next activity so we can set it there to the relevant view.
+            intent.putExtra(EXTRA_TRANSITION_NAME, transitionName);
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(context, holder.mTaskHolder, transitionName);
+            b = options.toBundle();
+            context.startActivityForResult(intent, OPEN_TASK_CODE, b);
         }
         else {
-            context.startActivity(intent);
+            context.startActivityForResult(intent, OPEN_TASK_CODE);
         }
     }
 
@@ -363,7 +379,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
         String[] extra_names = new String[]{};
         long[] extra_value = new long[]{};
 
-        startActivity(SingleTaskActivity.class, v, flags, extra_names, extra_value);
+        startActivity(SingleTaskActivity.class, extra_names, extra_value);
     }
 
     private void performSwipeAction(float deltaX) {

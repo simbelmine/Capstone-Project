@@ -18,7 +18,7 @@
     card_view:cardUseCompatPadding="true">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/parent_layout"
+        android:id="@+id/task_title_holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -131,8 +131,8 @@
             android:background="@color/secondQuadrant"
             android:paddingBottom="5dp"
             android:paddingTop="10dp"
-            app:layout_constraintBottom_toBottomOf="@+id/parent_layout"
-            app:layout_constraintEnd_toEndOf="@+id/parent_layout"
+            app:layout_constraintBottom_toBottomOf="@+id/task_title_holder"
+            app:layout_constraintEnd_toEndOf="@+id/task_title_holder"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/card_day_of_month"
             app:layout_constraintTop_toBottomOf="@+id/month_name"

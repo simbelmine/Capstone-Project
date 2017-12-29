@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -31,6 +32,7 @@ import android.widget.Toast;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.Task;
+import com.app.eisenflow.helpers.RecyclerItemSwipeDetector;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.DateTimeUtils;
 import com.app.eisenflow.utils.Utils;
@@ -110,6 +112,15 @@ public class SingleTaskActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.close_vector);
 
         init();
+
+
+        Bundle extras = getIntent().getExtras();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (extras != null) {
+                String imageTransitionName = extras.getString(RecyclerItemSwipeDetector.EXTRA_TRANSITION_NAME);
+                findViewById(R.id.task_title_holder).setTransitionName(imageTransitionName);
+            }
+        }
     }
 
     private void init() {
@@ -226,21 +237,25 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-        }
-
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
-                break;
+                backWithTransition();
+                return true;
             case R.id.action_save_task:
                 Toast.makeText(SingleTaskActivity.this, "TASK SAVED", Toast.LENGTH_SHORT).show();
                 saveTask();
-                break;
+                return true;
         }
 
         return true;
+    }
+
+    private void backWithTransition() {
+        if (Build.VERSION.SDK_INT >= 21) {
+            supportFinishAfterTransition();
+        } else {
+            finish();
+        }
     }
 
     private void setBgPriorityColor() {
@@ -392,12 +407,12 @@ public class SingleTaskActivity extends AppCompatActivity {
             mTask.setDateMillis((int)cal.getTimeInMillis());
 
             Cursor c = getCursor();
-                //if (c.getCount() == 0){
-                if (mTask.getId() == -1) {
-                    insertData();
-                } else {
-                    updateData();
-                }
+            //if (c.getCount() == 0){
+            if (mTask.getId() == -1) {
+                insertData();
+            } else {
+                updateData();
+            }
             finish();
         }
     }
