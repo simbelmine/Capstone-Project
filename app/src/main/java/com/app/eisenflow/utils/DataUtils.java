@@ -1,9 +1,12 @@
 package com.app.eisenflow.utils;
 
+import android.text.TextUtils;
 import android.view.View;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,7 +55,7 @@ public class DataUtils {
         return (value == 1) ? true : false;
     }
 
-    public static String integerCollectionToString(Collection<?> collection) {
+    public static String integerCollectionToString(Collection<Integer> collection) {
         StringBuilder sb = new StringBuilder();
         for (Object s : collection)
         {
@@ -61,6 +64,18 @@ public class DataUtils {
         }
 
         return sb.toString();
+    }
+
+    public static Collection<Integer> stringToIntegerCollection(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return null;
+        }
+        Collection<Integer> collection = new HashSet<>();
+        String[] strArray = str.split("\t");
+        for(int i = 0; i < strArray.length; i++) {
+            collection.add(Integer.valueOf(strArray[i]));
+        }
+        return collection;
     }
 
     public static void setViewVisibility(View view, int visibility) {

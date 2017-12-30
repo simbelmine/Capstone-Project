@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.app.eisenflow.Task;
+
 /**
  * Created on 12/21/17.
  */
@@ -72,6 +74,39 @@ public class EisenContract {
                     cursor.getString(cursor.getColumnIndex(KEY_TOTAL_DAYS_PERIOD)),
                     cursor.getString(cursor.getColumnIndex(KEY_IS_VIBRATION_ENABLED))
             };
+        }
+
+        public static Task cursorToTask(Cursor cursor) {
+            Task task = new Task();
+            int taskId = cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID));
+            int priority = cursor.getInt(cursor.getColumnIndex(KEY_PRIORITY));
+            String title = cursor.getString(cursor.getColumnIndex(KEY_TITLE));
+            String date = cursor.getString(cursor.getColumnIndex(KEY_DATE));
+            String time = cursor.getString(cursor.getColumnIndex(KEY_TIME));
+            int dateMillis = cursor.getInt(cursor.getColumnIndex(KEY_DATE_MILLIS));
+            int reminderOccurrence = cursor.getInt(cursor.getColumnIndex(KEY_REMINDER_OCCURRENCE));
+            String reminderWhen = cursor.getString(cursor.getColumnIndex(KEY_REMINDER_WHEN));
+            String note = cursor.getString(cursor.getColumnIndex(KEY_NOTE));
+            int progress = cursor.getInt(cursor.getColumnIndex(KEY_PROGRESS));
+            int isDone = cursor.getInt(cursor.getColumnIndex(KEY_IS_DONE));
+            double totalDaysPeriod = cursor.getDouble(cursor.getColumnIndex(KEY_TOTAL_DAYS_PERIOD));
+            int isVibrationEnabled = cursor.getInt(cursor.getColumnIndex(KEY_IS_VIBRATION_ENABLED));
+
+            task.setId(taskId);
+            task.setPriority(priority);
+            task.setTitle(title);
+            task.setDate(date);
+            task.setTime(time);
+            task.setDateMillis(dateMillis);
+            task.setReminderOccurrence(reminderOccurrence);
+            task.setReminderWhen(reminderWhen);
+            task.setNote(note);
+            task.setProgress(progress);
+            task.setIsDone(isDone);
+            task.setTotalDaysPeriod(totalDaysPeriod);
+            task.setVibrationEnabled(isVibrationEnabled);
+
+            return task;
         }
     }
 }

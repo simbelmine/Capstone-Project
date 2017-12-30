@@ -37,9 +37,11 @@ import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.DateTimeUtils;
 import com.app.eisenflow.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -56,10 +58,11 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_NOTE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_WHEN;
-import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
+import static com.app.eisenflow.helpers.RecyclerItemSwipeDetector.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.DataUtils.setViewVisibility;
 import static com.app.eisenflow.utils.Utils.showAlertMessage;
 
@@ -99,6 +102,9 @@ public class SingleTaskActivity extends AppCompatActivity {
     private DataUtils.Priority mPriority;
     private Calendar mToday;
     private Set<Integer> mCheckedDaysOfWeek;
+    private List<CheckBox> mWeekDays;
+    private int mCurrentPosition = -1;
+    private int mTaskId = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -114,6 +120,30 @@ public class SingleTaskActivity extends AppCompatActivity {
         init();
 
 
+        setTransitionName();
+        getCurrentPosition();
+    }
+
+    private void init() {
+        mTask = new Task();
+        mPriority = DataUtils.Priority.DEFAULT;
+        mToday = Calendar.getInstance();
+        mCheckedDaysOfWeek = new HashSet<>();
+        mWeekDays = getWeekDaysList();
+        setViewVisibility(mReminderHolder, View.GONE);
+        setViewVisibility(mWeekDaysHolder, View.GONE);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initDateTime();
+        if (!isNewTask()) {
+            populateData();
+        }
+    }
+
+    private void setTransitionName() {
         Bundle extras = getIntent().getExtras();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (extras != null) {
@@ -123,19 +153,12 @@ public class SingleTaskActivity extends AppCompatActivity {
         }
     }
 
-    private void init() {
-        mTask = new Task();
-        mPriority = DataUtils.Priority.DEFAULT;
-        mToday = Calendar.getInstance();
-        mCheckedDaysOfWeek = new HashSet<>();
-        setViewVisibility(mReminderHolder, View.GONE);
-        setViewVisibility(mWeekDaysHolder, View.GONE);
-    }
+    private void getCurrentPosition() {
+        Bundle extras = getIntent().getExtras();
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        initDateTime();
+        if (extras != null) {
+             mCurrentPosition = extras.getInt(EXTRA_TASK_POSITION);
+        }
     }
 
     private void initDateTime() {
@@ -454,10 +477,22 @@ public class SingleTaskActivity extends AppCompatActivity {
         return true;
     }
 
+    private List<CheckBox> getWeekDaysList() {
+        List<CheckBox> list = new ArrayList<>();
+        list.add(mMonCheckBox);
+        list.add(mTueCheckBox);
+        list.add(mWedCheckBox);
+        list.add(mThuCheckBox);
+        list.add(mFriCheckBox);
+        list.add(mSatCheckBox);
+        list.add(mSunCheckBox);
+        return list;
+    }
+
     private Cursor getCursor() {
         return getContentResolver().query(
                 CONTENT_URI,
-                new String[]{KEY_ROW_ID},
+                null,
                 null,
                 null,
                 null);
@@ -490,5 +525,46 @@ public class SingleTaskActivity extends AppCompatActivity {
 
         // Insert our ContentValues.
         getContentResolver().insert(CONTENT_URI, values);
+    }
+
+    private boolean isNewTask() {
+        return mCurrentPosition == -1 ? true : false;
+    }
+
+    private void populateData() {
+        Cursor cursor = getCursor();
+        if (cursor != null && cursor.moveToPosition(mCurrentPosition)) {
+            mTask = cursorToTask(cursor);
+
+            mPriority = DataUtils.Priority.valueOf(mTask.getPriority());
+            setBackgroundWithAnimation();
+            mTaskTitle.setText(mTask.getTitle());
+            initDateTime();
+            setReminderOccurrenceChoice();
+            setReminderWhenChoice();
+            setVibration();
+            mNoteEditText.setText(mTask.getNote());
+        }
+    }
+
+    private void setReminderOccurrenceChoice() {
+        int choice = mTask.getReminderOccurrence();
+        mOccurrenceHolder.check(choice);
+    }
+
+    private void setReminderWhenChoice() {
+        mCheckedDaysOfWeek = (HashSet<Integer>)DataUtils.stringToIntegerCollection(mTask.getReminderWhen());
+        if (mCheckedDaysOfWeek != null && mCheckedDaysOfWeek.size() > 0) {
+            for (CheckBox cb : mWeekDays) {
+                int idx = Integer.valueOf((String) cb.getTag());
+                if (mCheckedDaysOfWeek.contains(idx)) {
+                    cb.setChecked(true);
+                }
+            }
+        }
+    }
+
+    private void setVibration() {
+        mVibrationSwitch.setChecked(DataUtils.getBooleanValue(mTask.isVibrationEnabled()));
     }
 }

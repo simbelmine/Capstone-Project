@@ -1,17 +1,13 @@
 package com.app.eisenflow.helpers;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -21,16 +17,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.app.eisenflow.ApplicationEisenFlow;
 import com.app.eisenflow.R;
-import com.app.eisenflow.activities.MainActivity;
 import com.app.eisenflow.activities.SingleTaskActivity;
 import com.app.eisenflow.utils.DataUtils;
 
-import butterknife.ButterKnife;
-
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
-import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 
@@ -47,12 +38,13 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     private static final int DISMISS_DELAY = 3000;
     private static final int ACTION_DELAY = 1500;
     public static final String EXTRA_TRANSITION_NAME = "ExtraTransitionName";
+    public static final String EXTRA_TASK_POSITION = "ExtraTaskPosition";
     public static final int OPEN_TASK_CODE = 0x03;
-    int[] flags = new int[] {Intent.FLAG_ACTIVITY_NEW_TASK};
-    private Activity context;
+
+    private Activity mContext;
     private boolean motionInterceptDisallowed = false;
     private float downX, upX;
-    private TasksViewHolder holder;
+    private TasksViewHolder mHolder;
     private RecyclerView recyclerView;
     private RelativeLayout currentMenuLayout;
     //private SwipeRefreshLayout pullToRefreshLayout;
@@ -68,13 +60,13 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     private Cursor mCursor;
 
     public RecyclerItemSwipeDetector(Activity mContext, Cursor cursor, TasksViewHolder viewHolder) {
-        this.context = mContext;
+        this.mContext = mContext;
         this.mCursor = cursor;
-        this.holder = viewHolder;
-        this.recyclerView = context.findViewById(R.id.tasks_recycler_view);
+        this.mHolder = viewHolder;
+        this.recyclerView = this.mContext.findViewById(R.id.tasks_recycler_view);
 
-        animZoomIn = AnimationUtils.loadAnimation(context, R.anim.zoom_in);
-        animZoomOut = AnimationUtils.loadAnimation(context, R.anim.zoom_out);
+        animZoomIn = AnimationUtils.loadAnimation(this.mContext, R.anim.zoom_in);
+        animZoomOut = AnimationUtils.loadAnimation(this.mContext, R.anim.zoom_out);
 
         currentMenuLayout = getCorrectLayout();
 
@@ -116,8 +108,8 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 }
 
                 currentMenuLayout.setVisibility(View.VISIBLE);
-                if(priority == TWO) holder.mTaskProgress.setVisibility(View.INVISIBLE);
-                holder.mDeleteActionLayout.setPressed(true);
+                if(priority == TWO) mHolder.mTaskProgress.setVisibility(View.INVISIBLE);
+                mHolder.mDeleteActionLayout.setPressed(true);
 
                 swipe(v, (int) deltaX);
                 return true;
@@ -129,9 +121,9 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 
                 if (priority == TWO) {
                     if (Math.abs(deltaX) > DISTANCE) {
-                        holder.mTaskProgress.setVisibility(View.INVISIBLE);
+                        mHolder.mTaskProgress.setVisibility(View.INVISIBLE);
                     } else {
-                        holder.mTaskProgress.setVisibility(View.VISIBLE);
+                        mHolder.mTaskProgress.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -147,7 +139,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                     motionInterceptDisallowed = false;
                 }
 
-                holder.mDeleteActionLayout.setPressed(false);
+                mHolder.mDeleteActionLayout.setPressed(false);
 
                 return true;
             }
@@ -172,16 +164,16 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
         if(oldDeltaX == -1) oldDeltaX = deltaX;
         if(deltaX > oldDeltaX) {
             if(!isTriggered_RtoL) {
-                holder.mDeleteActionIcon.startAnimation(animZoomOut);
-                holder.mRightActionIcon.startAnimation(animZoomIn);
+                mHolder.mDeleteActionIcon.startAnimation(animZoomOut);
+                mHolder.mRightActionIcon.startAnimation(animZoomIn);
                 isTriggered_RtoL = true;
                 isTriggered_LtoR = false;
             }
         }
         else if(deltaX < oldDeltaX) {
             if (!isTriggered_LtoR) {
-                holder.mDeleteActionIcon.startAnimation(animZoomIn);
-                holder.mRightActionIcon.startAnimation(animZoomOut);
+                mHolder.mDeleteActionIcon.startAnimation(animZoomIn);
+                mHolder.mRightActionIcon.startAnimation(animZoomOut);
                 isTriggered_LtoR = true;
                 isTriggered_RtoL = false;
             }
@@ -190,11 +182,11 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     }
 
     private void swipe(View v, int distance) {
-        View animationView = holder.mTaskHolder;
+        View animationView = mHolder.mTaskHolder;
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) animationView.getLayoutParams();
         int rightMargin, leftMargin;
 
-        if(distance == 0)  holder.mDeleteActionIcon.startAnimation(animZoomOut);
+        if(distance == 0)  mHolder.mDeleteActionIcon.startAnimation(animZoomOut);
 
         if(v != null && Math.abs(distance) >= DISTANCE) {
             if(distance < 0)
@@ -220,39 +212,39 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     }
 
     private RelativeLayout getCorrectLayout() {
-        return holder.mDeleteActionLayout;
+        return mHolder.mDeleteActionLayout;
     }
 
     private void deleteTask() {
-        holder.mDeleteActionLayout.postDelayed(new Runnable() {
+        mHolder.mDeleteActionLayout.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(holder.mDeleteActionLayout.getVisibility() == View.VISIBLE) {
-                    holder.mTaskProgress.setVisibility(View.INVISIBLE);
-                    holder.mDeleteActionLayout.setVisibility(View.INVISIBLE);
-                    holder.mUndoLayout.setVisibility(View.VISIBLE);
-                    holder.mUndoActionBtn.setVisibility(View.INVISIBLE);
-                    holder.mUndoButton.setVisibility(View.VISIBLE);
+                if(mHolder.mDeleteActionLayout.getVisibility() == View.VISIBLE) {
+                    mHolder.mTaskProgress.setVisibility(View.INVISIBLE);
+                    mHolder.mDeleteActionLayout.setVisibility(View.INVISIBLE);
+                    mHolder.mUndoLayout.setVisibility(View.VISIBLE);
+                    mHolder.mUndoActionBtn.setVisibility(View.INVISIBLE);
+                    mHolder.mUndoButton.setVisibility(View.VISIBLE);
                 }
             }
         }, ICON_SHOW_DELAY);
 
-        holder.mUndoButton.setOnClickListener(new View.OnClickListener() {
+        mHolder.mUndoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                holder.mTaskProgress.setVisibility(View.VISIBLE);
-                holder.mUndoButton.setVisibility(View.INVISIBLE);
-                holder.mUndoLayout.setVisibility(View.INVISIBLE);
-                holder.mDeleteActionLayout.setVisibility(View.VISIBLE);
-                holder.mTaskHolder.setVisibility(View.VISIBLE);
+                mHolder.mTaskProgress.setVisibility(View.VISIBLE);
+                mHolder.mUndoButton.setVisibility(View.INVISIBLE);
+                mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
+                mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
+                mHolder.mTaskHolder.setVisibility(View.VISIBLE);
                 swipe(null, 0);
             }
         });
 
-        holder.mUndoButton.postDelayed(new Runnable() {
+        mHolder.mUndoButton.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(holder.mUndoButton.getVisibility() == View.VISIBLE) {
+                if(mHolder.mUndoButton.getVisibility() == View.VISIBLE) {
                     sendDeleteBroadcast();
                 }
             }
@@ -263,67 +255,67 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 //        Intent deleteIntent = new Intent(NewTaskListAdapterDB.ACTION_DELETE);
 //        deleteIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
 //        deleteIntent.putExtra("position", position);
-//        LocalBroadcastManager.getInstance(context).sendBroadcast(deleteIntent);
+//        LocalBroadcastManager.getInstance(mContext).sendBroadcast(deleteIntent);
     }
 
     private void activateAction() {
-        if(holder.mRightActionIcon.getTag() != null) {
-            holder.mRightActionIcon.postDelayed(new Runnable() {
+        if(mHolder.mRightActionIcon.getTag() != null) {
+            mHolder.mRightActionIcon.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (holder.mRightActionIcon.getVisibility() == View.VISIBLE) {
-                        holder.mDeleteActionLayout.setVisibility(View.INVISIBLE);
-                        holder.mUndoLayout.setVisibility(View.VISIBLE);
-                        holder.mUndoActionBtn.setVisibility(View.VISIBLE);
-                        holder.mUndoButton.setVisibility(View.INVISIBLE);
+                    if (mHolder.mRightActionIcon.getVisibility() == View.VISIBLE) {
+                        mHolder.mDeleteActionLayout.setVisibility(View.INVISIBLE);
+                        mHolder.mUndoLayout.setVisibility(View.VISIBLE);
+                        mHolder.mUndoActionBtn.setVisibility(View.VISIBLE);
+                        mHolder.mUndoButton.setVisibility(View.INVISIBLE);
                     }
                 }
             }, ICON_SHOW_DELAY);
 
-            holder.mUndoActionBtn.setOnClickListener(new View.OnClickListener() {
+            mHolder.mUndoActionBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    holder.mUndoActionBtn.setVisibility(View.INVISIBLE);
-                    holder.mUndoLayout.setVisibility(View.INVISIBLE);
-                    holder.mDeleteActionLayout.setVisibility(View.VISIBLE);
-                    holder.mTaskHolder.setVisibility(View.VISIBLE);
-                    holder.mTaskProgress.setVisibility(View.VISIBLE);
+                    mHolder.mUndoActionBtn.setVisibility(View.INVISIBLE);
+                    mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
+                    mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
+                    mHolder.mTaskHolder.setVisibility(View.VISIBLE);
+                    mHolder.mTaskProgress.setVisibility(View.VISIBLE);
                     swipe(null, 0);
                 }
             });
 
-            holder.mUndoActionBtn.postDelayed(new Runnable() {
+            mHolder.mUndoActionBtn.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (holder.mUndoActionBtn.getVisibility() == View.VISIBLE) {
-                        switch ((int)holder.mRightActionIcon.getTag()) {
+                    if (mHolder.mUndoActionBtn.getVisibility() == View.VISIBLE) {
+                        switch ((int) mHolder.mRightActionIcon.getTag()) {
                             case 0:
                                 Log.v("eisen", "Action -> Timer");
                                 //sendCardActionBroadcast(NewTaskListAdapterDB.TIMER_ACTION);
                                 swipe(null, 0);
-                                holder.mUndoLayout.setVisibility(View.INVISIBLE);
-                                holder.mDeleteActionLayout.setVisibility(View.VISIBLE);
+                                mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
+                                mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
                                 break;
                             case 1: {
                                 Log.v("eisen", "Action -> Up++");
                                 //sendCardActionBroadcast(NewTaskListAdapterDB.PROGRESS_UP_ACTION);
                                 swipe(null, 0);
-                                holder.mUndoLayout.setVisibility(View.INVISIBLE);
-                                holder.mDeleteActionLayout.setVisibility(View.VISIBLE);
+                                mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
+                                mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
                                 break;
                             }
                             case 2:
                                 Log.v("eisen", "Action -> Share");
                                 //sendCardActionBroadcast(NewTaskListAdapterDB.SHARE_ACTION);
                                 swipe(null, 0);
-                                holder.mUndoLayout.setVisibility(View.INVISIBLE);
-                                holder.mDeleteActionLayout.setVisibility(View.VISIBLE);
+                                mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
+                                mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
                                 break;
                         }
                     }
                     else {
-                        holder.mUndoLayout.setVisibility(View.INVISIBLE);
-                        holder.mDeleteActionLayout.setVisibility(View.VISIBLE);
+                        mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
+                        mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
                     }
                 }
             }, ACTION_DELAY);
@@ -334,52 +326,37 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 //        Intent intent = new Intent(action);
 //        intent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
 //        intent.putExtra("position", position);
-//        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+//        LocalBroadcastManager.getInstance(mContext).sendBroadcast(intent);
     }
 
-    private void startActivity(Class<?> activityClass, String[] extras_names, long[] extras_values) {
-        Intent intent = new Intent(context, activityClass);
-        // Set flags.
-//        if(flags != null) {
-//            for(int i = 0; i < flags.length; i++) {
-//                intent.addFlags(flags[i]);
-//            }
-//        }
-        // Set necessary extras.
-        if(extras_names != null && extras_values != null) {
-            if(extras_names.length == extras_values.length) {
-                for(int i = 0; i < extras_names.length; i++) {
-                    intent.putExtra(extras_names[i], extras_values[i]);
-                }
-            }
-        }
+    private void performClick(View v) {
+        int taskPosition = mHolder.getAdapterPosition();
 
+        Intent intent = new Intent(mContext, SingleTaskActivity.class);
+        intent.putExtra(EXTRA_TASK_POSITION, taskPosition);
+
+        startActivityWithIntent(intent);
+    }
+
+    private void startActivityWithIntent(Intent intent) {
         Bundle b;
+        // Start activity with transition animation if Android version bigger or equal than Jelly Bean.
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             // Use Task name to transition from MainActivity's list item to SingleTaskActivity.
             String transitionName = mCursor.getColumnName(mCursor.getColumnIndex(KEY_TITLE));
             // Set transition name to the view we want to transform.
-            ViewCompat.setTransitionName(holder.mTaskHolder, transitionName);
+            ViewCompat.setTransitionName(mHolder.mTaskHolder, transitionName);
             // Pass the transition name to next activity so we can set it there to the relevant view.
             intent.putExtra(EXTRA_TRANSITION_NAME, transitionName);
 
             ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(context, holder.mTaskHolder, transitionName);
+                    makeSceneTransitionAnimation(mContext, mHolder.mTaskHolder, transitionName);
             b = options.toBundle();
-            context.startActivityForResult(intent, OPEN_TASK_CODE, b);
+            mContext.startActivityForResult(intent, OPEN_TASK_CODE, b);
         }
         else {
-            context.startActivityForResult(intent, OPEN_TASK_CODE);
+            mContext.startActivityForResult(intent, OPEN_TASK_CODE);
         }
-    }
-
-    private void performClick(View v) {
-//        String[] extra_names = new String[]{KEY_ROW_ID, "position"};
-//        long[] extra_value = new long[]{taskId, position};
-        String[] extra_names = new String[]{};
-        long[] extra_value = new long[]{};
-
-        startActivity(SingleTaskActivity.class, extra_names, extra_value);
     }
 
     private void performSwipeAction(float deltaX) {
@@ -390,11 +367,11 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
             // R to L  -
             if(deltaX > 0) {
                 deleteTask();
-                Toast.makeText(context, "Delete", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Delete", Toast.LENGTH_SHORT).show();
             }
             else {
                 activateAction();
-                Toast.makeText(context, "Action", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Action", Toast.LENGTH_SHORT).show();
             }
 
         } else {
