@@ -417,7 +417,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         if(isDataValid()) {
             mTask.setTitle(mTaskTitle.getText().toString());
             mTask.setNote(mNoteEditText.getText().toString());
-            if (!mCheckedDaysOfWeek.isEmpty()) {
+            if (mCheckedDaysOfWeek != null && !mCheckedDaysOfWeek.isEmpty()) {
                 mTask.setReminderWhen(DataUtils.integerCollectionToString(mCheckedDaysOfWeek));
             }
             if (mTask.getDate() == null) {
@@ -429,12 +429,12 @@ public class SingleTaskActivity extends AppCompatActivity {
             Calendar cal = DateTimeUtils.getCalendar(mTask.getDate(), mTask.getTime());
             mTask.setDateMillis((int)cal.getTimeInMillis());
 
-            Cursor c = getCursor();
-            //if (c.getCount() == 0){
+            ContentValues values = getContentValues();
+
             if (mTask.getId() == -1) {
-                insertData();
+                insertData(values);
             } else {
-                updateData();
+                updateData(values);
             }
             finish();
         }
@@ -498,19 +498,16 @@ public class SingleTaskActivity extends AppCompatActivity {
                 null);
     }
 
-    private void updateData() {
-        // *** Example ***
-//        ContentValues values = new ContentValues();
-//        values.put(KEY_PRIORITY, 2);
-        // ***************
-
+    private void updateData(ContentValues values) {
         Uri uri = buildFlavorsUri(mTask.getId());
-
-        // Update record in the DB.
-//        getContentResolver().update(uri, values, null, null);
+        getContentResolver().update(uri, values, null, null);
     }
 
-    public void insertData(){
+    private void insertData(ContentValues values){
+        getContentResolver().insert(CONTENT_URI, values);
+    }
+
+    private ContentValues getContentValues() {
         ContentValues values;
         values = new ContentValues();
         values.put(KEY_PRIORITY, mTask.getPriority());
@@ -523,8 +520,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         values.put(KEY_IS_VIBRATION_ENABLED, mTask.isVibrationEnabled());
         values.put(KEY_NOTE, mTask.getNote());
 
-        // Insert our ContentValues.
-        getContentResolver().insert(CONTENT_URI, values);
+        return values;
     }
 
     private boolean isNewTask() {

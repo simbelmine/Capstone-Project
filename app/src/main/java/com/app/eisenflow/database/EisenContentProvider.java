@@ -63,8 +63,6 @@ public class EisenContentProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        Log.v("eisen", "URI --> " + uri);
-
         final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         Uri returnUri;
