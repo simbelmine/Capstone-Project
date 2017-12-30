@@ -78,6 +78,12 @@ public class MainActivity extends AppCompatActivity implements
         int itemsCountLocal = getItemsCountLocal();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
+
     private void initViews() {
         // Set toggle to open/close navigation drawer.
         mToggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -253,28 +259,26 @@ public class MainActivity extends AppCompatActivity implements
 
         switch (loader.getId()) {
             case LOADER_ID:
-                Cursor cursor = ((TasksCursorRecyclerViewAdapter) mTasksRecyclerView.getAdapter()).getCursor();
-                MatrixCursor mx = new MatrixCursor(EisenContract.TaskEntry.Columns);
-                fillMx(cursor, mx);
+                if (data == null)
+                    return;
 
-                //fill all existing in adapter
+                // Feed data to adapter.
+                MatrixCursor mx = getFilledMatrixCursor(data);
                 ((TasksCursorRecyclerViewAdapter) mTasksRecyclerView.getAdapter()).swapCursor(mx);
-                //fill with additional result
-                fillMx(data, mx);
                 break;
             default:
                 throw new IllegalArgumentException("no loader id handled!");
         }
     }
 
-    private void fillMx(Cursor data, MatrixCursor mx) {
-        if (data == null)
-            return;
-
+    private MatrixCursor getFilledMatrixCursor(Cursor data) {
+        MatrixCursor mx = new MatrixCursor(EisenContract.TaskEntry.Columns);
         data.moveToPosition(-1);
         while (data.moveToNext()) {
             mx.addRow(getDataRow(data));
         }
+
+        return mx;
     }
 
     @Override
