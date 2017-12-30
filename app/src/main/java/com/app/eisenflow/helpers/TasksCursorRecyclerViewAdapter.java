@@ -51,6 +51,12 @@ public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter {
         return super.getItemViewType(position);
     }
 
+    @Override
+    public Cursor swapCursor(Cursor newCursor) {
+        setLastSeenMonth(null);
+        return super.swapCursor(newCursor);
+    }
+
     public void setLastSeenDate(String lastSeenDate) {
         this.mLastSeenDate = lastSeenDate;
     }
