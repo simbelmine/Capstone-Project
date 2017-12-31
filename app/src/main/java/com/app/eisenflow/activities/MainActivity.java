@@ -2,7 +2,6 @@ package com.app.eisenflow.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.MatrixCursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -18,14 +17,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.app.eisenflow.R;
-import com.app.eisenflow.database.EisenContract;
 import com.app.eisenflow.helpers.TasksCursorRecyclerViewAdapter;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
@@ -34,7 +31,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
-import static com.app.eisenflow.database.EisenContract.TaskEntry.getDataRow;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -81,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     private void initViews() {
@@ -152,41 +147,7 @@ public class MainActivity extends AppCompatActivity implements
     @OnClick (R.id.fab)
     public void onFabClick() {
         startActivity(new Intent(MainActivity.this, SingleTaskActivity.class));
-
-//                Task task = new Task();
-//                task.setPriority(1);
-//                task.setTitle("My New Task");
-//                task.setDate("21/12/17");
-//                task.setTime("10:49");
-//                task.setReminderDate("22/12/17");
-//                task.setReminderOccurrence("weekly");
-//                task.setReminderTime("22:10");
-//                task.setReminderWhen("Monday");
-//                task.setNote("Something for the Soul");
-//
-//                tasks = new ArrayList<>();
-//                tasks.add(task);
-////
-//                Cursor c = getContentResolver().query(
-//                        CONTENT_URI,
-//                        new String[]{KEY_ROW_ID},
-//                        null,
-//                        null,
-//                        null);
-////                if (c.getCount() == 0){
-////                    insertData();
-////                } else {
-////                    updateData();
-////                }
-//
-//                deleteData();
-//
-//                // initialize loader
-//                getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
-
-
-
 
 //    private void deleteData() {
 //        Uri uri = buildFlavorsUri(id);
@@ -259,26 +220,15 @@ public class MainActivity extends AppCompatActivity implements
 
         switch (loader.getId()) {
             case LOADER_ID:
-                if (data == null)
+                if (data == null) {
                     return;
+                }
 
-                // Feed data to adapter.
-                MatrixCursor mx = getFilledMatrixCursor(data);
-                ((TasksCursorRecyclerViewAdapter) mTasksRecyclerView.getAdapter()).swapCursor(mx);
+                mTasksAdapter.swapCursor(data);
                 break;
             default:
                 throw new IllegalArgumentException("no loader id handled!");
         }
-    }
-
-    private MatrixCursor getFilledMatrixCursor(Cursor data) {
-        MatrixCursor mx = new MatrixCursor(EisenContract.TaskEntry.Columns);
-        data.moveToPosition(-1);
-        while (data.moveToNext()) {
-            mx.addRow(getDataRow(data));
-        }
-
-        return mx;
     }
 
     @Override
@@ -299,8 +249,6 @@ public class MainActivity extends AppCompatActivity implements
             itemCount = query.getCount();
             query.close();
         }
-
-        Log.v("eisen", "Items Count = " + itemCount);
 
         return itemCount;
     }

@@ -39,7 +39,6 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     private static final int ACTION_DELAY = 1500;
     public static final String EXTRA_TRANSITION_NAME = "ExtraTransitionName";
     public static final String EXTRA_TASK_POSITION = "ExtraTaskPosition";
-    public static final int OPEN_TASK_CODE = 0x03;
 
     private Activity mContext;
     private boolean motionInterceptDisallowed = false;
@@ -352,10 +351,10 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
             ActivityOptionsCompat options = ActivityOptionsCompat.
                     makeSceneTransitionAnimation(mContext, mHolder.mTaskHolder, transitionName);
             b = options.toBundle();
-            mContext.startActivityForResult(intent, OPEN_TASK_CODE, b);
+            mContext.startActivity(intent, b);
         }
         else {
-            mContext.startActivityForResult(intent, OPEN_TASK_CODE);
+            mContext.startActivity(intent);
         }
     }
 

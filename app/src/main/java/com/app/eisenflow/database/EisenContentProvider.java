@@ -102,7 +102,7 @@ public class EisenContentProvider extends ContentProvider {
                         null,
                         null,
                         ORDER_BY);
-                return retCursor;
+                break;
             case TASK_ID:
                 retCursor = db.query(
                         TABLE_NAME,
@@ -112,11 +112,14 @@ public class EisenContentProvider extends ContentProvider {
                         null,
                         null,
                         sortOrder);
-                return retCursor;
+                break;
             default:
                 // By default, we assume a bad URI
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return retCursor;
     }
 
     @Override
@@ -160,13 +163,13 @@ public class EisenContentProvider extends ContentProvider {
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
-        int numDeleted = 0;
+        int rowsDeleted = 0;
 
         Log.v("eisen", "URI Delte = " + uri);
 
         switch (match) {
             case TASK:
-                numDeleted = db.delete(
+                rowsDeleted = db.delete(
                         TABLE_NAME,
                         selection,
                         selectionArgs
@@ -176,7 +179,7 @@ public class EisenContentProvider extends ContentProvider {
                         TABLE_NAME + "'");
                 break;
             case TASK_ID:
-                numDeleted = db.delete(
+                rowsDeleted = db.delete(
                         TABLE_NAME,
                         KEY_ROW_ID + " = ?",
                         new String[]{String.valueOf(ContentUris.parseId(uri))});
@@ -188,6 +191,11 @@ public class EisenContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        return numDeleted;
+        if (selection == null || rowsDeleted != 0)
+        {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return rowsDeleted;
     }
 }
