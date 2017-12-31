@@ -75,12 +75,6 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
 
     public void setData(Cursor cursor) {
         if (cursor != null) {
-
-            String taskTitle = cursor.getString(cursor.getColumnIndex(KEY_TITLE));
-            long dayMillis = cursor.getLong(cursor.getColumnIndex(KEY_DATE_MILLIS));
-
-            Log.v("eisen", taskTitle + " = " + dayMillis);
-
             // Task Row.
             setTaskDetails(cursor);
 
@@ -237,11 +231,14 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
     private void setTaskOverdue(Cursor cursor) {
         String taskDate = cursor.getString(cursor.getColumnIndex(KEY_DATE));
         String taskTime= cursor.getString(cursor.getColumnIndex(KEY_TIME));
-        Calendar calDate = DateTimeUtils.getCalendarDateWithTime(taskDate, DateTimeUtils.getActualTime(taskTime));
+        Calendar calDate = DateTimeUtils.getCalendar(taskDate, taskTime);
 
         if(DateTimeUtils.isPastDate(calDate) && !isTaskDone(cursor)) {
             mDayOfMonth.setTextColor(mContext.getResources().getColor(R.color.firstQuadrant));
             mDayOfWeek.setTextColor(mContext.getResources().getColor(R.color.firstQuadrant));
+        } else {
+            mDayOfMonth.setTextColor(mContext.getResources().getColor(R.color.date));
+            mDayOfWeek.setTextColor(mContext.getResources().getColor(R.color.date));
         }
     }
 

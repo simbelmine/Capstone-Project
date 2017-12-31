@@ -370,17 +370,10 @@ public class DateTimeUtils {
 
     public static boolean isPastDate(Calendar calDate){
         Calendar now = Calendar.getInstance();
-        if(calDate.get(Calendar.MONTH) == now.get(Calendar.MONTH)
-                && calDate.get(Calendar.DAY_OF_MONTH) == now.get(Calendar.DAY_OF_MONTH)
-                && calDate.get(Calendar.HOUR) == now.get(Calendar.HOUR)
-                && calDate.get(Calendar.MINUTE) == now.get(Calendar.MINUTE)) {
-            return false;
-        }
-        else if(calDate.before(now)) {
-            return true;
-        }
-        else
-            return false;
+        long nowInMillis = now.getTimeInMillis();
+        long dateInMillis = calDate.getTimeInMillis();
+
+        return (dateInMillis < nowInMillis);
     }
 
     public String getDatePostfix(int dateNum) {
