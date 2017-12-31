@@ -9,7 +9,7 @@ public class Task {
     private String mTitle;
     private String mDate;
     private String mTime;
-    private int mDateMillis = -1;
+    private long mDateMillis = -1;
     private double mTotalDaysPeriod = -1;
     private int mReminderOccurrence = 0; //Daily occurrence by default.
     private String mReminderWhen = "";
@@ -60,11 +60,11 @@ public class Task {
         this.mTime = time;
     }
 
-    public int getDateMillis() {
+    public long getDateMillis() {
         return mDateMillis;
     }
 
-    public void setDateMillis(int dateMillis) {
+    public void setDateMillis(long dateMillis) {
         this.mDateMillis = dateMillis;
     }
 

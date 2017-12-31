@@ -14,6 +14,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -426,8 +427,9 @@ public class SingleTaskActivity extends AppCompatActivity {
             if (mTask.getTime() == null) {
                 mTask.setTime(DateTimeUtils.getTimeString(Calendar.getInstance()));
             }
-            Calendar cal = DateTimeUtils.getCalendar(mTask.getDate(), mTask.getTime());
-            mTask.setDateMillis((int)cal.getTimeInMillis());
+            String taskActualTime = DateTimeUtils.getActualTime(mTask.getTime());
+            Calendar cal = DateTimeUtils.getCalendar(mTask.getDate(), taskActualTime);
+            mTask.setDateMillis(cal.getTimeInMillis());
 
             ContentValues values = getContentValues();
 
@@ -451,7 +453,7 @@ public class SingleTaskActivity extends AppCompatActivity {
             return false;
         }
 
-        if (DataUtils.Priority.valueOf(mTask.getPriority()) == DataUtils.Priority.TWO && mCheckedDaysOfWeek.isEmpty() && mTask.getReminderOccurrence() == WEEKLY_OCCURRENCE) {
+        if (DataUtils.Priority.valueOf(mTask.getPriority()) == DataUtils.Priority.TWO && mCheckedDaysOfWeek != null && mCheckedDaysOfWeek.isEmpty() && mTask.getReminderOccurrence() == WEEKLY_OCCURRENCE) {
             showAlertMessage(mSingleTaskHolder, getString(R.string.add_task_reminder_when_alert), R.color.alert_color);
             return false;
         }

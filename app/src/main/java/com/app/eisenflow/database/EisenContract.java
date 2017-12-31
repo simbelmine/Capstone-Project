@@ -83,7 +83,7 @@ public class EisenContract {
             String title = cursor.getString(cursor.getColumnIndex(KEY_TITLE));
             String date = cursor.getString(cursor.getColumnIndex(KEY_DATE));
             String time = cursor.getString(cursor.getColumnIndex(KEY_TIME));
-            int dateMillis = cursor.getInt(cursor.getColumnIndex(KEY_DATE_MILLIS));
+            long dateMillis = cursor.getLong(cursor.getColumnIndex(KEY_DATE_MILLIS));
             int reminderOccurrence = cursor.getInt(cursor.getColumnIndex(KEY_REMINDER_OCCURRENCE));
             String reminderWhen = cursor.getString(cursor.getColumnIndex(KEY_REMINDER_WHEN));
             String note = cursor.getString(cursor.getColumnIndex(KEY_NOTE));
