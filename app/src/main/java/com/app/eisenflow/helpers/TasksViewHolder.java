@@ -4,20 +4,15 @@ import android.app.Activity;
 import android.database.Cursor;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.DateTimeUtils;
-import com.app.eisenflow.utils.Utils;
 
 import net.danlew.android.joda.DateUtils;
 
@@ -29,15 +24,18 @@ import org.joda.time.format.PeriodFormatterBuilder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE_MILLIS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PROGRESS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
@@ -77,19 +75,22 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
 
     public void setData(Cursor cursor) {
         if (cursor != null) {
+
+            String taskTitle = cursor.getString(cursor.getColumnIndex(KEY_TITLE));
+            long dayMillis = cursor.getLong(cursor.getColumnIndex(KEY_DATE_MILLIS));
+
+            Log.v("eisen", taskTitle + " = " + dayMillis);
+
             // Task Row.
             setTaskDetails(cursor);
+
             // Month Row.
-            String monthName = getMonthName(cursor);
-            if(mAdapter.getLastSeenMonth() == null || !mAdapter.getLastSeenMonth().equals(monthName)) {
-                setMonthDetails(monthName);
-            }
+            setMonthDetails(cursor);
         }
     }
 
     private void setTaskDetails(Cursor cursor) {
         String taskTitle = cursor.getString(cursor.getColumnIndex(KEY_TITLE));
-        mMonthName.setVisibility(View.GONE);
         mTaskTitle.setText(taskTitle);
         mTaskTime.setText(cursor.getString(cursor.getColumnIndex(KEY_TIME)));
 
@@ -155,17 +156,21 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void setVerticalCalendarDate(Cursor cursor) {
-        String taskDate = cursor.getString(cursor.getColumnIndex(KEY_DATE));
-        String taskTime = cursor.getString(cursor.getColumnIndex(KEY_TIME));
-        String taskActualTime = DateTimeUtils.getActualTime(taskTime);
+        Calendar cal = getCalendarDateFromCursor(cursor);
 
-        if(mAdapter.getLastSeenDate() == null || !mAdapter.getLastSeenDate().equals(taskDate) || isTaskDone(cursor)) {
-            Calendar cal = DateTimeUtils.getCalendar(taskDate, taskActualTime);
+        String dateMonthStr = String.valueOf(cal.get(Calendar.DAY_OF_MONTH)) + ", " + String.valueOf(cal.get(Calendar.MONTH));
+
+        if (!mAdapter.mDateHeaderMap.containsKey(dateMonthStr)) {
+            mAdapter.mDateHeaderMap.put(dateMonthStr, cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID)));
+        }
+
+        int currTaskId = cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID));
+        int mapTaskId = mAdapter.mDateHeaderMap.get(dateMonthStr);
+
+        if (mapTaskId == currTaskId) {
             mDayOfMonth.setText(String.valueOf(cal.get(Calendar.DAY_OF_MONTH)));
             mDayOfWeek.setText(cal.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.SHORT, Locale.getDefault()));
-            mAdapter.setLastSeenDate(taskDate);
-        }
-        else {
+        } else {
             mDayOfMonth.setText("");
             mDayOfWeek.setText("");
         }
@@ -240,10 +245,31 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private void setMonthDetails(String monthName) {
-        mMonthName.setText(monthName);
-        mMonthName.setVisibility(View.VISIBLE);
-        mAdapter.setLastSeenMonth(monthName);
+    private void setMonthDetails(Cursor cursor) {
+        String monthName = getMonthName(cursor);
+        Calendar cal = getCalendarDateFromCursor(cursor);
+        String monthYearStr = String.valueOf(cal.get(Calendar.MONTH)) + ", " + String.valueOf(cal.get(Calendar.YEAR));
+
+        if (!mAdapter.mMonthHeaderMap.containsKey(monthYearStr)) {
+            mAdapter.mMonthHeaderMap.put(monthYearStr, cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID)));
+        }
+
+        int currTaskId = cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID));
+        int mapTaskId = mAdapter.mMonthHeaderMap.get(monthYearStr);
+
+        if (mapTaskId == currTaskId) {
+            mMonthName.setText(monthName);
+            mMonthName.setVisibility(View.VISIBLE);
+        } else {
+            mMonthName.setVisibility(View.GONE);
+        }
+    }
+
+    private Calendar getCalendarDateFromCursor(Cursor cursor) {
+        String taskDate = cursor.getString(cursor.getColumnIndex(KEY_DATE));
+        String taskTime = cursor.getString(cursor.getColumnIndex(KEY_TIME));
+        String taskActualTime = DateTimeUtils.getActualTime(taskTime);
+        return DateTimeUtils.getCalendar(taskDate, taskActualTime);
     }
 
     private String getMonthName(Cursor cursor) {
