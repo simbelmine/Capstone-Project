@@ -25,6 +25,7 @@ import com.app.eisenflow.utils.TaskUtils;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
+import static com.app.eisenflow.utils.DataUtils.Priority.FOUR;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 
 /**
@@ -72,7 +73,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        Cursor cursor = mHolder.mCursor;
+        Cursor cursor = mHolder.getHolderCursor();
         if (cursor != null && cursor.moveToPosition(mHolder.getAdapterPosition())) {
             int priorityValue = cursor.getInt(cursor.getColumnIndex(KEY_PRIORITY));
             DataUtils.Priority priority = DataUtils.Priority.valueOf(priorityValue);
@@ -242,7 +243,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
         mHolder.mUndoButton.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Cursor cursor = mHolder.mCursor;
+                Cursor cursor = mHolder.getHolderCursor();
                 if (cursor != null && cursor.moveToPosition(mHolder.getAdapterPosition())) {
                     if (mHolder.mUndoButton.getVisibility() == View.VISIBLE) {
                         TaskUtils.deleteTask(mContext, cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID)));
@@ -255,6 +256,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 
     private void activateAction() {
         if(mHolder.mRightActionIcon.getTag() != null) {
+            final DataUtils.Priority priority = DataUtils.Priority.valueOf((int) mHolder.mRightActionIcon.getTag());
             mHolder.mRightActionIcon.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -283,15 +285,16 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 @Override
                 public void run() {
                     if (mHolder.mUndoActionBtn.getVisibility() == View.VISIBLE) {
-                        switch ((int) mHolder.mRightActionIcon.getTag()) {
-                            case 0:
+
+                        switch (priority) {
+                            case ONE:
                                 Log.v("eisen", "Action -> Timer");
                                 //sendCardActionBroadcast(NewTaskListAdapterDB.TIMER_ACTION);
                                 swipe(null, 0);
                                 mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
                                 mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
                                 break;
-                            case 1: {
+                            case TWO: {
                                 Log.v("eisen", "Action -> Up++");
                                 //sendCardActionBroadcast(NewTaskListAdapterDB.PROGRESS_UP_ACTION);
                                 swipe(null, 0);
@@ -299,9 +302,9 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                                 mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
                                 break;
                             }
-                            case 2:
+                            case THREE:
                                 Log.v("eisen", "Action -> Share");
-                                //sendCardActionBroadcast(NewTaskListAdapterDB.SHARE_ACTION);
+                                TaskUtils.shareTask(mContext, mHolder.getHolderCursor(), mHolder.getAdapterPosition());
                                 swipe(null, 0);
                                 mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
                                 mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
@@ -314,6 +317,8 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                     }
                 }
             }, ACTION_DELAY);
+        } else {
+            swipe(null, 0);
         }
     }
 
@@ -334,7 +339,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     }
 
     private void startActivityWithIntent(Intent intent) {
-        Cursor cursor = mHolder.mCursor;
+        Cursor cursor = mHolder.getHolderCursor();
         Bundle b;
         // Start activity with transition animation if Android version bigger or equal than Jelly Bean.
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&

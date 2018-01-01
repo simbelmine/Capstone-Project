@@ -65,7 +65,7 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
     private static int MAX_PROGRESS = 100;
     private Activity mContext;
     private TasksCursorRecyclerViewAdapter mAdapter;
-    public Cursor mCursor;
+    private Cursor mCursor;
 
     public TasksViewHolder(Activity context, TasksCursorRecyclerViewAdapter adapter, View itemView) {
         super(itemView);
@@ -84,6 +84,10 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
             // Month Row.
             setMonthDetails(cursor);
         }
+    }
+
+    public Cursor getHolderCursor() {
+        return mCursor;
     }
 
     private void setTaskDetails(Cursor cursor) {

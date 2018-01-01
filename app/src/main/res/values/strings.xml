@@ -63,4 +63,9 @@
         <!-- Content Descriptions -->
     <string name="close_button_description">Close Single Task Activity</string>
     <string name="save_button_description">Save Task and Exit</string>
+    
+    <!-- Main Activity -->
+    <string name="share_task_title">Share EisenFlow task</string>
+    <string name="share_task_message">Delegated task from EisenFlow. \n\n
+        To Do: %1$s \nDue date: %2$s@%3$s \nNote: %4$s</string>
 </resources>
