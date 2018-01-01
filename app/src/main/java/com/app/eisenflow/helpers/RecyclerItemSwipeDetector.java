@@ -246,7 +246,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 Cursor cursor = mHolder.getHolderCursor();
                 if (cursor != null && cursor.moveToPosition(mHolder.getAdapterPosition())) {
                     if (mHolder.mUndoButton.getVisibility() == View.VISIBLE) {
-                        TaskUtils.deleteTask(mContext, cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID)));
+                        TaskUtils.deleteTask(cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID)));
                         swipe(null, 0);
                     }
                 }
@@ -296,7 +296,8 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                                 break;
                             case TWO: {
                                 Log.v("eisen", "Action -> Up++");
-                                //sendCardActionBroadcast(NewTaskListAdapterDB.PROGRESS_UP_ACTION);
+                                int progress = TaskUtils.getIncreasedTaskProgress(mHolder.getHolderCursor(), mHolder.getAdapterPosition());
+                                TaskUtils.updateProgress(mHolder.getHolderCursor(), mHolder.getAdapterPosition(), progress);
                                 swipe(null, 0);
                                 mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
                                 mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
@@ -304,7 +305,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                             }
                             case THREE:
                                 Log.v("eisen", "Action -> Share");
-                                TaskUtils.shareTask(mContext, mHolder.getHolderCursor(), mHolder.getAdapterPosition());
+                                TaskUtils.shareTask(mHolder.getHolderCursor(), mHolder.getAdapterPosition());
                                 swipe(null, 0);
                                 mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
                                 mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);

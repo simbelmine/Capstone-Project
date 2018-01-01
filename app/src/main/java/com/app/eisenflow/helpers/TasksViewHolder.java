@@ -182,15 +182,16 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
         int occurrence = cursor.getInt(cursor.getColumnIndex(KEY_REMINDER_OCCURRENCE));
 
         if(priority == TWO) {
+            mTaskProgress.setVisibility(View.VISIBLE);
+            int currProgress = 0;
             if(occurrence != -1) {
-                mTaskProgress.setVisibility(View.VISIBLE);
+                currProgress = calculateProgress(cursor);
+            }
 
-                int currProgress = calculateProgress(cursor);
-                if (currProgress >= MAX_PROGRESS) {
-                    mTaskProgress.setText(getFormattedProgress(MAX_PROGRESS));
-                } else {
-                    mTaskProgress.setText(getFormattedProgress(currProgress));
-                }
+            if (currProgress >= MAX_PROGRESS) {
+                mTaskProgress.setText(getFormattedProgress(MAX_PROGRESS));
+            } else {
+                mTaskProgress.setText(getFormattedProgress(currProgress));
             }
         }
         else {
@@ -199,18 +200,14 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
     }
 
     private int calculateProgress(Cursor cursor) {
-        int progressToReturn = -1;
+        int progressToReturn;
 
         double totalDays = cursor.getDouble(cursor.getColumnIndex(KEY_TOTAL_DAYS_PERIOD));
-
         int progress = cursor.getInt(cursor.getColumnIndex(KEY_PROGRESS));
+
         double monthlyPercentage = 100 / totalDays;
-
         progressToReturn = (int) (Math.round(progress * monthlyPercentage));
-
-
         if (progress == totalDays || progressToReturn > 100) progressToReturn = 100;
-
 
         return progressToReturn;
     }

@@ -61,10 +61,15 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_OC
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_WHEN;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
 import static com.app.eisenflow.helpers.RecyclerItemSwipeDetector.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.DataUtils.integerCollectionToString;
 import static com.app.eisenflow.utils.DataUtils.setViewVisibility;
+import static com.app.eisenflow.utils.DateTimeUtils.getDateString;
+import static com.app.eisenflow.utils.DateTimeUtils.getTimeString;
+import static com.app.eisenflow.utils.TaskUtils.getTotalDays;
 import static com.app.eisenflow.utils.Utils.showAlertMessage;
 
 /**
@@ -165,15 +170,15 @@ public class SingleTaskActivity extends AppCompatActivity {
     private void initDateTime() {
         // Set Date.
         if (mTask.getDate() == null) {
-            mDate.setText(DateTimeUtils.getDateString(mToday));
+            mDate.setText(getDateString(mToday));
         } else {
             mDate.setText(mTask.getDate());
         }
         // Set Time.
         if (mTask.getTime() == null) {
-            mTime.setText(DateTimeUtils.getTimeString(mToday));
+            mTime.setText(getTimeString(mToday));
         } else {
-            mTime.setText(DateTimeUtils.getTimeString(getCalendarTime()));
+            mTime.setText(getTimeString(getCalendarTime()));
         }
     }
 
@@ -362,7 +367,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         c.set(Calendar.YEAR, selectedYear);
         c.set(Calendar.MONTH, selectedMonth);
         c.set(Calendar.DAY_OF_MONTH, selectedDayOfMonth);
-        String date = DateTimeUtils.getDateString(c);
+        String date = getDateString(c);
 
         mTask.setDate(date);
         setDateText(date);
@@ -403,7 +408,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR_OF_DAY, selectedHour);
         c.set(Calendar.MINUTE, selectedMinute);
-        String time = DateTimeUtils.getTimeString(c);
+        String time = getTimeString(c);
 
         mTask.setTime(time);
         setTimeText(time);
@@ -415,29 +420,33 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private void saveTask() {
         if(isDataValid()) {
+            // Show tip message for Urgent-Important tasks.
+            // Ideally this tasks should be scheduled for next day in order to have better performance.
             if (isRedTask() && isScheduledTooInAdvance() && !isRedTipShown) {
                 showAlertMessage(findViewById(R.id.single_task_holder), getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
                 isRedTipShown = true;
                 return;
             }
 
+            // Set unset task details.
             mTask.setTitle(mTaskTitle.getText().toString());
             mTask.setNote(mNoteEditText.getText().toString());
             if (mCheckedDaysOfWeek != null && !mCheckedDaysOfWeek.isEmpty()) {
-                mTask.setReminderWhen(DataUtils.integerCollectionToString(mCheckedDaysOfWeek));
+                mTask.setReminderWhen(integerCollectionToString(mCheckedDaysOfWeek));
             }
             if (mTask.getDate() == null) {
-                mTask.setDate(DateTimeUtils.getDateString(Calendar.getInstance()));
+                mTask.setDate(getDateString(Calendar.getInstance()));
             }
             if (mTask.getTime() == null) {
-                mTask.setTime(DateTimeUtils.getTimeString(Calendar.getInstance()));
+                mTask.setTime(getTimeString(Calendar.getInstance()));
             }
             String taskActualTime = DateTimeUtils.getActualTime(mTask.getTime());
             Calendar cal = DateTimeUtils.getCalendar(mTask.getDate(), taskActualTime);
             mTask.setDateMillis(cal.getTimeInMillis());
+            mTask.setTotalDaysPeriod(getTotalDays(mTask.getDate()));
 
+            // Insert/Update with created content values.
             ContentValues values = getContentValues();
-
             if (mTask.getId() == -1) {
                 insertData(values);
             } else {
@@ -537,6 +546,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         values.put(KEY_DATE_MILLIS, mTask.getDateMillis());
         values.put(KEY_REMINDER_OCCURRENCE, mTask.getReminderOccurrence());
         values.put(KEY_REMINDER_WHEN, mTask.getReminderWhen());
+        values.put(KEY_TOTAL_DAYS_PERIOD, mTask.getTotalDaysPeriod());
         values.put(KEY_IS_VIBRATION_ENABLED, mTask.isVibrationEnabled());
         values.put(KEY_NOTE, mTask.getNote());
 
