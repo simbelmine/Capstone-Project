@@ -59,6 +59,7 @@
     <string name="add_task_reminder_when_alert">Missing repeating day/s for your reminder.</string>
     <string name="add_task_date_alert">Your date is in the past.</string>
     <string name="add_task_time_alert">Your time is in the past.</string>
+    <string name="priority_0_tip_snackbar">To help your productivity, schedule \'Do it now\' just for the next day.</string>
         <!-- Content Descriptions -->
     <string name="close_button_description">Close Single Task Activity</string>
     <string name="save_button_description">Save Task and Exit</string>

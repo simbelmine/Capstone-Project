@@ -106,6 +106,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     private List<CheckBox> mWeekDays;
     private int mCurrentPosition = -1;
     private int mTaskId = -1;
+    private boolean isRedTipShown;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -414,6 +415,12 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private void saveTask() {
         if(isDataValid()) {
+            if (isRedTask() && isScheduledTooInAdvance() && !isRedTipShown) {
+                showAlertMessage(findViewById(R.id.single_task_holder), getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
+                isRedTipShown = true;
+                return;
+            }
+
             mTask.setTitle(mTaskTitle.getText().toString());
             mTask.setNote(mNoteEditText.getText().toString());
             if (mCheckedDaysOfWeek != null && !mCheckedDaysOfWeek.isEmpty()) {
@@ -475,6 +482,19 @@ public class SingleTaskActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    private boolean isRedTask() {
+        return DataUtils.Priority.valueOf(mTask.getPriority()) == DataUtils.Priority.ONE;
+    }
+
+    private boolean isScheduledTooInAdvance() {
+        Calendar currDate = Calendar.getInstance();
+        Calendar date  = Calendar.getInstance();
+        date.setTime(DateTimeUtils.getDate(mTask.getDate()));
+
+        return date.get(Calendar.MONTH) >= currDate.get(Calendar.MONTH) &&
+                date.get(Calendar.DAY_OF_MONTH) >= (currDate.get(Calendar.DAY_OF_MONTH)+2);
     }
 
     private List<CheckBox> getWeekDaysList() {
