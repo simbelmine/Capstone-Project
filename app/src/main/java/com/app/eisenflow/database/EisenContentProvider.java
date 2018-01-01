@@ -165,8 +165,6 @@ public class EisenContentProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         int rowsDeleted = 0;
 
-        Log.v("eisen", "URI Delte = " + uri);
-
         switch (match) {
             case TASK:
                 rowsDeleted = db.delete(
@@ -174,22 +172,16 @@ public class EisenContentProvider extends ContentProvider {
                         selection,
                         selectionArgs
                 );
-                // reset _ID
-                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" +
-                        TABLE_NAME + "'");
                 break;
             case TASK_ID:
                 rowsDeleted = db.delete(
                         TABLE_NAME,
                         KEY_ROW_ID + " = ?",
                         new String[]{String.valueOf(ContentUris.parseId(uri))});
-                // reset _ID
-                db.execSQL("DELETE FROM SQLITE_SEQUENCE WHERE NAME = '" +
-                        TABLE_NAME + "'");
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
-        }
+        };
 
         if (selection == null || rowsDeleted != 0)
         {

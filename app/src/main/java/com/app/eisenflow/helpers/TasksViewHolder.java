@@ -65,19 +65,22 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
     private static int MAX_PROGRESS = 100;
     private Activity mContext;
     private TasksCursorRecyclerViewAdapter mAdapter;
+    public Cursor mCursor;
 
     public TasksViewHolder(Activity context, TasksCursorRecyclerViewAdapter adapter, View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
         this.mContext = context;
         this.mAdapter = adapter;
+        itemView.setOnTouchListener(new RecyclerItemSwipeDetector(mContext, this));
     }
 
     public void setData(Cursor cursor) {
         if (cursor != null) {
+            mCursor = cursor;
+
             // Task Row.
             setTaskDetails(cursor);
-
             // Month Row.
             setMonthDetails(cursor);
         }
@@ -104,7 +107,6 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
         setTaskOverdue(cursor);
 
         mTaskTime.setVisibility(View.VISIBLE);
-        mCardView.setOnTouchListener(new RecyclerItemSwipeDetector(mContext, cursor, this));
     }
 
     private void setTaskBackgroundByPriority(int priority) {

@@ -120,7 +120,6 @@ public class SingleTaskActivity extends AppCompatActivity {
 
         init();
 
-
         setTransitionName();
         getCurrentPosition();
     }
@@ -266,7 +265,6 @@ public class SingleTaskActivity extends AppCompatActivity {
                 backWithTransition();
                 return true;
             case R.id.action_save_task:
-                Toast.makeText(SingleTaskActivity.this, "TASK SAVED", Toast.LENGTH_SHORT).show();
                 saveTask();
                 return true;
         }

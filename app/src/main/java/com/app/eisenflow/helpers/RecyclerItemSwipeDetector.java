@@ -20,8 +20,10 @@ import android.widget.Toast;
 import com.app.eisenflow.R;
 import com.app.eisenflow.activities.SingleTaskActivity;
 import com.app.eisenflow.utils.DataUtils;
+import com.app.eisenflow.utils.TaskUtils;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 
@@ -47,20 +49,15 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     private RecyclerView recyclerView;
     private RelativeLayout currentMenuLayout;
     //private SwipeRefreshLayout pullToRefreshLayout;
-
     boolean isLeftToRight = false;
-
-    Animation animZoomIn;
-    Animation animZoomOut;
+    private Animation animZoomIn;
+    private Animation animZoomOut;
     float oldDeltaX = -1;
-    boolean isTriggered_LtoR = false;
-    boolean isTriggered_RtoL = false;
+    private boolean isTriggered_LtoR = false;
+    private boolean isTriggered_RtoL = false;
 
-    private Cursor mCursor;
-
-    public RecyclerItemSwipeDetector(Activity mContext, Cursor cursor, TasksViewHolder viewHolder) {
+    public RecyclerItemSwipeDetector(Activity mContext, TasksViewHolder viewHolder) {
         this.mContext = mContext;
-        this.mCursor = cursor;
         this.mHolder = viewHolder;
         this.recyclerView = this.mContext.findViewById(R.id.tasks_recycler_view);
 
@@ -75,84 +72,86 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        int priorityValue = mCursor.getInt(mCursor.getColumnIndex(KEY_PRIORITY));
-        DataUtils.Priority priority = DataUtils.Priority.valueOf(priorityValue);
+        Cursor cursor = mHolder.mCursor;
+        if (cursor != null && cursor.moveToPosition(mHolder.getAdapterPosition())) {
+            int priorityValue = cursor.getInt(cursor.getColumnIndex(KEY_PRIORITY));
+            DataUtils.Priority priority = DataUtils.Priority.valueOf(priorityValue);
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN: {
-                downX = event.getX();
-                return true; // allow other events like Click to be processed
-            }
-
-            case MotionEvent.ACTION_MOVE: {
-                upX = event.getX();
-                float deltaX = downX - upX;
-
-                //pullToRefreshLayout.setEnabled(false);
-
-                // If we opened the menu enough => the RecyclerView is going to accept the change if not, skip it
-                if (Math.abs(deltaX) > MIN_LOCK_DISTANCE && recyclerView != null && !motionInterceptDisallowed) {
-                    recyclerView.requestDisallowInterceptTouchEvent(true);
-                    motionInterceptDisallowed = true;
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN: {
+                    downX = event.getX();
+                    return true; // allow other events like Click to be processed
                 }
 
-                performIconAnimations(deltaX);
+                case MotionEvent.ACTION_MOVE: {
+                    upX = event.getX();
+                    float deltaX = downX - upX;
 
+                    //pullToRefreshLayout.setEnabled(false);
 
-                if(deltaX > 0) {
-                    isLeftToRight = false;
-                }
-                else {
-                    isLeftToRight = true;
-                }
-
-                currentMenuLayout.setVisibility(View.VISIBLE);
-                if(priority == TWO) mHolder.mTaskProgress.setVisibility(View.INVISIBLE);
-                mHolder.mDeleteActionLayout.setPressed(true);
-
-                swipe(v, (int) deltaX);
-                return true;
-            }
-
-            case MotionEvent.ACTION_UP: {
-                upX = event.getX();
-                float deltaX = upX - downX;
-
-                if (priority == TWO) {
-                    if (Math.abs(deltaX) > DISTANCE) {
-                        mHolder.mTaskProgress.setVisibility(View.INVISIBLE);
-                    } else {
-                        mHolder.mTaskProgress.setVisibility(View.VISIBLE);
+                    // If we opened the menu enough => the RecyclerView is going to accept the change if not, skip it
+                    if (Math.abs(deltaX) > MIN_LOCK_DISTANCE && recyclerView != null && !motionInterceptDisallowed) {
+                        recyclerView.requestDisallowInterceptTouchEvent(true);
+                        motionInterceptDisallowed = true;
                     }
+
+                    performIconAnimations(deltaX);
+
+
+                    if (deltaX > 0) {
+                        isLeftToRight = false;
+                    } else {
+                        isLeftToRight = true;
+                    }
+
+                    currentMenuLayout.setVisibility(View.VISIBLE);
+                    if (priority == TWO) mHolder.mTaskProgress.setVisibility(View.INVISIBLE);
+                    mHolder.mDeleteActionLayout.setPressed(true);
+
+                    swipe(v, (int) deltaX);
+                    return true;
                 }
 
-                if (upX == downX) {
-                    performClick(v);
-                } else {
-                    performSwipeAction(deltaX);
+                case MotionEvent.ACTION_UP: {
+                    upX = event.getX();
+                    float deltaX = upX - downX;
+
+                    if (priority == TWO) {
+                        if (Math.abs(deltaX) > DISTANCE) {
+                            mHolder.mTaskProgress.setVisibility(View.INVISIBLE);
+                        } else {
+                            mHolder.mTaskProgress.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    if (upX == downX) {
+                        performClick(v);
+                    } else {
+                        performSwipeAction(deltaX);
+                    }
+
+
+                    if (recyclerView != null) {
+                        recyclerView.requestDisallowInterceptTouchEvent(false);
+                        motionInterceptDisallowed = false;
+                    }
+
+                    mHolder.mDeleteActionLayout.setPressed(false);
+
+                    return true;
                 }
 
+                case MotionEvent.ACTION_CANCEL: {
+                    currentMenuLayout.setVisibility(View.VISIBLE);
+                    //pullToRefreshLayout.setEnabled(true);
 
-                if (recyclerView != null) {
-                    recyclerView.requestDisallowInterceptTouchEvent(false);
-                    motionInterceptDisallowed = false;
+                    upX = event.getX();
+                    float deltaX = upX - downX;
+                    if (Math.abs(deltaX) > MIN_DISTANCE) {
+                        performSwipeAction(deltaX);
+                    }
+                    return true;
                 }
-
-                mHolder.mDeleteActionLayout.setPressed(false);
-
-                return true;
-            }
-
-            case MotionEvent.ACTION_CANCEL: {
-                currentMenuLayout.setVisibility(View.VISIBLE);
-                //pullToRefreshLayout.setEnabled(true);
-
-                upX = event.getX();
-                float deltaX = upX - downX;
-                if(Math.abs(deltaX) > MIN_DISTANCE) {
-                    performSwipeAction(deltaX);
-                }
-                return true;
             }
         }
 
@@ -243,18 +242,15 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
         mHolder.mUndoButton.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(mHolder.mUndoButton.getVisibility() == View.VISIBLE) {
-                    sendDeleteBroadcast();
+                Cursor cursor = mHolder.mCursor;
+                if (cursor != null && cursor.moveToPosition(mHolder.getAdapterPosition())) {
+                    if (mHolder.mUndoButton.getVisibility() == View.VISIBLE) {
+                        TaskUtils.deleteTask(mContext, cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID)));
+                        swipe(null, 0);
+                    }
                 }
             }
         }, DISMISS_DELAY);
-    }
-
-    private void sendDeleteBroadcast() {
-//        Intent deleteIntent = new Intent(NewTaskListAdapterDB.ACTION_DELETE);
-//        deleteIntent.putExtra(LocalDataBaseHelper.KEY_ROW_ID, taskId);
-//        deleteIntent.putExtra("position", position);
-//        LocalBroadcastManager.getInstance(mContext).sendBroadcast(deleteIntent);
     }
 
     private void activateAction() {
@@ -338,11 +334,13 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     }
 
     private void startActivityWithIntent(Intent intent) {
+        Cursor cursor = mHolder.mCursor;
         Bundle b;
         // Start activity with transition animation if Android version bigger or equal than Jelly Bean.
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
+                cursor != null && cursor.moveToPosition(mHolder.getAdapterPosition())) {
             // Use Task name to transition from MainActivity's list item to SingleTaskActivity.
-            String transitionName = mCursor.getColumnName(mCursor.getColumnIndex(KEY_TITLE));
+            String transitionName = cursor.getColumnName(cursor.getColumnIndex(KEY_TITLE));
             // Set transition name to the view we want to transform.
             ViewCompat.setTransitionName(mHolder.mTaskHolder, transitionName);
             // Pass the transition name to next activity so we can set it there to the relevant view.
@@ -366,11 +364,9 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
             // R to L  -
             if(deltaX > 0) {
                 deleteTask();
-                Toast.makeText(mContext, "Delete", Toast.LENGTH_SHORT).show();
             }
             else {
                 activateAction();
-                Toast.makeText(mContext, "Action", Toast.LENGTH_SHORT).show();
             }
 
         } else {
