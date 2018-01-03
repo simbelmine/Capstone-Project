@@ -1,5 +1,6 @@
 package com.app.eisenflow.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
@@ -10,6 +11,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.app.eisenflow.ApplicationEisenFlow;
@@ -98,5 +100,16 @@ public class Utils {
         DisplayMetrics metrics = resources.getDisplayMetrics();
         float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
         return px;
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }
