@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import com.app.eisenflow.ApplicationEisenFlow;
 import com.app.eisenflow.Task;
 
 /**
@@ -57,6 +58,15 @@ public class EisenContract {
         };
 
         public static final String ORDER_BY =  KEY_DATE_MILLIS + " ASC";
+
+        public static Cursor getCursor() {
+            return ApplicationEisenFlow.getAppContext().getContentResolver().query(
+                    CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null);
+        }
 
         public static Object[] getDataRow(Cursor cursor) {
             return new Object[]{

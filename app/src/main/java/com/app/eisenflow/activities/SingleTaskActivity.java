@@ -14,7 +14,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +28,6 @@ import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.Task;
@@ -64,6 +62,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
 import static com.app.eisenflow.helpers.RecyclerItemSwipeDetector.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.DataUtils.integerCollectionToString;
 import static com.app.eisenflow.utils.DataUtils.setViewVisibility;
@@ -516,15 +515,6 @@ public class SingleTaskActivity extends AppCompatActivity {
         list.add(mSatCheckBox);
         list.add(mSunCheckBox);
         return list;
-    }
-
-    private Cursor getCursor() {
-        return getContentResolver().query(
-                CONTENT_URI,
-                null,
-                null,
-                null,
-                null);
     }
 
     private void updateData(ContentValues values) {
