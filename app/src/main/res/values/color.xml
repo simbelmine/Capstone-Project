@@ -43,4 +43,14 @@
 
     <!-- Main Activity -->
     <color name="list_item_bg">#ffebeff1</color>
+
+    <!-- Timer Activity-->
+    <color name="timer_color">#6e3e39</color>
+    <color name="bottom_dummy_circle">#a35448</color>
+    <color name="top_dummy_circle">#ba6053</color>
+    <color name="top_dummy_circle_pressed">#bf6e63</color>
+    <color name="timer_progress">#8b483e</color>
+    <color name="timer_radial_center">#eb8577</color>
+    <color name="timer_radial_start">#eb8577</color>
+    <color name="timer_radial_end">#d16c5d</color>
 </resources>

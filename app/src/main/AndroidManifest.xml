@@ -25,6 +25,7 @@
         <activity android:name=".activities.TutorialActivity" />
         <activity android:name=".activities.SingleTaskActivity"
             android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".activities.TimerActivity"/>
 
         <provider
             android:name=".database.EisenContentProvider"

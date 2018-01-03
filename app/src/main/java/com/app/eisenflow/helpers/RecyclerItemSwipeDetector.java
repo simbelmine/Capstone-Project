@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.activities.SingleTaskActivity;
+import com.app.eisenflow.activities.TimerActivity;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.TaskUtils;
 
@@ -289,7 +290,9 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                         switch (priority) {
                             case ONE:
                                 Log.v("eisen", "Action -> Timer");
-                                //sendCardActionBroadcast(NewTaskListAdapterDB.TIMER_ACTION);
+                                Intent timerIntent = new Intent(mContext, TimerActivity.class);
+                                timerIntent.putExtra(EXTRA_TASK_POSITION, mHolder.getAdapterPosition());
+                                mContext.startActivity(timerIntent);
                                 swipe(null, 0);
                                 mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
                                 mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);

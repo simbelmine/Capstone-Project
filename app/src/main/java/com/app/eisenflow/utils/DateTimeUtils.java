@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -422,4 +423,31 @@ public class DateTimeUtils {
         return time;
     }
 
+    public static boolean isTimerTimeValid(int hours, int minutes) {
+        return (hours >= 0 && minutes > 0);
+    }
+
+    public static long getTimerTimeInMillis(int hour, int minutes) {
+        return getTimerHourInMillis(hour) + getTimerMinutesInMillis(minutes);
+    }
+
+    public static long getTimerHourInMillis(int hour) {
+        return TimeUnit.HOURS.toMillis(hour);
+    }
+
+    public static long getTimerMinutesInMillis(int minutes) {
+        return TimeUnit.MINUTES.toMillis(minutes);
+    }
+
+    public static String getCorrectTimerTimeValue(int value) {
+        if(value == 0) {
+            return "00";
+        }
+        else if(value < 10) {
+            return String.valueOf("0"+value);
+        }
+        else {
+            return String.valueOf(value);
+        }
+    }
 }

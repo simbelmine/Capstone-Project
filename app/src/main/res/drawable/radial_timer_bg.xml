@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+    <gradient
+        android:centerColor="@color/timer_radial_center"
+        android:endColor="@color/timer_radial_end"
+        android:gradientRadius="600"
+        android:startColor="@color/timer_radial_start"
+        android:type="radial" >
+    </gradient>
+
+</shape>
