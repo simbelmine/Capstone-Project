@@ -23,6 +23,7 @@ import com.app.eisenflow.activities.TimerActivity;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.TaskUtils;
 
+import static com.app.eisenflow.activities.MainActivity.TAG;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
@@ -289,7 +290,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 
                         switch (priority) {
                             case ONE:
-                                Log.v("eisen", "Action -> Timer");
+                                Log.v(TAG, "Action: Timer");
                                 Intent timerIntent = new Intent(mContext, TimerActivity.class);
                                 timerIntent.putExtra(EXTRA_TASK_POSITION, mHolder.getAdapterPosition());
                                 mContext.startActivity(timerIntent);
@@ -298,7 +299,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                                 mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
                                 break;
                             case TWO: {
-                                Log.v("eisen", "Action -> Up++");
+                                Log.v(TAG, "Action: Progress++");
                                 int progress = TaskUtils.getIncreasedTaskProgress(mHolder.getHolderCursor(), mHolder.getAdapterPosition());
                                 TaskUtils.updateProgress(mHolder.getHolderCursor(), mHolder.getAdapterPosition(), progress);
                                 swipe(null, 0);
@@ -307,7 +308,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                                 break;
                             }
                             case THREE:
-                                Log.v("eisen", "Action -> Share");
+                                Log.v(TAG, "Action: Share");
                                 TaskUtils.shareTask(mHolder.getHolderCursor(), mHolder.getAdapterPosition());
                                 swipe(null, 0);
                                 mHolder.mUndoLayout.setVisibility(View.INVISIBLE);

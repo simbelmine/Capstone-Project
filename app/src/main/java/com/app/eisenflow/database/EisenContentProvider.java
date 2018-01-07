@@ -43,7 +43,6 @@ public class EisenContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        Log.v("eisen", "Provider -> onCreate()");
         mDatabaseHelper = EisenDatabaseHelper.getInstance(getContext());
         return true;
     }

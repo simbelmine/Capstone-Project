@@ -19,6 +19,8 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.TABLE_NAME;
 
+import static com.app.eisenflow.activities.MainActivity.TAG;
+
 /**
  * Created on 12/20/17.
  */
@@ -59,7 +61,7 @@ public class EisenDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("eisen", "---Database " + DATABASE_NAME + " was created.");
+        Log.d(TAG, "---Database " + DATABASE_NAME + " was created.");
         db.execSQL(CREATE_TABLE);
     }
 

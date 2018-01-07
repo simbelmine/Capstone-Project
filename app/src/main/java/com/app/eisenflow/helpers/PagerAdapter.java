@@ -18,7 +18,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        Log.v("eisen", "Position #  " + position);
         return PlaceholderFragment.newInstance(position);
     }
 
