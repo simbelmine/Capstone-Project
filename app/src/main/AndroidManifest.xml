@@ -22,16 +22,23 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name" />
-        <activity android:name=".activities.TutorialActivity" />
-        <activity android:name=".activities.SingleTaskActivity"
+        <activity
+            android:name=".activities.TutorialActivity"
+            />
+        <activity
+            android:name=".activities.SingleTaskActivity"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".activities.TimerActivity"/>
+        <activity
+            android:name=".activities.TimerActivity"
+            android:launchMode="singleTask"/>
 
         <provider
             android:name=".database.EisenContentProvider"
             android:authorities="com.app.eisenflow.provider"
             android:enabled="true"
             android:exported="false"></provider>
+
+        <service android:name=".activities.TimerService"/>
     </application>
 
 </manifest>

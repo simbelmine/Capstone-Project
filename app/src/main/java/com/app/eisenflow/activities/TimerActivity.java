@@ -1,14 +1,18 @@
 package com.app.eisenflow.activities;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -19,6 +23,8 @@ import android.widget.TextView;
 import com.app.eisenflow.R;
 import com.app.eisenflow.utils.Utils;
 
+import java.util.concurrent.TimeUnit;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,11 +33,11 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
 import static com.app.eisenflow.helpers.RecyclerItemSwipeDetector.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.DateTimeUtils.getCorrectTimerTimeValue;
-import static com.app.eisenflow.utils.DateTimeUtils.getTimerHourInMillis;
-import static com.app.eisenflow.utils.DateTimeUtils.getTimerMinutesInMillis;
 import static com.app.eisenflow.utils.DateTimeUtils.getTimerTimeInMillis;
 import static com.app.eisenflow.utils.DateTimeUtils.isTimerTimeValid;
 import static com.app.eisenflow.utils.Utils.hideKeyboard;
+
+import static com.app.eisenflow.activities.MainActivity.TAG;
 
 /**
  * Created on 1/1/18.
@@ -49,35 +55,52 @@ public class TimerActivity extends AppCompatActivity {
     @BindView(R.id.seconds_layout) LinearLayout mTimerSecondsHolder;
     @BindView(R.id.timer_seconds) EditText mTimerSeconds;
 
-    private static final int MINUTES_IN_HOUR = 60;
-    private static final int SECONDS_IN_MINUTE = 60;
     private static final long COUNTDOWN_INTERVAL = 50;
     private int mHourValue = 0;
     private int mMinutesValue = 0;
-    private long mTotalTimeLeft = 0;
+    private long mTimeStart = 0;
+    private long mTimeLeft = 0;
     private boolean isPaused;
     private boolean isTimerSet;
+    private boolean isTimerRunning;
     private CountDownTimer mCountDownTimer;
-    private int mOldSeconds = 0;
-    private int secondsProgress = 1;
-    private int minutesProgress = 0;
-    private int hoursProgress = 0;
-    private boolean isAdditionalMinsReady;
     private boolean isFirstStarted;
+    private long mTotalTimeInMilliseconds = 0;
+
+    private boolean serviceBound;
+    private TimerService timerService;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
         ButterKnife.bind(this);
+        isPaused = true;
 
         addTextChangedListeners();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        stopService();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         setTaskName();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        if (isTimerRunning) {
+            startService();
+        } else {
+            stopService();
+        }
     }
 
     private void setTaskName() {
@@ -105,46 +128,47 @@ public class TimerActivity extends AppCompatActivity {
 
     @OnClick (R.id.big_play_btn)
     public void onBigPlayButton() {
-        if (!isPaused) {
+
+        if (isPaused) {
             if (isTimerTimeValid(mHourValue, mMinutesValue)) {
+                isPaused = false;
                 setTimerTime();
                 startTimer();
+                hideKeyboard(this);
             } else {
                 Utils.showAlertMessage(findViewById(R.id.timer_holder), "To start, enter time!", R.color.date);
             }
-            hideKeyboard(this);
-        } else {
-            isPaused = false;
+        }
+        else {
             mCountDownTimer.cancel();
             mPlayButton.setVisibility(View.VISIBLE);
             mPauseButton.setVisibility(View.INVISIBLE);
+            isPaused = true;
+            isTimerRunning = false;
         }
     }
 
     private void setTimerTime() {
         isFirstStarted = true;
-        isPaused = true;
 
-        long totalTimeCountInMilliseconds = 0;
-        if(!isTimerSet) {
-            totalTimeCountInMilliseconds = getTimerTimeInMillis(mHourValue, mMinutesValue);
-            mCircularProgressBar.setMax((int) (totalTimeCountInMilliseconds));
+        if(!isTimerSet && mTotalTimeInMilliseconds == 0) {
+            mTotalTimeInMilliseconds = getTimerTimeInMillis(mHourValue, mMinutesValue);
+            mCircularProgressBar.setMax((int) (mTotalTimeInMilliseconds));
             isTimerSet = true;
         }
 
-        if(mTotalTimeLeft == 0) {
-            mTotalTimeLeft = totalTimeCountInMilliseconds;
+        if(mTimeStart == 0) {
+            mTimeStart = mTotalTimeInMilliseconds;
+        } else {
+            mTimeStart = mTimeLeft;
         }
 
         mPlayButton.setVisibility(View.INVISIBLE);
         mPauseButton.setVisibility(View.VISIBLE);
 
         mTimerSecondsHolder.setVisibility(View.VISIBLE);
-        mTimerHour.setInputType(InputType.TYPE_NULL);
-        mTimerMinutes.setInputType(InputType.TYPE_NULL);
-
-        mTimerHour.setText(getCorrectTimerTimeValue(0));
-        mTimerMinutes.setText(getCorrectTimerTimeValue(0));
+        mTimerHour.setEnabled(false);
+        mTimerMinutes.setEnabled(false);
     }
 
     private void startTimer() {
@@ -153,63 +177,53 @@ public class TimerActivity extends AppCompatActivity {
     }
 
     private void initCountDownTimer() {
-        mCountDownTimer = new CountDownTimer(mTotalTimeLeft, COUNTDOWN_INTERVAL) {
+        mCountDownTimer = new CountDownTimer(mTimeStart, COUNTDOWN_INTERVAL) {
             @Override
             public void onTick(long leftTimeInMilliseconds) {
-                mTotalTimeLeft = leftTimeInMilliseconds;
+                // Now Timer is Running.
+                isTimerRunning = true;
+                // Save time for future use.
+                mTimeLeft = leftTimeInMilliseconds;
 
-                long progress = (getTimerTimeInMillis(mHourValue, mMinutesValue) - leftTimeInMilliseconds);
-                mCircularProgressBar.setProgress(Math.abs((int)progress));
+                // Calculate hour, minutes, seconds by extracting
+                // the current left time from the total time to go.
+                long calculatedTimeLeft = mTotalTimeInMilliseconds - leftTimeInMilliseconds;
+                long hours = TimeUnit.MILLISECONDS.toHours(calculatedTimeLeft);
+                long minutes = TimeUnit.MILLISECONDS.toMinutes(calculatedTimeLeft) - TimeUnit.HOURS.toMinutes(hours);
+                long seconds = TimeUnit.MILLISECONDS.toSeconds(calculatedTimeLeft) - TimeUnit.MINUTES.toSeconds(minutes);
 
-                long progressInSeconds = progress/1000;
+                // Add counter values.
+                mTimerHour.setText(getCorrectTimerTimeValue(hours));
+                mTimerMinutes.setText(getCorrectTimerTimeValue(minutes));
+                mTimerSeconds.setText(getCorrectTimerTimeValue(seconds));
 
-                if(mOldSeconds != progressInSeconds) {
+                long progress = (mTotalTimeInMilliseconds - leftTimeInMilliseconds);
+                mCircularProgressBar.setProgress((int)progress);
 
-                    if(secondsProgress == SECONDS_IN_MINUTE-1) {
-                        if(getTimerHourInMillis(mHourValue) == 0) {
-                            isAdditionalMinsReady = true;
-                        }
-
-                        // check if there are some minutes to go before counting the hour
-                        if (!isAdditionalMinsReady && minutesProgress < MINUTES_IN_HOUR) {
-                            minutesProgress++;
-                            mTimerMinutes.setText(getCorrectTimerTimeValue(minutesProgress));
-                        }
-                        else if (!isAdditionalMinsReady) {
-                            if (hoursProgress < getTimerHourInMillis(mHourValue) / 1000) {
-                                hoursProgress++;
-                                mTimerHour.setText(getCorrectTimerTimeValue(hoursProgress));
-                            }
-                            else {
-                                isAdditionalMinsReady = true;
-                                hoursProgress = 0;
-                            }
-                            minutesProgress = 0;
-                        }
-
-                        if (isAdditionalMinsReady && minutesProgress < (getTimerMinutesInMillis(mMinutesValue) / 1000)) {
-                            minutesProgress++;
-                            mTimerMinutes.setText(getCorrectTimerTimeValue(minutesProgress));
-                        }
-
-                        secondsProgress = 1;
-                        mTimerSeconds.setText(getCorrectTimerTimeValue(0));
-                    }
-                    else {
-                        mTimerSeconds.setText(getCorrectTimerTimeValue(secondsProgress));
-                        secondsProgress++;
-                    }
+                // Check if TimerService is Running, if yes update the Notification.
+                // If TimerService is Running it means the app is in the background.
+                if(serviceBound && timerService != null) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(getCorrectTimerTimeValue(hours) + ":");
+                    sb.append(getCorrectTimerTimeValue(minutes) + ":");
+                    sb.append(getCorrectTimerTimeValue(seconds));
+                    timerService.updateNotification(sb.toString());
+                    timerService.foreground();
                 }
-
-                mOldSeconds = (int)progressInSeconds;
             }
 
             @Override
             public void onFinish() {
+                Log.v(TAG, "CountDownTimer Finished.");
+                isTimerRunning = false;
                 mCircularProgressBar.setProgress(0);
+                mTimerHour.setEnabled(true);
+                mTimerMinutes.setEnabled(true);
+                mTimerHour.getText().clear();
+                mTimerMinutes.getText().clear();
                 mTimerSecondsHolder.setVisibility(View.GONE);
-                mTimerHour.setCursorVisible(true);
-                mTimerMinutes.setCursorVisible(true);
+                mPauseButton.setVisibility(View.INVISIBLE);
+                mPlayButton.setVisibility(View.VISIBLE);
             }
         };
     }
@@ -245,6 +259,44 @@ public class TimerActivity extends AppCompatActivity {
         }
         @Override
         public void afterTextChanged(Editable editable) {
+        }
+    };
+
+
+    private void startService() {
+        Intent startIntent = new Intent(this, TimerService.class);
+        startService(startIntent);
+        bindService(startIntent, mConnection, 0);
+    }
+
+    private void stopService() {
+        if (serviceBound) {
+            stopService(new Intent(this, TimerService.class));
+            // Unbind the service
+            unbindService(mConnection);
+            serviceBound = false;
+        }
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                Log.v(TAG, "Service bound");
+            }
+            TimerService.RunServiceBinder binder = (TimerService.RunServiceBinder) service;
+            timerService = binder.getService();
+            serviceBound = true;
+            // Ensure the service is not in the foreground when bound
+            timerService.background();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            if (Log.isLoggable(TAG, Log.VERBOSE)) {
+                Log.v(TAG, "Service disconnect");
+            }
+            serviceBound = false;
         }
     };
 }

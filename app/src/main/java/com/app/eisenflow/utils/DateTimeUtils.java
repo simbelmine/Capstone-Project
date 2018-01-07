@@ -18,6 +18,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.app.eisenflow.activities.MainActivity.TAG;
+
 /**
  * Created on 12/23/17.
  */
@@ -55,7 +57,7 @@ public class DateTimeUtils {
             try {
                 return postFormatter.parse(dateStr);
             } catch (ParseException ex) {
-                Log.e("eisen", "String to Date Formatting Exception : " + ex.getMessage());
+                Log.e(TAG, "String to Date Formatting Exception : " + ex.getMessage());
             }
         }
 
@@ -89,13 +91,6 @@ public class DateTimeUtils {
         Calendar time  = Calendar.getInstance();
         time.setTime(getTime(timeStr));
 
-        Log.v("eisen", "\nDate: " + dateStr);
-        Log.v("eisen", "\nTime: " + timeStr);
-
-//        Log.v("eisen", "\nCurrent: " + currTime);
-//        Log.v("eisen", "\nDate: " + date);
-//        Log.v("eisen", "\nTime: " + time);
-
         if(date.get(Calendar.MONTH) == currDate.get(Calendar.MONTH) &&
                 date.get(Calendar.DAY_OF_MONTH) == currDate.get(Calendar.DAY_OF_MONTH) &&
                 time.getTimeInMillis() < currTime.getTimeInMillis()) {
@@ -120,7 +115,6 @@ public class DateTimeUtils {
         SimpleDateFormat postFormatter;
         postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
 
-        Log.v("eisen"," ----  " + cal.getTime());
         return postFormatter.format(cal.getTime());
     }
 
@@ -162,7 +156,7 @@ public class DateTimeUtils {
             return postFormatter.parse(timeStr);
         }
         catch (ParseException ex) {
-            Log.e("eisen", "String to Time Formatting Exception : " + ex.getMessage());
+            Log.e(TAG, "String to Time Formatting Exception : " + ex.getMessage());
         }
 
         return null;
@@ -184,7 +178,7 @@ public class DateTimeUtils {
             return postFormatter.parse(timeStr);
         }
         catch (ParseException ex) {
-            Log.e("eisen", "String to Time Formatting Exception 24 : " + ex.getMessage());
+            Log.e(TAG, "String to Time Formatting Exception 24 : " + ex.getMessage());
         }
 
         return null;
@@ -198,7 +192,7 @@ public class DateTimeUtils {
             return postFormatter.parse(timeStr);
         }
         catch (ParseException ex) {
-            Log.e("eisen", "String to Time Formatting Exception 24 : " + ex.getMessage());
+            Log.e(TAG, "String to Time Formatting Exception 24 : " + ex.getMessage());
         }
 
         return null;
@@ -251,7 +245,7 @@ public class DateTimeUtils {
             }
         }
         catch (ParseException ex) {
-            Log.e("eisen", "String to Time Formatting Exception : " + ex.getMessage());
+            Log.e(TAG, "String to Time Formatting Exception : " + ex.getMessage());
         }
 
         return null;
@@ -439,15 +433,7 @@ public class DateTimeUtils {
         return TimeUnit.MINUTES.toMillis(minutes);
     }
 
-    public static String getCorrectTimerTimeValue(int value) {
-        if(value == 0) {
-            return "00";
-        }
-        else if(value < 10) {
-            return String.valueOf("0"+value);
-        }
-        else {
-            return String.valueOf(value);
-        }
+    public static String getCorrectTimerTimeValue(long value) {
+        return String.format("%02d", value);
     }
 }
