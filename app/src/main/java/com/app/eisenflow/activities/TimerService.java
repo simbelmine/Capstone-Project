@@ -46,7 +46,9 @@ public class TimerService extends Service {
     private static final String NOTIFICATION_CHANEL = "M_CH_ID";
     public static final String LEFT_TIME_MILLIS = "LeftTimeMillis";
     private static final long COUNTDOWN_INTERVAL = 50;
-    private static final String DEFAULT_TIME_PASSED = "00:00";
+    private static final String DEFAULT_TIME_PASSED = "00h:00m";
+    private static final int MIN_PROGRESS = 1;
+    private static final int MAX_PROGRESS = 100;
 
     // Service binder
     private final IBinder serviceBinder = new RunServiceBinder();
@@ -134,8 +136,9 @@ public class TimerService extends Service {
         stopForeground(true);
     }
 
-    public void updateNotification(String elapsedTime) {
-        notificationBuilder.setContentTitle(getString(R.string.timer_notification_content, elapsedTime));
+    public void updateNotification(int progress, String elapsedTime) {
+        notificationBuilder.setContentText(getString(R.string.timer_notification_content, elapsedTime));
+        notificationBuilder.setProgress((int)mTotalTimeInMilliseconds, progress, false);
         foreground();
     }
 
@@ -166,6 +169,7 @@ public class TimerService extends Service {
                 notificationIntent,
                 0);
         builder.setContentIntent(intent);
+        builder.setProgress(MAX_PROGRESS, MIN_PROGRESS, false);
 
         return builder;
     }
@@ -212,6 +216,7 @@ public class TimerService extends Service {
                 long hours = TimeUnit.MILLISECONDS.toHours(calculatedTimeLeft);
                 long minutes = TimeUnit.MILLISECONDS.toMinutes(calculatedTimeLeft) - TimeUnit.HOURS.toMinutes(hours);
                 long seconds = TimeUnit.MILLISECONDS.toSeconds(calculatedTimeLeft) - TimeUnit.MINUTES.toSeconds(minutes);
+                long progress = (mTotalTimeInMilliseconds - leftTimeInMilliseconds);
 
                 if (!isActivityToBackground && seconds != mPreviousSecond) {
                     Log.v(TAG, "Send Broadcast: Tick to Activity");
@@ -223,9 +228,9 @@ public class TimerService extends Service {
                 if (isActivityToBackground && mPreviousMinute != minutes) {
                     Log.e(TAG, "Send Broadcast: Tick to Notification");
                     StringBuilder sb = new StringBuilder();
-                    sb.append(getCorrectTimerTimeValue(hours) + ":");
-                    sb.append(getCorrectTimerTimeValue(minutes));
-                    updateNotification(sb.toString());
+                    sb.append(getCorrectTimerTimeValue(hours) + "h:");
+                    sb.append(getCorrectTimerTimeValue(minutes) + "m");
+                    updateNotification((int)progress, sb.toString());
                     mPreviousMinute = minutes;
                 }
                 mPreviousSecond = seconds;
