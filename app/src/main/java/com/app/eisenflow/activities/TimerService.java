@@ -155,8 +155,9 @@ public class TimerService extends Service {
     private NotificationCompat.Builder createNotification() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, NOTIFICATION_CHANEL)
                 .setContentText(getString(R.string.timer_notification_content, DEFAULT_TIME_PASSED))
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setAutoCancel(true);
+                .setSmallIcon(R.mipmap.ic_stat_fish_icon)
+                .setAutoCancel(true)
+                .setShowWhen(false);
 
         builder.addAction(getNotificationActionPause());
 
