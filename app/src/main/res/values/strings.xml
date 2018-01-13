@@ -68,4 +68,8 @@
     <string name="share_task_title">Share EisenFlow task</string>
     <string name="share_task_message">Delegated task from EisenFlow. \n\n
         To Do: %1$s \nDue date: %2$s@%3$s \nNote: %4$s</string>
+
+    <!-- Timer Notification -->
+    <string name="timer_notification_title">EisenFlow Timer</string>
+    <string name="timer_notification_content">Time passed: %1$s</string>
 </resources>
