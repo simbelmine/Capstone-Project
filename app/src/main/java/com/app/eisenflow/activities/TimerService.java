@@ -110,7 +110,6 @@ public class TimerService extends Service {
             Log.v(TAG, "Destroying service");
         }
         mCountDownTimer.cancel();
-        stopSelf();
         cancelNotification();
         unregisterReceivers();
     }
@@ -205,6 +204,7 @@ public class TimerService extends Service {
     private NotificationCompat.Action getNotificationActionDismiss() {
         Intent actionPause = new Intent(this, TimerService.class);
         actionPause.setAction(ACTION_NOTIFICATION_DISMISS);
+        actionPause.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         PendingIntent actionPausePendingIntent = PendingIntent.getService(
                 this,
                 NOTIFICATION_ACTION_CODE,
