@@ -51,7 +51,6 @@ public class TimerService extends Service {
     public NotificationCompat.Builder mNotificationBuilder;
     private CountDownTimer mCountDownTimer;
     private boolean isActivityToBackground;
-    private boolean isPlaying;
     private long mTotalTimeInMilliseconds = 0;
     private long mPreviousMinute = 0;
     private long mTimeLeft = 0;
@@ -169,7 +168,6 @@ public class TimerService extends Service {
     private NotificationCompat.Action getNotificationActionPlay() {
         Intent actionPlay = new Intent(this, TimerService.class);
         actionPlay.setAction(ACTION_NOTIFICATION_PLAY);
-        actionPlay.putExtra("isPlaying", true);
         PendingIntent actionPlayPendingIntent = PendingIntent.getService(
                 this, NOTIFICATION_ACTION_CODE,
                 actionPlay,
@@ -177,28 +175,13 @@ public class TimerService extends Service {
         );
         return new NotificationCompat.Action.Builder(
                 R.drawable.play,
-                "Play",
+                getString(R.string.timer_notification_play),
                 actionPlayPendingIntent).build();
-    }
-
-    private void setPlayAction() {
-        clearNotificationActions();
-        mNotificationBuilder.addAction(getNotificationActionPlay());
-        foreground();
-
-    }
-
-    private void setPauseAction() {
-        clearNotificationActions();
-        mNotificationBuilder.addAction(getNotificationActionPause());
-        foreground();
-
     }
 
     private NotificationCompat.Action getNotificationActionPause() {
         Intent actionPause = new Intent(this, TimerService.class);
         actionPause.setAction(ACTION_NOTIFICATION_PAUSE);
-        actionPause.putExtra("isPlaying", false);
         PendingIntent actionPausePendingIntent = PendingIntent.getService(
                 this,
                 NOTIFICATION_ACTION_CODE,
@@ -207,7 +190,7 @@ public class TimerService extends Service {
         );
         return new NotificationCompat.Action.Builder(
                 R.drawable.pause,
-                "Pause",
+                getString(R.string.timer_notification_pause),
                 actionPausePendingIntent).build();
     }
 
@@ -223,8 +206,22 @@ public class TimerService extends Service {
         );
         return new NotificationCompat.Action.Builder(
                 R.drawable.close_vector,
-                "Dismiss",
+                getString(R.string.timer_notification_dismiss),
                 actionPausePendingIntent).build();
+    }
+
+    private void setPlayAction() {
+        clearNotificationActions();
+        mNotificationBuilder.addAction(getNotificationActionPlay());
+        foreground();
+
+    }
+
+    private void setPauseAction() {
+        clearNotificationActions();
+        mNotificationBuilder.addAction(getNotificationActionPause());
+        foreground();
+
     }
 
     private void initCountDownTimer(long startTime) {
@@ -380,13 +377,11 @@ public class TimerService extends Service {
     }
 
     private void play(long startTime) {
-        isPlaying = true;
         initCountDownTimer(startTime);
         startCountDownTimer();
     }
 
     private void pause() {
-        isPlaying = false;
         if (mCountDownTimer != null) {
             mCountDownTimer.cancel();
         }

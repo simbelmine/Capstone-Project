@@ -75,10 +75,6 @@ public class TimerActivity extends AppCompatActivity {
     private boolean isFirstStarted;
     private long mTotalTimeInMilliseconds = 0;
 
-
-    private boolean isServiceBound;
-    private TimerService timerService;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +86,7 @@ public class TimerActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        
+
         if (!isServiceRunning(TimerService.class)) {
             startService();
         }
@@ -145,7 +141,7 @@ public class TimerActivity extends AppCompatActivity {
             if (isTimerTimeValid(mHourValue, mMinutesValue)) {
                 play();
             } else {
-                Utils.showAlertMessage(findViewById(R.id.timer_holder), "To start, enter time!", R.color.date);
+                Utils.showAlertMessage(findViewById(R.id.timer_holder), getString(R.string.timer_alert_message), R.color.date);
             }
         }
         else {
@@ -241,7 +237,6 @@ public class TimerActivity extends AppCompatActivity {
     private void stopService() {
         if (Utils.isServiceRunning(TimerService.class)) {
             stopService(new Intent(this, TimerService.class));
-            isServiceBound = false;
         }
     }
 
