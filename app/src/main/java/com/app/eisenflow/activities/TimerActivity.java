@@ -84,57 +84,24 @@ public class TimerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
         ButterKnife.bind(this);
-        isPaused = true;
-
         addTextChangedListeners();
-
-        if(getIntent() != null && getIntent().getExtras() != null) {
-            Bundle extras = getIntent().getExtras();
-            Log.e(TAG, "extras --> " + extras);
-
-            boolean isPlaying = getIntent().getBooleanExtra("isPlaying", false);
-//            if (isPlaying) {
-//                updatePlayViews();
-//            } else {
-//                pause();
-//            }
-        } else {
-            if (savedInstanceState != null) {
-                // Restore value of members from saved state
-                isPaused = savedInstanceState.getBoolean("isPaused");
-                Log.e(TAG, "Restore State  --> " + isPaused);
-
-            }
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        Log.e(TAG, "NEW INtent intent --> " + getIntent().getExtras());
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
+        
         if (!isServiceRunning(TimerService.class)) {
             startService();
         }
-
         sendMessageActivityToForeground();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putBoolean("isPaused", isPaused);
-        super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        isPaused = true;
+        updatePlayPauseButton();
         setTaskName();
         registerReceivers();
     }
@@ -188,16 +155,26 @@ public class TimerActivity extends AppCompatActivity {
 
     private void play() {
         isPaused = false;
+        updatePlayPauseButton();
         setTimerTime();
         sendBroadcastPlay();
     }
 
     private void pause() {
         sendBroadcastPause();
-        mPlayButton.setVisibility(View.VISIBLE);
-        mPauseButton.setVisibility(View.INVISIBLE);
         isPaused = true;
         isTimerRunning = false;
+        updatePlayPauseButton();
+    }
+
+    private void updatePlayPauseButton() {
+        if (isPaused) {
+            mPlayButton.setVisibility(View.VISIBLE);
+            mPauseButton.setVisibility(View.INVISIBLE);
+        } else {
+            mPlayButton.setVisibility(View.INVISIBLE);
+            mPauseButton.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setTimerTime() {

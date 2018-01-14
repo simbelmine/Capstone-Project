@@ -81,14 +81,10 @@ public class TimerService extends Service {
             String action = intent.getAction();
             if (ACTION_NOTIFICATION_PLAY.equals(action)) {
                 play(mTimeLeft);
-                clearNotificationActions();
-                mNotificationBuilder.addAction(getNotificationActionPause());
-                foreground();
+                setPauseAction();
             } else if (ACTION_NOTIFICATION_PAUSE.equals(action)) {
                 pause();
-                clearNotificationActions();
-                mNotificationBuilder.addAction(getNotificationActionPlay());
-                foreground();
+                setPlayAction();
             } else if (ACTION_NOTIFICATION_DISMISS.equals(action)) {
                 stopSelf();
             }
@@ -183,6 +179,20 @@ public class TimerService extends Service {
                 R.drawable.play,
                 "Play",
                 actionPlayPendingIntent).build();
+    }
+
+    private void setPlayAction() {
+        clearNotificationActions();
+        mNotificationBuilder.addAction(getNotificationActionPlay());
+        foreground();
+
+    }
+
+    private void setPauseAction() {
+        clearNotificationActions();
+        mNotificationBuilder.addAction(getNotificationActionPause());
+        foreground();
+
     }
 
     private NotificationCompat.Action getNotificationActionPause() {
@@ -315,6 +325,7 @@ public class TimerService extends Service {
 
             long startTime = intent.getLongExtra(START_TIME, 0);
             play(startTime);
+            setPauseAction();
         }
     };
 
@@ -323,6 +334,7 @@ public class TimerService extends Service {
         public void onReceive(Context context, Intent intent) {
             Log.v(TAG, "Service Received Action: Pause");
             pause();
+            setPlayAction();
         }
     };
 
