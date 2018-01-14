@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -123,5 +124,11 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static Uri getNotificationCompletedSoundUri() {
+        return Uri.parse("android.resource://" +
+                ApplicationEisenFlow.getAppContext().getPackageName() +
+                "/" + com.app.eisenflow.R.raw.task_complete);
     }
 }

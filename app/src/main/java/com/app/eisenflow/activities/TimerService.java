@@ -15,6 +15,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.app.eisenflow.R;
+import com.app.eisenflow.utils.Utils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -263,6 +264,9 @@ public class TimerService extends Service {
                     mNotificationBuilder.addAction(getNotificationActionDismiss());
                     // Open MainActivity on notification click when CountdownTimer finished it's work.
                     mNotificationBuilder.setContentIntent(getContentIntent(MainActivity.class));
+                    // Alert CountdownTimer finished by sound.
+                    mNotificationBuilder.setSound(Utils.getNotificationCompletedSoundUri());
+                    // Update the notification.
                     updateNotification((int)mTotalTimeInMilliseconds, getNotificationTimeString(mCurrentHour, mCurrentMinutes));
                 }
             }
