@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.helpers.TasksCursorRecyclerViewAdapter;
+import com.app.eisenflow.utils.Utils;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
 import butterknife.BindView;
@@ -78,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        if (Utils.isServiceRunning(TimerService.class)) {
+            stopService(new Intent(this, TimerService.class));
+        }
     }
 
     private void initViews() {

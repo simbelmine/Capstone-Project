@@ -1,16 +1,14 @@
 package com.app.eisenflow.activities;
 
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Binder;
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -28,8 +26,6 @@ import static com.app.eisenflow.utils.DateTimeUtils.getCorrectTimerTimeValue;
  */
 
 public class TimerService extends Service {
-    public NotificationCompat.Builder notificationBuilder;
-
     private static final int NOTIFICATION_ID = 101;
     private static final int NOTIFICATION_RESULT_CODE = 0;
     private static final int NOTIFICATION_ACTION_CODE = 301;
@@ -37,6 +33,7 @@ public class TimerService extends Service {
     public static final String ACTION_PAUSE = "onPauseAction";
     public static final String ACTION_NOTIFICATION_PLAY = "onNotificationPlayAction";
     public static final String ACTION_NOTIFICATION_PAUSE = "onNotificationPauseAction";
+    public static final String ACTION_NOTIFICATION_DISMISS = "onNotificationDismissAction";
     public static final String ACTION_TICK = "onTickAction";
     public static final String ACTION_FINISHED = "onFinishedAction";
     public static final String ACTION_ACTIVITY_TO_BACKGROUND = "onActivityToBackground";
@@ -50,9 +47,7 @@ public class TimerService extends Service {
     private static final int MIN_PROGRESS = 1;
     private static final int MAX_PROGRESS = 100;
 
-    // Service binder
-    private final IBinder serviceBinder = new RunServiceBinder();
-
+    public NotificationCompat.Builder mNotificationBuilder;
     private CountDownTimer mCountDownTimer;
     private boolean isActivityToBackground;
     private boolean isPlaying;
@@ -60,12 +55,9 @@ public class TimerService extends Service {
     private long mPreviousMinute = 0;
     private long mTimeLeft = 0;
     private long mPreviousSecond = 0;
-
-    public class RunServiceBinder extends Binder {
-        TimerService getService() {
-            return TimerService.this;
-        }
-    }
+    private long mCurrentHour = 0;
+    private long mCurrentMinutes = 0;
+    private long mCurrentSeconds = 0;
 
     @Override
     public void onCreate() {
@@ -73,7 +65,7 @@ public class TimerService extends Service {
             Log.v(TAG, "Creating service");
         }
         background();
-        notificationBuilder = createNotification();
+        mNotificationBuilder = createNotification();
         registerReceivers();
     }
 
@@ -88,26 +80,26 @@ public class TimerService extends Service {
             String action = intent.getAction();
             if (ACTION_NOTIFICATION_PLAY.equals(action)) {
                 play(mTimeLeft);
-                notificationBuilder.mActions.clear();
-                notificationBuilder.addAction(getNotificationActionPause());
+                clearNotificationActions();
+                mNotificationBuilder.addAction(getNotificationActionPause());
                 foreground();
             } else if (ACTION_NOTIFICATION_PAUSE.equals(action)) {
                 pause();
-                notificationBuilder.mActions.clear();
-                notificationBuilder.addAction(getNotificationActionPlay());
+                clearNotificationActions();
+                mNotificationBuilder.addAction(getNotificationActionPlay());
                 foreground();
+            } else if (ACTION_NOTIFICATION_DISMISS.equals(action)) {
+                stopSelf();
             }
         }
 
         return Service.START_STICKY;
     }
 
+    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        if (Log.isLoggable(TAG, Log.VERBOSE)) {
-            Log.v(TAG, "Binding service");
-        }
-        return serviceBinder;
+        return null;
     }
 
     @Override
@@ -126,7 +118,7 @@ public class TimerService extends Service {
      * Place the service into the foreground
      */
     public void foreground() {
-        startForeground(NOTIFICATION_ID, notificationBuilder.build());
+        startForeground(NOTIFICATION_ID, mNotificationBuilder.build());
     }
 
     /**
@@ -137,8 +129,8 @@ public class TimerService extends Service {
     }
 
     public void updateNotification(int progress, String elapsedTime) {
-        notificationBuilder.setContentText(getString(R.string.timer_notification_content, elapsedTime));
-        notificationBuilder.setProgress((int)mTotalTimeInMilliseconds, progress, false);
+        mNotificationBuilder.setContentText(getString(R.string.timer_notification_content, elapsedTime));
+        mNotificationBuilder.setProgress((int)mTotalTimeInMilliseconds, progress, false);
         foreground();
     }
 
@@ -161,18 +153,21 @@ public class TimerService extends Service {
 
         builder.addAction(getNotificationActionPause());
 
-        Intent notificationIntent = new Intent(this, TimerActivity.class);
+        builder.setContentIntent(getContentIntent(TimerActivity.class));
+        builder.setProgress(MAX_PROGRESS, MIN_PROGRESS, false);
+
+        return builder;
+    }
+
+    private PendingIntent getContentIntent(Class<?> intentClass)  {
+        Intent notificationIntent = new Intent(this, intentClass);
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
 
-        PendingIntent intent = PendingIntent.getActivity(
+        return PendingIntent.getActivity(
                 this,
                 NOTIFICATION_RESULT_CODE,
                 notificationIntent,
                 0);
-        builder.setContentIntent(intent);
-        builder.setProgress(MAX_PROGRESS, MIN_PROGRESS, false);
-
-        return builder;
     }
 
     private NotificationCompat.Action getNotificationActionPlay() {
@@ -206,6 +201,21 @@ public class TimerService extends Service {
                 actionPausePendingIntent).build();
     }
 
+    private NotificationCompat.Action getNotificationActionDismiss() {
+        Intent actionPause = new Intent(this, TimerService.class);
+        actionPause.setAction(ACTION_NOTIFICATION_DISMISS);
+        PendingIntent actionPausePendingIntent = PendingIntent.getService(
+                this,
+                NOTIFICATION_ACTION_CODE,
+                actionPause,
+                0
+        );
+        return new NotificationCompat.Action.Builder(
+                R.drawable.close_vector,
+                "Dismiss",
+                actionPausePendingIntent).build();
+    }
+
     private void initCountDownTimer(long startTime) {
         mCountDownTimer = new CountDownTimer(startTime, COUNTDOWN_INTERVAL) {
             @Override
@@ -214,35 +224,61 @@ public class TimerService extends Service {
                 mTimeLeft = leftTimeInMilliseconds;
 
                 long calculatedTimeLeft = mTotalTimeInMilliseconds - leftTimeInMilliseconds;
-                long hours = TimeUnit.MILLISECONDS.toHours(calculatedTimeLeft);
-                long minutes = TimeUnit.MILLISECONDS.toMinutes(calculatedTimeLeft) - TimeUnit.HOURS.toMinutes(hours);
-                long seconds = TimeUnit.MILLISECONDS.toSeconds(calculatedTimeLeft) - TimeUnit.MINUTES.toSeconds(minutes);
+                mCurrentHour = TimeUnit.MILLISECONDS.toHours(calculatedTimeLeft);
+                mCurrentMinutes = TimeUnit.MILLISECONDS.toMinutes(calculatedTimeLeft) - TimeUnit.HOURS.toMinutes(mCurrentHour);
+                mCurrentSeconds = TimeUnit.MILLISECONDS.toSeconds(calculatedTimeLeft) - TimeUnit.MINUTES.toSeconds(mCurrentMinutes);
                 long progress = (mTotalTimeInMilliseconds - leftTimeInMilliseconds);
 
-                if (!isActivityToBackground && seconds != mPreviousSecond) {
+                if (mPreviousSecond != mCurrentSeconds ) {
+                    Log.v(TAG, "" + mCurrentSeconds);
+                }
+
+                if (!isActivityToBackground && mCurrentSeconds != mPreviousSecond) {
                     Log.v(TAG, "Send Broadcast: Tick to Activity");
                     sendBroadcastTick(leftTimeInMilliseconds);
                 }
 
                 // Check if TimerService is Running, if yes update the Notification.
                 // If TimerService is Running it means the app is in the background.
-                if (isActivityToBackground && mPreviousMinute != minutes) {
+                if (isActivityToBackground && mPreviousMinute != mCurrentMinutes) {
                     Log.e(TAG, "Send Broadcast: Tick to Notification");
-                    StringBuilder sb = new StringBuilder();
-                    sb.append(getCorrectTimerTimeValue(hours) + "h:");
-                    sb.append(getCorrectTimerTimeValue(minutes) + "m");
-                    updateNotification((int)progress, sb.toString());
-                    mPreviousMinute = minutes;
+                    updateNotification((int)progress, getNotificationTimeString(mCurrentHour, mCurrentMinutes));
+                    mPreviousMinute = mCurrentMinutes;
                 }
-                mPreviousSecond = seconds;
+                mPreviousSecond = mCurrentSeconds;
             }
 
             @Override
             public void onFinish() {
                 Log.v(TAG, "Send Broadcast: Finished");
                 sendBroadcastFinished();
+                if (isActivityToBackground) {
+                    Log.v(TAG, "Finished: update notification");
+                    if (mCurrentMinutes == 0 && mCurrentSeconds == 59) {
+                        mCurrentMinutes = 1;
+                    }
+
+                    // Add Dismiss action.
+                    clearNotificationActions();
+                    mNotificationBuilder.addAction(getNotificationActionDismiss());
+                    // Open MainActivity on notification click when CountdownTimer finished it's work.
+                    mNotificationBuilder.setContentIntent(getContentIntent(MainActivity.class));
+                    updateNotification((int)mTotalTimeInMilliseconds, getNotificationTimeString(mCurrentHour, mCurrentMinutes));
+                }
             }
         };
+    }
+
+    private String getNotificationTimeString(long hours, long minutes) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getCorrectTimerTimeValue(hours) + "h:");
+        sb.append(getCorrectTimerTimeValue(minutes) + "m");
+
+        return sb.toString();
+    }
+
+    private void clearNotificationActions() {
+        mNotificationBuilder.mActions.clear();
     }
 
     private void startCountDownTimer() {
