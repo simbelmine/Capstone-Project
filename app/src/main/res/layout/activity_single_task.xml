@@ -49,7 +49,6 @@
                     android:layout_marginStart="48dp"
                     android:background="@color/transparent"
                     android:cursorVisible="true"
-                    android:focusableInTouchMode="true"
                     android:hint="@string/enter_task_hint"
                     android:inputType="textCapSentences|textAutoCorrect"
                     android:paddingEnd="16dp"

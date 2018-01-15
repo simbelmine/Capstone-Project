@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -255,6 +256,12 @@ public class SingleTaskActivity extends AppCompatActivity {
     @OnCheckedChanged ({R.id.vibration_switch})
     public void onVibrationSwitchChecked(CompoundButton button, boolean checked) {
         mTask.setVibrationEnabled(DataUtils.getVibrationStateValue(checked));
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        Utils.forceEditTextToLooseFocus(this, event);
+        return super.dispatchTouchEvent(event);
     }
 
     @Override
