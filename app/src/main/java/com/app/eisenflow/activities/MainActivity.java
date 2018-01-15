@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.toolbar_arrow) ImageView mToolbarArrow;
     @BindView(R.id.material_calendar_view) MaterialCalendarView mMaterialCalendarView;
     @BindView(R.id.tasks_recycler_view) RecyclerView mTasksRecyclerView;
+    @BindView(R.id.bottom_sheet_holder) ConstraintLayout mBottomSheetHolder;
 
     public static final String TAG = "eisen";
     private static final int LOADER_ID = 0x02;

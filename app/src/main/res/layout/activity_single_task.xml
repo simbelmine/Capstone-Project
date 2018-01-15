@@ -344,7 +344,7 @@
             </FrameLayout>
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/vibration_img"
                 android:layout_width="@dimen/task_icon_size"
                 android:layout_height="@dimen/task_icon_size"
                 android:layout_marginStart="@dimen/activity_horizontal_spacing"
@@ -354,14 +354,14 @@
                 app:srcCompat="@mipmap/ic_vibration_black" />
 
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/vibration_lbl"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_half_spacing"
                 android:layout_marginTop="16dp"
                 android:text="@string/vibration_txt"
                 android:textSize="16sp"
-                app:layout_constraintStart_toEndOf="@+id/imageView"
+                app:layout_constraintStart_toEndOf="@+id/vibration_img"
                 app:layout_constraintTop_toBottomOf="@+id/reminder_holder" />
 
             <Switch
@@ -373,18 +373,18 @@
                 android:layout_marginTop="16dp"
                 android:checked="true"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView"
+                app:layout_constraintStart_toEndOf="@+id/vibration_lbl"
                 app:layout_constraintTop_toBottomOf="@+id/reminder_holder" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/note_img"
                 android:layout_width="@dimen/task_icon_size"
                 android:layout_height="@dimen/task_icon_size"
                 android:layout_marginLeft="@dimen/activity_horizontal_spacing"
                 android:layout_marginStart="@dimen/activity_horizontal_spacing"
                 android:layout_marginTop="24dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView"
+                app:layout_constraintTop_toBottomOf="@+id/vibration_img"
                 app:srcCompat="@drawable/note" />
 
             <TextView
@@ -396,8 +396,8 @@
                 android:gravity="center"
                 android:text="@string/note_txt"
                 android:textSize="16sp"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintStart_toEndOf="@+id/note_img"
+                app:layout_constraintTop_toBottomOf="@+id/vibration_lbl" />
 
             <EditText
                 android:id="@+id/note_edit_text"
@@ -418,7 +418,7 @@
                 android:textColor="@color/date"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                app:layout_constraintTop_toBottomOf="@+id/note_img" />
 
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/reminder_holder"
