@@ -15,10 +15,9 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
+import com.app.eisenflow.EisenBottomSheet;
 import com.app.eisenflow.R;
-import com.app.eisenflow.activities.SingleTaskActivity;
 import com.app.eisenflow.activities.TimerActivity;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.TaskUtils;
@@ -27,7 +26,6 @@ import static com.app.eisenflow.activities.MainActivity.TAG;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
-import static com.app.eisenflow.utils.DataUtils.Priority.FOUR;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 
 /**
@@ -58,6 +56,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     float oldDeltaX = -1;
     private boolean isTriggered_LtoR = false;
     private boolean isTriggered_RtoL = false;
+    private EisenBottomSheet mEisenBottomSheet;
 
     public RecyclerItemSwipeDetector(Activity mContext, TasksViewHolder viewHolder) {
         this.mContext = mContext;
@@ -68,6 +67,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
         animZoomOut = AnimationUtils.loadAnimation(this.mContext, R.anim.zoom_out);
 
         currentMenuLayout = getCorrectLayout();
+        mEisenBottomSheet = new EisenBottomSheet(mContext);
 
         //pullToRefreshLayout =  (SwipeRefreshLayout)recyclerView.getParent().getParent();
     }
@@ -337,10 +337,12 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     private void performClick(View v) {
         int taskPosition = mHolder.getAdapterPosition();
 
-        Intent intent = new Intent(mContext, SingleTaskActivity.class);
-        intent.putExtra(EXTRA_TASK_POSITION, taskPosition);
+        mEisenBottomSheet.openBottomSheet(taskPosition);
 
-        startActivityWithIntent(intent);
+//        Intent intent = new Intent(mContext, SingleTaskActivity.class);
+//        intent.putExtra(EXTRA_TASK_POSITION, taskPosition);
+//
+//        startActivityWithIntent(intent);
     }
 
     private void startActivityWithIntent(Intent intent) {

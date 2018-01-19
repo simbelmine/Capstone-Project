@@ -40,6 +40,9 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
+import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
+import static com.app.eisenflow.utils.TaskUtils.getFormattedProgress;
+import static com.app.eisenflow.utils.TaskUtils.setTaskBackgroundByPriority;
 
 /**
  * Created on 12/25/17.
@@ -97,7 +100,7 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
 
         // Set 'Priority' connected resources.
         int priority = cursor.getInt(cursor.getColumnIndex(KEY_PRIORITY));
-        setTaskBackgroundByPriority(priority);
+        setTaskBackgroundByPriority(mContext, mTaskHolder, priority);
         setPriorityActionIcon(cursor, priority);
         // Set time left.
         mTaskTime.setText(getTimeLeft(cursor));
@@ -111,27 +114,6 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
         setTaskOverdue(cursor);
 
         mTaskTime.setVisibility(View.VISIBLE);
-    }
-
-    private void setTaskBackgroundByPriority(int priority) {
-        DataUtils.Priority priorityValue = DataUtils.Priority.valueOf(priority);
-        switch (priorityValue) {
-            case ONE:
-                mTaskHolder.setBackgroundColor(mContext.getResources().getColor(R.color.firstQuadrant));
-                break;
-            case TWO:
-                mTaskHolder.setBackgroundColor(mContext.getResources().getColor(R.color.secondQuadrant));
-                break;
-            case THREE:
-                mTaskHolder.setBackgroundColor(mContext.getResources().getColor(R.color.thirdQuadrant));
-                break;
-            case FOUR:
-                mTaskHolder.setBackgroundColor(mContext.getResources().getColor(R.color.fourthQuadrant));
-                break;
-            case DEFAULT:
-                mTaskHolder.setBackgroundColor(mContext.getResources().getColor(R.color.list_item_bg));
-                break;
-        }
     }
 
     private void setPriorityActionIcon(Cursor cursor, int priorityValue) {
@@ -197,23 +179,6 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
         else {
             mTaskProgress.setVisibility(View.INVISIBLE);
         }
-    }
-
-    private int calculateProgress(Cursor cursor) {
-        int progressToReturn;
-
-        double totalDays = cursor.getDouble(cursor.getColumnIndex(KEY_TOTAL_DAYS_PERIOD));
-        int progress = cursor.getInt(cursor.getColumnIndex(KEY_PROGRESS));
-
-        double monthlyPercentage = 100 / totalDays;
-        progressToReturn = (int) (Math.round(progress * monthlyPercentage));
-        if (progress == totalDays || progressToReturn > 100) progressToReturn = 100;
-
-        return progressToReturn;
-    }
-
-    private String getFormattedProgress(int progress) {
-        return String.valueOf(progress) + "%";
     }
 
     private void crossTaskIfDone(Cursor cursor) {

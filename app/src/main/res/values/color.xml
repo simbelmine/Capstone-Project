@@ -44,6 +44,9 @@
     <!-- Main Activity -->
     <color name="list_item_bg">#ffebeff1</color>
 
+    <!-- Bottom Sheet -->
+    <color name="botom_sheet_data_color">#778899</color>
+
     <!-- Timer Activity-->
     <color name="timer_color">#6e3e39</color>
     <color name="bottom_dummy_circle">#a35448</color>

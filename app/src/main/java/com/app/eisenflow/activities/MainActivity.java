@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.app.eisenflow.EisenBottomSheet;
 import com.app.eisenflow.R;
 import com.app.eisenflow.helpers.TasksCursorRecyclerViewAdapter;
 import com.app.eisenflow.utils.Utils;
@@ -47,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.toolbar_arrow) ImageView mToolbarArrow;
     @BindView(R.id.material_calendar_view) MaterialCalendarView mMaterialCalendarView;
     @BindView(R.id.tasks_recycler_view) RecyclerView mTasksRecyclerView;
-    @BindView(R.id.bottom_sheet_holder) ConstraintLayout mBottomSheetHolder;
 
     public static final String TAG = "eisen";
     private static final int LOADER_ID = 0x02;

@@ -3,10 +3,12 @@ package com.app.eisenflow.utils;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.app.eisenflow.ApplicationEisenFlow;
+import com.app.eisenflow.R;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,10 +19,10 @@ public class DataUtils {
     // Enum to set priority highest to lowest (1 to 4).
     public enum Priority {
         DEFAULT(0),
-        ONE(1),
-        TWO(2),
-        THREE(3),
-        FOUR(4);
+        ONE(1),   // Red
+        TWO(2),   // Green
+        THREE(3), // Yellow
+        FOUR(4);  // Gray
 
         private static Map map = new HashMap<>();
         private int value;
@@ -44,6 +46,65 @@ public class DataUtils {
 
         public int getValue() {
             return value;
+        }
+    }
+
+    public enum Occurrence {
+        DAILY(ApplicationEisenFlow.getAppContext().getString(R.string.daily_txt), 0),
+        WEEKLY(ApplicationEisenFlow.getAppContext().getString(R.string.weekly_txt), 1),
+        MONTHLY(ApplicationEisenFlow.getAppContext().getString(R.string.monthly_txt), 2),
+        YEARLY(ApplicationEisenFlow.getAppContext().getString(R.string.yearly_txt), 3);
+
+        private static Map map = new HashMap<>();
+        private int value;
+        private String strValue;
+        Occurrence(String strValue, int value) {
+            this.strValue = strValue;
+            this.value = value;
+        }
+
+        static {
+            for (Occurrence pageType : Occurrence.values()) {
+                map.put(pageType.value, pageType.strValue);
+            }
+        }
+
+        public static String valueOf(int value) {
+            String occurrence = (String) map.get(value);
+            return occurrence ;
+        }
+
+        public static Occurrence getOccurrenceType(int value) {
+            return Occurrence.values()[value];
+        }
+    }
+
+    public enum When {
+        MON(ApplicationEisenFlow.getAppContext().getString(R.string.mon_txt), 0),
+        TUE(ApplicationEisenFlow.getAppContext().getString(R.string.tue_txt), 1),
+        WED(ApplicationEisenFlow.getAppContext().getString(R.string.wed_txt), 2),
+        THU(ApplicationEisenFlow.getAppContext().getString(R.string.thu_txt), 3),
+        FRI(ApplicationEisenFlow.getAppContext().getString(R.string.fri_txt), 4),
+        SAT(ApplicationEisenFlow.getAppContext().getString(R.string.sat_txt), 5),
+        SUN(ApplicationEisenFlow.getAppContext().getString(R.string.sun_txt), 6);
+
+        private static Map map = new HashMap<>();
+        private int value;
+        private String strValue;
+        When(String strValue, int value) {
+            this.strValue = strValue;
+            this.value = value;
+        }
+
+        static {
+            for (When pageType : When.values()) {
+                map.put(pageType.value, pageType.strValue);
+            }
+        }
+
+        public static String valueOf(int value) {
+            String when = (String) map.get(value);
+            return when ;
         }
     }
 

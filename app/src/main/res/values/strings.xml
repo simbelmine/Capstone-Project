@@ -68,6 +68,8 @@
     <string name="share_task_title">Share EisenFlow task</string>
     <string name="share_task_message">Delegated task from EisenFlow. \n\n
         To Do: %1$s \nDue date: %2$s@%3$s \nNote: %4$s</string>
+    <string name="vibration_on">ON</string>
+    <string name="vibration_off">OFF</string>
 
     <!-- Timer Activity -->
     <string name="timer_alert_message">To start, enter time!</string>

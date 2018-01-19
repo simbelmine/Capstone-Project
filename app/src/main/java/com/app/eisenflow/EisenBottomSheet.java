@@ -1,0 +1,225 @@
+package com.app.eisenflow;
+
+import android.app.Activity;
+import android.database.Cursor;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.BottomSheetBehavior;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.app.eisenflow.utils.DataUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_VIBRATION_ENABLED;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_NOTE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PROGRESS;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_WHEN;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
+import static com.app.eisenflow.utils.DataUtils.Occurrence.WEEKLY;
+import static com.app.eisenflow.utils.DataUtils.getBooleanValue;
+import static com.app.eisenflow.utils.DataUtils.stringToIntegerCollection;
+import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
+import static com.app.eisenflow.utils.TaskUtils.getFormattedProgress;
+import static com.app.eisenflow.utils.TaskUtils.setTaskBackgroundByPriority;
+
+/**
+ * Created on 1/15/18.
+ */
+
+public class EisenBottomSheet {
+    @BindView(R.id.bottom_sheet_holder) ConstraintLayout mBottomSheetHolder;
+    @BindView(R.id.bottom_sheet_title_holder_image) ImageView mTaskNameHolder;
+    @BindView(R.id.bottom_sheet_task_name) TextView mTaskName;
+    @BindView(R.id.bottom_sheet_date_txt) TextView mTaskDate;
+    @BindView(R.id.bottom_sheet_time_txt) TextView mTaskTime;
+    @BindView(R.id.bottom_sheet_reminder_holder) ConstraintLayout mReminderHolder;
+    @BindView(R.id.bottom_sheet_occurrence_txt) TextView mTaskReminderOccurrence;
+    @BindView(R.id.bottom_sheet_when_txt) TextView mTaskReminderWhen;
+    @BindView(R.id.bottom_sheet_vibration_txt) TextView mVibrationValue;
+    @BindView(R.id.bottom_sheet_note_txt) TextView mTaskNote;
+    @BindView(R.id.bottom_sheet_progress_holder) FrameLayout mTaskProgressHolder;
+    @BindView(R.id.bottom_sheet_progres_value) TextView mTaskProgressValue;
+    @BindView(R.id.bottom_sheet_done_btn) ImageView mTaskDoneButton;
+    @BindView(R.id.bottom_sheet_menu_btn) ImageView mTaskMenuButton;
+
+    private Activity mActivity;
+    private Cursor mCursor;
+    private BottomSheetBehavior mBottomSheetBehavior;
+    private static boolean isDone;
+
+    public EisenBottomSheet(Activity activity) {
+        mActivity = activity;
+        ButterKnife.bind(this, this.mActivity);
+        mCursor = getCursor();
+        mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetHolder);
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        mBottomSheetBehavior.setPeekHeight(0);
+        setCallbacks();
+    }
+
+    public void openBottomSheet(int position) {
+        if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        }
+        setTaskDetails(position);
+    }
+
+    public void closeBottomSheet() {
+        if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED) {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
+    }
+
+    @OnClick (R.id.bottom_sheet_done_btn)
+    public void onDoneButtonClick()
+    {
+        // Toggle Done button.
+        if (isDone) {
+            isDone = false;
+        } else {
+            isDone = true;
+        }
+        updateDoneButton(isDone);
+    }
+
+    @OnClick (R.id.bottom_sheet_menu_btn)
+    public void onMenuButtonClick() {
+
+    }
+
+    private void updateDoneButton(boolean isDone) {
+        if (isDone) {
+            mTaskDoneButton.setImageResource(R.drawable.done);
+        } else {
+            mTaskDoneButton.setImageResource(R.drawable.not_done);
+        }
+    }
+
+    private void setCallbacks() {
+        if (mBottomSheetBehavior == null) {
+            return;
+        }
+
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                switch (newState) {
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED: {
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_COLLAPSED: {
+                    }
+                    break;
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                        break;
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+            }
+        });
+    }
+
+    private void setTaskDetails(int position) {
+        if (mCursor != null && mCursor.moveToPosition(position)) {
+            int priority = mCursor.getInt(mCursor.getColumnIndex(KEY_PRIORITY));
+            String title = mCursor.getString(mCursor.getColumnIndex(KEY_TITLE));
+            String date = mCursor.getString(mCursor.getColumnIndex(KEY_DATE));
+            String time = mCursor.getString(mCursor.getColumnIndex(KEY_TIME));
+            int reminderOccurrence = mCursor.getInt(mCursor.getColumnIndex(KEY_REMINDER_OCCURRENCE));
+            String reminderWhen = mCursor.getString(mCursor.getColumnIndex(KEY_REMINDER_WHEN));
+            String note = mCursor.getString(mCursor.getColumnIndex(KEY_NOTE));
+            double totalDays = mCursor.getDouble(mCursor.getColumnIndex(KEY_TOTAL_DAYS_PERIOD));
+            int progress = mCursor.getInt(mCursor.getColumnIndex(KEY_PROGRESS));
+            int done = mCursor.getInt(mCursor.getColumnIndex(KEY_IS_DONE));
+            int isVibrationEnabled = mCursor.getInt(mCursor.getColumnIndex(KEY_IS_VIBRATION_ENABLED));
+
+            setTaskBackgroundByPriority(mActivity, mTaskNameHolder, priority);
+            mTaskName.setText(title);
+            mTaskDate.setText(date);
+            mTaskTime.setText(time);
+            setReminderOccurrence(getReminderOccurrence(reminderOccurrence), priority);
+            setReminderWhen(getReminderWhen(reminderWhen), reminderOccurrence);
+            mVibrationValue.setText(isVibrating(isVibrationEnabled));
+            mTaskNote.setText(note);
+            isDone = DataUtils.getBooleanValue(done);
+            Log.v("eisen", "# done = " + done);
+            Log.v("eisen", "# isDone = " + isDone);
+
+            updateDoneButton(isDone);
+
+            DataUtils.Priority priorityType = DataUtils.Priority.valueOf(priority);
+            if (priorityType == DataUtils.Priority.TWO) {
+                mTaskProgressHolder.setVisibility(View.VISIBLE);
+                mTaskProgressValue.setText(getFormattedProgress(calculateProgress(totalDays, progress)));
+            } else {
+                mTaskProgressHolder.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    private void setReminderOccurrence(String occurrence, int priority) {
+        DataUtils.Priority priorityType = DataUtils.Priority.valueOf(priority);
+        if (TextUtils.isEmpty(occurrence) || priorityType != DataUtils.Priority.TWO) {
+            mReminderHolder.setVisibility(View.GONE);
+        } else {
+            mTaskReminderOccurrence.setText(occurrence);
+            mReminderHolder.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void setReminderWhen(String when, int occurrence) {
+        DataUtils.Occurrence occurrenceType = DataUtils.Occurrence.getOccurrenceType(occurrence);
+
+        if (TextUtils.isEmpty(when) || WEEKLY != occurrenceType) {
+            mTaskReminderWhen.setVisibility(View.GONE);
+        } else {
+            mTaskReminderWhen.setText(when);
+            mTaskReminderWhen.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private String getReminderOccurrence(int occurrence) {
+        return DataUtils.Occurrence.valueOf(occurrence);
+    }
+
+    private String getReminderWhen(String when) {
+        if (TextUtils.isEmpty(when)) {
+            return null;
+        }
+        List<Integer> whenValues = new ArrayList<>(stringToIntegerCollection(when));
+        StringBuilder sb = new StringBuilder();
+        for (Integer i : whenValues) {
+            String whenValue = DataUtils.When.valueOf(i);
+            sb.append(whenValue + "\t\t");
+        }
+        return sb.toString();
+    }
+
+    private String isVibrating(int vibrating) {
+        return getBooleanValue(vibrating) ? mActivity.getString(R.string.vibration_on) : mActivity.getString(R.string.vibration_off);
+    }
+}

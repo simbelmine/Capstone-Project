@@ -6,10 +6,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.app.eisenflow.ApplicationEisenFlow;
 import com.app.eisenflow.R;
-import com.app.eisenflow.Task;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -20,6 +21,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PROGRESS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
 
 /**
@@ -89,5 +91,46 @@ public class TaskUtils {
             Uri uri = buildFlavorsUri(id);
             context.getContentResolver().update(uri, values, null, null);
         }
+    }
+
+    public static void setTaskBackgroundByPriority(Context context, View taskHolder, int priority) {
+        DataUtils.Priority priorityValue = DataUtils.Priority.valueOf(priority);
+        switch (priorityValue) {
+            case ONE:
+                taskHolder.setBackgroundColor(context.getResources().getColor(R.color.firstQuadrant));
+                break;
+            case TWO:
+                taskHolder.setBackgroundColor(context.getResources().getColor(R.color.secondQuadrant));
+                break;
+            case THREE:
+                taskHolder.setBackgroundColor(context.getResources().getColor(R.color.thirdQuadrant));
+                break;
+            case FOUR:
+                taskHolder.setBackgroundColor(context.getResources().getColor(R.color.fourthQuadrant));
+                break;
+            case DEFAULT:
+                taskHolder.setBackgroundColor(context.getResources().getColor(R.color.list_item_bg));
+                break;
+        }
+    }
+
+    public static int calculateProgress(Cursor cursor) {
+        double totalDays = cursor.getDouble(cursor.getColumnIndex(KEY_TOTAL_DAYS_PERIOD));
+        int progress = cursor.getInt(cursor.getColumnIndex(KEY_PROGRESS));
+
+        return calculateProgress(totalDays, progress);
+    }
+
+    public static int calculateProgress(double totalDays, int progress) {
+        int progressToReturn;
+        double monthlyPercentage = 100 / totalDays;
+        progressToReturn = (int) (Math.round(progress * monthlyPercentage));
+        if (progress == totalDays || progressToReturn > 100) progressToReturn = 100;
+
+        return progressToReturn;
+    }
+
+    public static String getFormattedProgress(int progress) {
+        return String.valueOf(progress) + "%";
     }
 }
