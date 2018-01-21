@@ -120,18 +120,18 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
         DataUtils.Priority priority = DataUtils.Priority.valueOf(priorityValue);
         switch (priority) {
             case ONE:
-                mRightActionIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.timer));
+                mRightActionIcon.setImageResource(R.drawable.timer);
                 mRightActionIcon.setTag(priorityValue);
                 break;
             case TWO:
                 int reminderOccurrence = cursor.getInt(cursor.getColumnIndex(KEY_REMINDER_OCCURRENCE));
                 if(reminderOccurrence != -1) {
-                    mRightActionIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.calendar_plus));
+                    mRightActionIcon.setImageResource(R.drawable.calendar_plus);
                     mRightActionIcon.setTag(priorityValue);
                 }
                 break;
             case THREE:
-                mRightActionIcon.setImageDrawable(mContext.getResources().getDrawable(R.drawable.share));
+                mRightActionIcon.setImageResource(R.drawable.share);
                 mRightActionIcon.setTag(priorityValue);
                 break;
         }

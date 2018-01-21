@@ -58,18 +58,19 @@ public class Utils {
         return Color.rgb((int) r, (int) g, (int) b);
     }
 
-    public static void showAlertMessage(View parentView, String messageToShow, int colorMsg) {
+    public static Object createAlertMessage(Activity activity, View parentView, String messageToShow, int colorMsg) {
         if(Build.VERSION.SDK_INT >= NEEDED_API_LEVEL) {
-            showAlertSnackbar(parentView, messageToShow, colorMsg);
+            return showAlertSnackbar(activity, parentView, messageToShow, colorMsg);
         }
         else {
-            showAlertDialog(messageToShow, colorMsg);
+            return showAlertDialog(activity, messageToShow, colorMsg);
         }
     }
-    private static void showAlertSnackbar(View parentView, String messageToShow, int colorMsg) {
+
+    private static Snackbar showAlertSnackbar(Activity activity, View parentView, String messageToShow, int colorMsg) {
         Snackbar snackbar = Snackbar.make(parentView, messageToShow, Snackbar.LENGTH_INDEFINITE)
                 .setActionTextColor(Color.WHITE)
-                .setAction(ApplicationEisenFlow.getAppContext().getString(android.R.string.ok), new View.OnClickListener() {
+                .setAction(activity.getString(android.R.string.ok), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                     }
@@ -77,11 +78,11 @@ public class Utils {
 
         View snackbarView = snackbar.getView();
         TextView text = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
-        text.setTextColor(ApplicationEisenFlow.getAppContext().getResources().getColor(colorMsg));
-        snackbar.show();
+        text.setTextColor(activity.getResources().getColor(colorMsg));
+        return snackbar;
     }
 
-    private static void showAlertDialog(String messageToShow, int colorMsg) {
+    private static AlertDialog.Builder showAlertDialog(Activity activity, String messageToShow, int colorMsg) {
         int theme;
         if(colorMsg == R.color.date || colorMsg == R.color.white) {
             theme = R.style.MyTipDialogStyle;
@@ -91,13 +92,33 @@ public class Utils {
         }
 
         AlertDialog.Builder builder =
-                new AlertDialog.Builder(ApplicationEisenFlow.getAppContext(), theme);
+                new AlertDialog.Builder(activity, theme);
         if(colorMsg != R.color.date && colorMsg != R.color.white) {
-            builder.setTitle(ApplicationEisenFlow.getAppContext().getResources().getString(R.string.add_task_alert_title));
+            builder.setTitle(activity.getResources().getString(R.string.add_task_alert_title));
         }
         builder.setMessage(messageToShow);
-        builder.setPositiveButton(ApplicationEisenFlow.getAppContext().getResources().getString(android.R.string.ok), null);
-        builder.show();
+        builder.setPositiveButton(activity.getResources().getString(android.R.string.ok), null);
+        builder.setCancelable(true);
+        return builder;
+    }
+
+    public static void showAlertMessage(Object alertMessage) {
+        if (alertMessage != null) {
+            if (alertMessage instanceof Snackbar) {
+                ((Snackbar)alertMessage).show();
+            }
+            if (alertMessage instanceof AlertDialog.Builder) {
+                ((AlertDialog.Builder)alertMessage).show();
+            }
+        }
+    }
+
+    public static void hideAlertMessage(Object alertMessage) {
+        if (alertMessage != null) {
+            if (alertMessage instanceof Snackbar) {
+                ((Snackbar)alertMessage).dismiss();
+            }
+        }
     }
 
     public static float convertDpToPixel(Context context, int dp){

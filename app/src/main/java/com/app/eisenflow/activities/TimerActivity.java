@@ -45,8 +45,11 @@ import static com.app.eisenflow.helpers.RecyclerItemSwipeDetector.EXTRA_TASK_POS
 import static com.app.eisenflow.utils.DateTimeUtils.getCorrectTimerTimeValue;
 import static com.app.eisenflow.utils.DateTimeUtils.getTimerTimeInMillis;
 import static com.app.eisenflow.utils.DateTimeUtils.isTimerTimeValid;
+import static com.app.eisenflow.utils.Utils.hideAlertMessage;
 import static com.app.eisenflow.utils.Utils.hideKeyboard;
 import static com.app.eisenflow.utils.Utils.isServiceRunning;
+import static com.app.eisenflow.utils.Utils.createAlertMessage;
+import static com.app.eisenflow.utils.Utils.showAlertMessage;
 
 /**
  * Created on 1/1/18.
@@ -74,6 +77,7 @@ public class TimerActivity extends AppCompatActivity {
 
     private boolean isFirstStarted;
     private long mTotalTimeInMilliseconds = 0;
+    private Object alertMessage;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -140,8 +144,10 @@ public class TimerActivity extends AppCompatActivity {
         if (isPaused) {
             if (isTimerTimeValid(mHourValue, mMinutesValue)) {
                 play();
+                hideAlertMessage(alertMessage);
             } else {
-                Utils.showAlertMessage(findViewById(R.id.timer_holder), getString(R.string.timer_alert_message), R.color.date);
+                alertMessage = createAlertMessage(this, findViewById(R.id.timer_holder), getString(R.string.timer_alert_message), R.color.date);
+                showAlertMessage(alertMessage);
             }
         }
         else {

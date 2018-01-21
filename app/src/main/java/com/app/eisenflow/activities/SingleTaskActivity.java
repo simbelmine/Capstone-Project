@@ -14,7 +14,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -71,6 +70,7 @@ import static com.app.eisenflow.utils.DataUtils.setViewVisibility;
 import static com.app.eisenflow.utils.DateTimeUtils.getDateString;
 import static com.app.eisenflow.utils.DateTimeUtils.getTimeString;
 import static com.app.eisenflow.utils.TaskUtils.getTotalDays;
+import static com.app.eisenflow.utils.Utils.createAlertMessage;
 import static com.app.eisenflow.utils.Utils.showAlertMessage;
 
 /**
@@ -430,7 +430,8 @@ public class SingleTaskActivity extends AppCompatActivity {
             // Show tip message for Urgent-Important tasks.
             // Ideally this tasks should be scheduled for next day in order to have better performance.
             if (isRedTask() && isScheduledTooInAdvance() && !isRedTipShown) {
-                showAlertMessage(findViewById(R.id.single_task_holder), getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
+                Object alertMessage = createAlertMessage(this, findViewById(R.id.single_task_holder), getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
+                showAlertMessage(alertMessage);
                 isRedTipShown = true;
                 return;
             }
@@ -466,16 +467,19 @@ public class SingleTaskActivity extends AppCompatActivity {
     private boolean isDataValid() {
         String taskTitle = mTaskTitle.getText().toString();
         if (isEmpty(taskTitle)) {
-            showAlertMessage(mSingleTaskHolder, getString(R.string.add_task_name_alert), R.color.alert_color);
+            Object alertMessage = createAlertMessage(this, mSingleTaskHolder, getString(R.string.add_task_name_alert), R.color.alert_color);
+            showAlertMessage(alertMessage);
             return false;
         }
         if(mTask.getPriority() == -1) {
-            showAlertMessage(mSingleTaskHolder, getString(R.string.add_task_priority_alert), R.color.alert_color);
+            Object alertMessage = createAlertMessage(this, mSingleTaskHolder, getString(R.string.add_task_priority_alert), R.color.alert_color);
+            showAlertMessage(alertMessage);
             return false;
         }
 
         if (DataUtils.Priority.valueOf(mTask.getPriority()) == DataUtils.Priority.TWO && mCheckedDaysOfWeek != null && mCheckedDaysOfWeek.isEmpty() && mTask.getReminderOccurrence() == WEEKLY_OCCURRENCE) {
-            showAlertMessage(mSingleTaskHolder, getString(R.string.add_task_reminder_when_alert), R.color.alert_color);
+            Object alertMessage = createAlertMessage(this, mSingleTaskHolder, getString(R.string.add_task_reminder_when_alert), R.color.alert_color);
+            showAlertMessage(alertMessage);
             return false;
         }
 
@@ -490,11 +494,13 @@ public class SingleTaskActivity extends AppCompatActivity {
         String timeS = mTime.getText().toString();
 
         if (!DateTimeUtils.isDateValid(dateStr)) {
-            showAlertMessage(mSingleTaskHolder, getResources().getString(R.string.add_task_date_alert), R.color.alert_color);
+            Object alertMessage = createAlertMessage(this, mSingleTaskHolder, getResources().getString(R.string.add_task_date_alert), R.color.alert_color);
+            showAlertMessage(alertMessage);
             return false;
         }
         if (!DateTimeUtils.isTimeValid(dateStr, timeS)) {
-            showAlertMessage(mSingleTaskHolder, getResources().getString(R.string.add_task_time_alert), R.color.alert_color);
+            Object alertMessage = createAlertMessage(this, mSingleTaskHolder, getResources().getString(R.string.add_task_time_alert), R.color.alert_color);
+            showAlertMessage(alertMessage);
             return false;
         }
         return true;
