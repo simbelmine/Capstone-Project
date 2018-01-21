@@ -213,17 +213,19 @@ public class TimerService extends Service {
     }
 
     private void setPlayAction() {
-        clearNotificationActions();
-        mNotificationBuilder.addAction(getNotificationActionPlay());
-        foreground();
-
+        if (isActivityToBackground) {
+            clearNotificationActions();
+            mNotificationBuilder.addAction(getNotificationActionPlay());
+            foreground();
+        }
     }
 
     private void setPauseAction() {
-        clearNotificationActions();
-        mNotificationBuilder.addAction(getNotificationActionPause());
-        foreground();
-
+        if (isActivityToBackground) {
+            clearNotificationActions();
+            mNotificationBuilder.addAction(getNotificationActionPause());
+            foreground();
+        }
     }
 
     private void initCountDownTimer(long startTime) {
