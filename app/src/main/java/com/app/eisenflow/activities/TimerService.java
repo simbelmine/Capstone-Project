@@ -58,6 +58,7 @@ public class TimerService extends Service {
     private long mCurrentHour = 0;
     private long mCurrentMinutes = 0;
     private long mCurrentSeconds = 0;
+    private boolean isPaused;
 
     @Override
     public void onCreate() {
@@ -344,8 +345,13 @@ public class TimerService extends Service {
         public void onReceive(Context context, Intent intent) {
             Log.v(TAG, "Service Received Action: ActivityToBackground");
             // Send the service to the foreground.
-            foreground();
             isActivityToBackground = true;
+
+            if (isPaused) {
+                setPlayAction();
+            } else {
+                setPauseAction();
+            }
         }
     };
 
@@ -381,11 +387,13 @@ public class TimerService extends Service {
     }
 
     private void play(long startTime) {
+        isPaused = false;
         initCountDownTimer(startTime);
         startCountDownTimer();
     }
 
     private void pause() {
+        isPaused = true;
         if (mCountDownTimer != null) {
             mCountDownTimer.cancel();
         }
