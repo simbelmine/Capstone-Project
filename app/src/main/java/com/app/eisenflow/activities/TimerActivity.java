@@ -97,7 +97,7 @@ public class TimerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         isPaused = true;
-        updatePlayPauseButton();
+        updatePlayPauseButton(true);
         setTaskName();
         registerReceivers();
     }
@@ -151,7 +151,7 @@ public class TimerActivity extends AppCompatActivity {
 
     private void play() {
         isPaused = false;
-        updatePlayPauseButton();
+        updatePlayPauseButton(isPaused);
         setTimerTime();
         sendBroadcastPlay();
     }
@@ -160,10 +160,10 @@ public class TimerActivity extends AppCompatActivity {
         sendBroadcastPause();
         isPaused = true;
         isTimerRunning = false;
-        updatePlayPauseButton();
+        updatePlayPauseButton(isPaused);
     }
 
-    private void updatePlayPauseButton() {
+    private void updatePlayPauseButton(boolean isPaused) {
         if (isPaused) {
             mPlayButton.setVisibility(View.VISIBLE);
             mPauseButton.setVisibility(View.INVISIBLE);
@@ -248,6 +248,7 @@ public class TimerActivity extends AppCompatActivity {
 
             if (intent != null) {
                 Long leftTimeInMilliseconds = intent.getLongExtra(LEFT_TIME_MILLIS, 0);
+                isPaused = false;
                 isTimerRunning = true;
                 // Save time for future use.
                 mTimeLeft = leftTimeInMilliseconds;
