@@ -1,13 +1,8 @@
 package com.app.eisenflow.helpers;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
-import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -18,15 +13,17 @@ import android.widget.RelativeLayout;
 
 import com.app.eisenflow.EisenBottomSheet;
 import com.app.eisenflow.R;
-import com.app.eisenflow.activities.TimerActivity;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.TaskUtils;
 
 import static com.app.eisenflow.activities.MainActivity.TAG;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
-import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
+import static com.app.eisenflow.utils.TaskUtils.addProgressAction;
+import static com.app.eisenflow.utils.TaskUtils.deleteTaskAction;
+import static com.app.eisenflow.utils.TaskUtils.shareTaskAction;
+import static com.app.eisenflow.utils.TaskUtils.startTimerActivityAction;
 
 /**
  * Created by Sve on 5/1/16.
@@ -247,7 +244,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 Cursor cursor = mHolder.getHolderCursor();
                 if (cursor != null && cursor.moveToPosition(mHolder.getAdapterPosition())) {
                     if (mHolder.mUndoButton.getVisibility() == View.VISIBLE) {
-                        TaskUtils.deleteTask(cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID)));
+                        deleteTaskAction(cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID)));
                         swipe(null, 0);
                     }
                 }
@@ -290,17 +287,14 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                         switch (priority) {
                             case ONE:
                                 Log.v(TAG, "Action: Timer");
-                                Intent timerIntent = new Intent(mContext, TimerActivity.class);
-                                timerIntent.putExtra(EXTRA_TASK_POSITION, mHolder.getAdapterPosition());
-                                mContext.startActivity(timerIntent);
+                                startTimerActivityAction(mContext, mHolder.getAdapterPosition());
                                 swipe(null, 0);
                                 mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
                                 mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
                                 break;
                             case TWO: {
                                 Log.v(TAG, "Action: Progress++");
-                                int progress = TaskUtils.getIncreasedTaskProgress(mHolder.getHolderCursor(), mHolder.getAdapterPosition());
-                                TaskUtils.updateProgress(mHolder.getHolderCursor(), mHolder.getAdapterPosition(), progress);
+                                addProgressAction(mHolder.getHolderCursor(), mHolder.getAdapterPosition());
                                 swipe(null, 0);
                                 mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
                                 mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
@@ -308,7 +302,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                             }
                             case THREE:
                                 Log.v(TAG, "Action: Share");
-                                TaskUtils.shareTask(mHolder.getHolderCursor(), mHolder.getAdapterPosition());
+                                shareTaskAction(mHolder.getHolderCursor(), mHolder.getAdapterPosition());
                                 swipe(null, 0);
                                 mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
                                 mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);

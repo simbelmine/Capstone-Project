@@ -12,9 +12,12 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.app.eisenflow.activities.SingleTaskActivity;
@@ -35,6 +38,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PROGRESS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_WHEN;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
@@ -43,9 +47,13 @@ import static com.app.eisenflow.helpers.RecyclerItemSwipeDetector.EXTRA_TASK_POS
 import static com.app.eisenflow.utils.DataUtils.Occurrence.WEEKLY;
 import static com.app.eisenflow.utils.DataUtils.getBooleanValue;
 import static com.app.eisenflow.utils.DataUtils.stringToIntegerCollection;
+import static com.app.eisenflow.utils.TaskUtils.addProgressAction;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
+import static com.app.eisenflow.utils.TaskUtils.deleteTaskAction;
 import static com.app.eisenflow.utils.TaskUtils.getFormattedProgress;
 import static com.app.eisenflow.utils.TaskUtils.setTaskBackgroundByPriority;
+import static com.app.eisenflow.utils.TaskUtils.shareTaskAction;
+import static com.app.eisenflow.utils.TaskUtils.startTimerActivityAction;
 
 /**
  * Created on 1/15/18.
@@ -71,6 +79,7 @@ public class EisenBottomSheet {
     public static final String EXTRA_TRANSITION_NAME = "ExtraTransitionName";
     private Activity mActivity;
     private Cursor mCursor;
+    private static int mPriority = -1;
     private static int mTaskPosition = -1;
     private BottomSheetBehavior mBottomSheetBehavior;
     private static boolean isDone;
@@ -113,7 +122,7 @@ public class EisenBottomSheet {
 
     @OnClick (R.id.bottom_sheet_menu_btn)
     public void onMenuButtonClick() {
-
+        showBottomSheetOverflowMenu();
     }
 
     @OnClick (R.id.bottom_sheet_edit_btn)
@@ -205,6 +214,7 @@ public class EisenBottomSheet {
             int done = mCursor.getInt(mCursor.getColumnIndex(KEY_IS_DONE));
             int isVibrationEnabled = mCursor.getInt(mCursor.getColumnIndex(KEY_IS_VIBRATION_ENABLED));
 
+            mPriority = priority;
             setTaskBackgroundByPriority(mActivity, mTaskNameHolder, priority);
             mTaskName.setText(title);
             mTaskDate.setText(date);
@@ -266,5 +276,55 @@ public class EisenBottomSheet {
 
     private String isVibrating(int vibrating) {
         return getBooleanValue(vibrating) ? mActivity.getString(R.string.vibration_on) : mActivity.getString(R.string.vibration_off);
+    }
+
+    private void showBottomSheetOverflowMenu() {
+        PopupMenu popup = new PopupMenu(mActivity, mTaskMenuButton);
+        Menu menu = popup.getMenu();
+        popup.getMenuInflater().inflate(R.menu.bottom_sheet_overflow_menu, popup.getMenu());
+
+        if (mPriority != -1) {
+            DataUtils.Priority priorityType = DataUtils.Priority.valueOf(mPriority);
+            switch (priorityType) {
+                case ONE:
+                    menu.findItem(R.id.action_add_progress).setVisible(false);
+                    menu.findItem(R.id.action_share).setVisible(false);
+                    break;
+                case TWO:
+                    menu.findItem(R.id.action_start_timer).setVisible(false);
+                    menu.findItem(R.id.action_share).setVisible(false);
+                    break;
+                case THREE:
+                    menu.findItem(R.id.action_start_timer).setVisible(false);
+                    menu.findItem(R.id.action_add_progress).setVisible(false);
+                    break;
+                case FOUR:
+                    menu.findItem(R.id.action_start_timer).setVisible(false);
+                    menu.findItem(R.id.action_add_progress).setVisible(false);
+                    menu.findItem(R.id.action_share).setVisible(false);
+                    break;
+            }
+        }
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_start_timer:
+                        startTimerActivityAction(mActivity, mTaskPosition);
+                        break;
+                    case R.id.action_add_progress:
+                        addProgressAction(mCursor, mTaskPosition);
+                        break;
+                    case R.id.action_share:
+                        shareTaskAction(mCursor, mTaskPosition);
+                        break;
+                    case R.id.action_delete:
+                        deleteTaskAction(mCursor.getInt(mCursor.getColumnIndex(KEY_ROW_ID)));
+                        break;
+                }
+                return true;
+            }
+        });
+        popup.show();
     }
 }

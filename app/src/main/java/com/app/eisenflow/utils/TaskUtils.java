@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 
 import com.app.eisenflow.ApplicationEisenFlow;
 import com.app.eisenflow.R;
+import com.app.eisenflow.activities.TimerActivity;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
@@ -23,6 +24,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
+import static com.app.eisenflow.helpers.RecyclerItemSwipeDetector.EXTRA_TASK_POSITION;
 
 /**
  * Created on 12/31/17.
@@ -31,13 +33,18 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri
 public class TaskUtils {
     private static final String PRECISSION_FORMAT = "0.00";
 
-    public static void deleteTask(int taskId) {
-        Context context = ApplicationEisenFlow.getAppContext();
-        Uri uri = buildFlavorsUri(taskId);
-        context.getContentResolver().delete(uri, null, null);
+    public static void startTimerActivityAction(Context context, int position) {
+        Intent timerIntent = new Intent(context, TimerActivity.class);
+        timerIntent.putExtra(EXTRA_TASK_POSITION, position);
+        context.startActivity(timerIntent);
     }
 
-    public static void shareTask(Cursor cursor, int position) {
+    public static void addProgressAction(Cursor cursor, int position) {
+        int progress = TaskUtils.getIncreasedTaskProgress(cursor, position);
+        TaskUtils.updateProgress(cursor, position, progress);
+    }
+
+    public static void shareTaskAction(Cursor cursor, int position) {
         Context context = ApplicationEisenFlow.getAppContext();
         if (cursor != null && cursor.moveToPosition(position)) {
             Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -48,6 +55,12 @@ public class TaskUtils {
                     context.getResources().getString(R.string.share_task_title)
             ).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         }
+    }
+
+    public static void deleteTaskAction(int taskId) {
+        Context context = ApplicationEisenFlow.getAppContext();
+        Uri uri = buildFlavorsUri(taskId);
+        context.getContentResolver().delete(uri, null, null);
     }
 
     private static String getMessageToShare(Cursor cursor) {
