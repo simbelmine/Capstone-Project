@@ -104,7 +104,9 @@ public class TimerService extends Service {
         if (Log.isLoggable(TAG, Log.VERBOSE)) {
             Log.v(TAG, "Destroying service");
         }
-        mCountDownTimer.cancel();
+        if (mCountDownTimer != null) {
+            mCountDownTimer.cancel();
+        }
         cancelNotification();
         unregisterReceivers();
     }
