@@ -197,19 +197,19 @@ public class TimerService extends Service {
     }
 
     private NotificationCompat.Action getNotificationActionDismiss() {
-        Intent actionPause = new Intent(this, TimerService.class);
-        actionPause.setAction(ACTION_NOTIFICATION_DISMISS);
-        actionPause.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        PendingIntent actionPausePendingIntent = PendingIntent.getService(
+        Intent actionDismiss = new Intent(this, TimerService.class);
+        actionDismiss.setAction(ACTION_NOTIFICATION_DISMISS);
+        actionDismiss.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        PendingIntent actionDismissPendingIntent = PendingIntent.getService(
                 this,
                 NOTIFICATION_ACTION_CODE,
-                actionPause,
+                actionDismiss,
                 0
         );
         return new NotificationCompat.Action.Builder(
                 R.drawable.close_vector,
                 getString(R.string.timer_notification_dismiss),
-                actionPausePendingIntent).build();
+                actionDismissPendingIntent).build();
     }
 
     private void setPlayAction() {
