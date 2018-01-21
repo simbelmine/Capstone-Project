@@ -1,10 +1,15 @@
 package com.app.eisenflow;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.app.eisenflow.activities.SingleTaskActivity;
 import com.app.eisenflow.utils.DataUtils;
 
 import java.util.ArrayList;
@@ -33,6 +39,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
+import static com.app.eisenflow.helpers.RecyclerItemSwipeDetector.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.DataUtils.Occurrence.WEEKLY;
 import static com.app.eisenflow.utils.DataUtils.getBooleanValue;
 import static com.app.eisenflow.utils.DataUtils.stringToIntegerCollection;
@@ -59,9 +66,12 @@ public class EisenBottomSheet {
     @BindView(R.id.bottom_sheet_progres_value) TextView mTaskProgressValue;
     @BindView(R.id.bottom_sheet_done_btn) ImageView mTaskDoneButton;
     @BindView(R.id.bottom_sheet_menu_btn) ImageView mTaskMenuButton;
+    @BindView(R.id.bottom_sheet_edit_btn) ImageView mTaskEditButton;
 
+    public static final String EXTRA_TRANSITION_NAME = "ExtraTransitionName";
     private Activity mActivity;
     private Cursor mCursor;
+    private static int mTaskPosition = -1;
     private BottomSheetBehavior mBottomSheetBehavior;
     private static boolean isDone;
 
@@ -76,6 +86,7 @@ public class EisenBottomSheet {
     }
 
     public void openBottomSheet(int position) {
+        mTaskPosition = position;
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
@@ -103,6 +114,43 @@ public class EisenBottomSheet {
     @OnClick (R.id.bottom_sheet_menu_btn)
     public void onMenuButtonClick() {
 
+    }
+
+    @OnClick (R.id.bottom_sheet_edit_btn)
+    public void onEditButtonClick() {
+        if (mTaskPosition != -1) {
+            Intent intent = new Intent(mActivity, SingleTaskActivity.class);
+            intent.putExtra(EXTRA_TASK_POSITION, mTaskPosition);
+            startActivityWithTransition(intent);
+        }
+    }
+
+    private void startActivityWithTransition(Intent intent) {
+        if (mCursor == null) {
+            return;
+        }
+        Bundle b;
+        // Start activity with transition animation if Android version bigger or equal than Jelly Bean.
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
+                mCursor != null && mCursor.moveToPosition(mTaskPosition)) {
+
+            View transitionView = mActivity.findViewById(R.id.bottom_sheet_title_holder);
+
+            // Use Task name to transition from MainActivity's list item to SingleTaskActivity.
+            String transitionName = mCursor.getColumnName(mCursor.getColumnIndex(KEY_TITLE));
+            // Set transition name to the view we want to transform.
+            ViewCompat.setTransitionName(transitionView, transitionName);
+            // Pass the transition name to next activity so we can set it there to the relevant view.
+            intent.putExtra(EXTRA_TRANSITION_NAME, transitionName);
+
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation(mActivity, transitionView, transitionName);
+            b = options.toBundle();
+            mActivity.startActivity(intent, b);
+        }
+        else {
+            mActivity.startActivity(intent);
+        }
     }
 
     private void updateDoneButton(boolean isDone) {
@@ -166,9 +214,6 @@ public class EisenBottomSheet {
             mVibrationValue.setText(isVibrating(isVibrationEnabled));
             mTaskNote.setText(note);
             isDone = DataUtils.getBooleanValue(done);
-            Log.v("eisen", "# done = " + done);
-            Log.v("eisen", "# isDone = " + isDone);
-
             updateDoneButton(isDone);
 
             DataUtils.Priority priorityType = DataUtils.Priority.valueOf(priority);

@@ -40,7 +40,6 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     private static final int ICON_SHOW_DELAY = 300;
     private static final int DISMISS_DELAY = 3000;
     private static final int ACTION_DELAY = 1500;
-    public static final String EXTRA_TRANSITION_NAME = "ExtraTransitionName";
     public static final String EXTRA_TASK_POSITION = "ExtraTaskPosition";
 
     private Activity mContext;
@@ -336,36 +335,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 
     private void performClick(View v) {
         int taskPosition = mHolder.getAdapterPosition();
-
         mEisenBottomSheet.openBottomSheet(taskPosition);
-
-//        Intent intent = new Intent(mContext, SingleTaskActivity.class);
-//        intent.putExtra(EXTRA_TASK_POSITION, taskPosition);
-//
-//        startActivityWithIntent(intent);
-    }
-
-    private void startActivityWithIntent(Intent intent) {
-        Cursor cursor = mHolder.getHolderCursor();
-        Bundle b;
-        // Start activity with transition animation if Android version bigger or equal than Jelly Bean.
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
-                cursor != null && cursor.moveToPosition(mHolder.getAdapterPosition())) {
-            // Use Task name to transition from MainActivity's list item to SingleTaskActivity.
-            String transitionName = cursor.getColumnName(cursor.getColumnIndex(KEY_TITLE));
-            // Set transition name to the view we want to transform.
-            ViewCompat.setTransitionName(mHolder.mTaskHolder, transitionName);
-            // Pass the transition name to next activity so we can set it there to the relevant view.
-            intent.putExtra(EXTRA_TRANSITION_NAME, transitionName);
-
-            ActivityOptionsCompat options = ActivityOptionsCompat.
-                    makeSceneTransitionAnimation(mContext, mHolder.mTaskHolder, transitionName);
-            b = options.toBundle();
-            mContext.startActivity(intent, b);
-        }
-        else {
-            mContext.startActivity(intent);
-        }
     }
 
     private void performSwipeAction(float deltaX) {

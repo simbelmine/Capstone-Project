@@ -14,6 +14,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -32,7 +33,6 @@ import android.widget.TimePicker;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.Task;
-import com.app.eisenflow.helpers.RecyclerItemSwipeDetector;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.DateTimeUtils;
 import com.app.eisenflow.utils.Utils;
@@ -50,6 +50,7 @@ import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 import static android.text.TextUtils.isEmpty;
+import static com.app.eisenflow.EisenBottomSheet.EXTRA_TRANSITION_NAME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE_MILLIS;
@@ -153,7 +154,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (extras != null) {
-                String imageTransitionName = extras.getString(RecyclerItemSwipeDetector.EXTRA_TRANSITION_NAME);
+                String imageTransitionName = extras.getString(EXTRA_TRANSITION_NAME);
                 findViewById(R.id.task_title_holder).setTransitionName(imageTransitionName);
             }
         }
