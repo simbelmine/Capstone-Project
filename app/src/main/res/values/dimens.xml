@@ -41,6 +41,8 @@
     <dimen name="card_priority_img_margin">5dp</dimen>
     <dimen name="card_under_icon_size">25dp</dimen>
     <dimen name="card_under_icon_margin">25dp</dimen>
+    <dimen name="card_top_month_margin">4dp</dimen>
+    <dimen name="card_bottom_margin">4dp</dimen>
 
     <!-- Timer Activity -->
     <dimen name="task_name_buttons_margin">30dp</dimen>

@@ -6,6 +6,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,7 +50,7 @@ import static com.app.eisenflow.utils.TaskUtils.setTaskBackgroundByPriority;
  */
 
 public class TasksViewHolder extends RecyclerView.ViewHolder {
-    @BindView(R.id.card_view) CardView mCardView;
+    @BindView(R.id.card_view) FrameLayout mCardView;
     @BindView(R.id.task_card_mainview) RelativeLayout mTaskHolder;
     @BindView(R.id.task_title) TextView mTaskTitle;
     @BindView(R.id.task_time_txt) TextView mTaskTime;
