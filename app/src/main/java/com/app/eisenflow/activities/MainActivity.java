@@ -2,7 +2,6 @@ package com.app.eisenflow.activities;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -18,8 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.transition.Fade;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -35,6 +32,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
+import static com.app.eisenflow.utils.Statics.LOADER_ID;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -50,8 +48,6 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.material_calendar_view) MaterialCalendarView mMaterialCalendarView;
     @BindView(R.id.tasks_recycler_view) RecyclerView mTasksRecyclerView;
 
-    public static final String TAG = "eisen";
-    private static final int LOADER_ID = 0x02;
     private ActionBarDrawerToggle mToggle;
     private RecyclerView.LayoutManager mLinearLayoutManager;
     private TasksCursorRecyclerViewAdapter mTasksAdapter;

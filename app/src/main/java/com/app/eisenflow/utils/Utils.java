@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.app.eisenflow.ApplicationEisenFlow;
 import com.app.eisenflow.R;
 
-import static com.app.eisenflow.activities.LaunchActivity.PREF_FIRST_TIME_USER;
+import static com.app.eisenflow.utils.Statics.PREF_FIRST_TIME_USER;
 
 /**
  * Created on 12/19/17.

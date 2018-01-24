@@ -64,11 +64,12 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
-import static com.app.eisenflow.helpers.RecyclerItemSwipeDetector.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.DataUtils.integerCollectionToString;
 import static com.app.eisenflow.utils.DataUtils.setViewVisibility;
 import static com.app.eisenflow.utils.DateTimeUtils.getDateString;
 import static com.app.eisenflow.utils.DateTimeUtils.getTimeString;
+import static com.app.eisenflow.utils.Statics.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Statics.WEEKLY_OCCURRENCE;
 import static com.app.eisenflow.utils.TaskUtils.getTotalDays;
 import static com.app.eisenflow.utils.Utils.createAlertMessage;
 import static com.app.eisenflow.utils.Utils.showAlertMessage;
@@ -104,7 +105,6 @@ public class SingleTaskActivity extends AppCompatActivity {
     @BindView(R.id.vibration_switch) Switch mVibrationSwitch;
     @BindView(R.id.note_edit_text) EditText mNoteEditText;
 
-    private static final int WEEKLY_OCCURRENCE = 1;
     private Task mTask;
     private DataUtils.Priority mPriority;
     private Calendar mToday;
@@ -320,7 +320,10 @@ public class SingleTaskActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float position = animation.getAnimatedFraction();
-                int blended = Utils.blendColors(getResources().getColor(fromColor), getResources().getColor(toColor), position);
+                int blended = Utils.blendColors(
+                        getResources().getColor(fromColor),
+                        getResources().getColor(toColor),
+                        position);
 
                 // Apply blended color to the view.
                 mTitleHolder.setBackgroundColor(blended);
@@ -430,7 +433,11 @@ public class SingleTaskActivity extends AppCompatActivity {
             // Show tip message for Urgent-Important tasks.
             // Ideally this tasks should be scheduled for next day in order to have better performance.
             if (isRedTask() && isScheduledTooInAdvance() && !isRedTipShown) {
-                Object alertMessage = createAlertMessage(this, findViewById(R.id.single_task_holder), getResources().getString(R.string.priority_0_tip_snackbar), R.color.date);
+                Object alertMessage = createAlertMessage(
+                        this,
+                        findViewById(R.id.single_task_holder),
+                        getResources().getString(R.string.priority_0_tip_snackbar),
+                        R.color.date);
                 showAlertMessage(alertMessage);
                 isRedTipShown = true;
                 return;
@@ -467,18 +474,32 @@ public class SingleTaskActivity extends AppCompatActivity {
     private boolean isDataValid() {
         String taskTitle = mTaskTitle.getText().toString();
         if (isEmpty(taskTitle)) {
-            Object alertMessage = createAlertMessage(this, mSingleTaskHolder, getString(R.string.add_task_name_alert), R.color.alert_color);
+            Object alertMessage = createAlertMessage(
+                    this,
+                    mSingleTaskHolder,
+                    getString(R.string.add_task_name_alert),
+                    R.color.alert_color);
             showAlertMessage(alertMessage);
             return false;
         }
         if(mTask.getPriority() == -1) {
-            Object alertMessage = createAlertMessage(this, mSingleTaskHolder, getString(R.string.add_task_priority_alert), R.color.alert_color);
+            Object alertMessage = createAlertMessage(
+                    this,
+                    mSingleTaskHolder,
+                    getString(R.string.add_task_priority_alert),
+                    R.color.alert_color);
             showAlertMessage(alertMessage);
             return false;
         }
 
-        if (DataUtils.Priority.valueOf(mTask.getPriority()) == DataUtils.Priority.TWO && mCheckedDaysOfWeek != null && mCheckedDaysOfWeek.isEmpty() && mTask.getReminderOccurrence() == WEEKLY_OCCURRENCE) {
-            Object alertMessage = createAlertMessage(this, mSingleTaskHolder, getString(R.string.add_task_reminder_when_alert), R.color.alert_color);
+        if (DataUtils.Priority.valueOf(mTask.getPriority()) == DataUtils.Priority.TWO &&
+                mCheckedDaysOfWeek != null && mCheckedDaysOfWeek.isEmpty() &&
+                mTask.getReminderOccurrence() == WEEKLY_OCCURRENCE) {
+            Object alertMessage = createAlertMessage(
+                    this,
+                    mSingleTaskHolder,
+                    getString(R.string.add_task_reminder_when_alert),
+                    R.color.alert_color);
             showAlertMessage(alertMessage);
             return false;
         }
@@ -494,12 +515,19 @@ public class SingleTaskActivity extends AppCompatActivity {
         String timeS = mTime.getText().toString();
 
         if (!DateTimeUtils.isDateValid(dateStr)) {
-            Object alertMessage = createAlertMessage(this, mSingleTaskHolder, getResources().getString(R.string.add_task_date_alert), R.color.alert_color);
+            Object alertMessage = createAlertMessage(
+                    this, mSingleTaskHolder,
+                    getResources().getString(R.string.add_task_date_alert),
+                    R.color.alert_color);
             showAlertMessage(alertMessage);
             return false;
         }
         if (!DateTimeUtils.isTimeValid(dateStr, timeS)) {
-            Object alertMessage = createAlertMessage(this, mSingleTaskHolder, getResources().getString(R.string.add_task_time_alert), R.color.alert_color);
+            Object alertMessage = createAlertMessage(
+                    this,
+                    mSingleTaskHolder,
+                    getResources().getString(R.string.add_task_time_alert),
+                    R.color.alert_color);
             showAlertMessage(alertMessage);
             return false;
         }

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 
 import com.app.eisenflow.R;
 
+import static com.app.eisenflow.utils.Statics.ARG_SECTION_NUMBER;
+
 /**
  * A placeholder fragment containing a simple view.
  *
@@ -20,7 +22,6 @@ public class PlaceholderFragment extends Fragment {
      * The fragment argument representing the section number for this
      * fragment.
      */
-    private static final String ARG_SECTION_NUMBER = "section_number";
     int[] layouts = new int[] {R.layout.splashscreen_two, R.layout.splashscreen_three};
     private int number;
 

@@ -41,6 +41,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
+import static com.app.eisenflow.utils.Statics.MAX_PROGRESS;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
 import static com.app.eisenflow.utils.TaskUtils.getFormattedProgress;
 import static com.app.eisenflow.utils.TaskUtils.setTaskBackgroundByPriority;
@@ -66,7 +67,6 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.action_undo_btn) TextView mUndoActionBtn;
     @BindView(R.id.month_name) TextView mMonthName;
 
-    private static int MAX_PROGRESS = 100;
     private Activity mContext;
     private TasksCursorRecyclerViewAdapter mAdapter;
     private Cursor mCursor;

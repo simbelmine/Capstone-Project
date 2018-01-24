@@ -29,7 +29,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.app.eisenflow.activities.MainActivity.TAG;
+import static com.app.eisenflow.utils.Statics.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Statics.TAG;
 import static com.app.eisenflow.activities.TimerService.ACTION_ACTIVITY_TO_BACKGROUND;
 import static com.app.eisenflow.activities.TimerService.ACTION_ACTIVITY_TO_FOREGROUND;
 import static com.app.eisenflow.activities.TimerService.ACTION_FINISHED;
@@ -41,7 +42,6 @@ import static com.app.eisenflow.activities.TimerService.START_TIME;
 import static com.app.eisenflow.activities.TimerService.TOTAL_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
-import static com.app.eisenflow.helpers.RecyclerItemSwipeDetector.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.DateTimeUtils.getCorrectTimerTimeValue;
 import static com.app.eisenflow.utils.DateTimeUtils.getTimerTimeInMillis;
 import static com.app.eisenflow.utils.DateTimeUtils.isTimerTimeValid;

@@ -21,7 +21,7 @@ import com.app.eisenflow.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.app.eisenflow.activities.LaunchActivity.PREF_FIRST_TIME_USER;
+import static com.app.eisenflow.utils.Statics.PREF_FIRST_TIME_USER;
 
 /**
  *  TutorialActivity should not contain UI elements that require user input,
@@ -75,7 +75,10 @@ public class TutorialActivity extends AppCompatActivity implements
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         final ArgbEvaluator evaluator = new ArgbEvaluator();
-        int colorUpdate = (Integer) evaluator.evaluate(positionOffset, colorList[position], colorList[position == 1 ? position : position + 1]);
+        int colorUpdate = (Integer) evaluator.evaluate(
+                positionOffset,
+                colorList[position],
+                colorList[position == 1 ? position : position + 1]);
         mTutorialNavigation.setBackgroundColor(colorUpdate);
     }
 

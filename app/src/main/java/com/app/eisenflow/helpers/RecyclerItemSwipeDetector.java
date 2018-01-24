@@ -14,9 +14,14 @@ import android.widget.RelativeLayout;
 import com.app.eisenflow.EisenBottomSheet;
 import com.app.eisenflow.R;
 import com.app.eisenflow.utils.DataUtils;
-import com.app.eisenflow.utils.TaskUtils;
 
-import static com.app.eisenflow.activities.MainActivity.TAG;
+import static com.app.eisenflow.utils.Statics.ACTION_DELAY;
+import static com.app.eisenflow.utils.Statics.DISMISS_DELAY;
+import static com.app.eisenflow.utils.Statics.DISTANCE;
+import static com.app.eisenflow.utils.Statics.ICON_SHOW_DELAY;
+import static com.app.eisenflow.utils.Statics.MIN_DISTANCE;
+import static com.app.eisenflow.utils.Statics.MIN_LOCK_DISTANCE;
+import static com.app.eisenflow.utils.Statics.TAG;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
@@ -26,19 +31,9 @@ import static com.app.eisenflow.utils.TaskUtils.shareTaskAction;
 import static com.app.eisenflow.utils.TaskUtils.startTimerActivityAction;
 
 /**
- * Created by Sve on 5/1/16.
+ * Created on 5/1/16.
  */
 public class RecyclerItemSwipeDetector implements View.OnTouchListener {
-    //    private static final int MIN_LOCK_DISTANCE = 30; // disallow motion intercept
-//    private static final int MIN_DISTANCE = 550;
-    private static final int MIN_LOCK_DISTANCE = 300; // disallow motion intercept
-    private static final int MIN_DISTANCE = 100;
-    private static final int DISTANCE = 70;
-    private static final int ICON_SHOW_DELAY = 300;
-    private static final int DISMISS_DELAY = 3000;
-    private static final int ACTION_DELAY = 1500;
-    public static final String EXTRA_TASK_POSITION = "ExtraTaskPosition";
-
     private Activity mContext;
     private boolean motionInterceptDisallowed = false;
     private float downX, upX;

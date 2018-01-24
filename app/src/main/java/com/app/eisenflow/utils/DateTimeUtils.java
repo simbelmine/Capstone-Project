@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.app.eisenflow.activities.MainActivity.TAG;
+import static com.app.eisenflow.utils.Statics.TAG;
 
 /**
  * Created on 12/23/17.

@@ -16,15 +16,14 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.ORDER_BY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.TABLE_NAME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
+import static com.app.eisenflow.utils.Statics.TASK;
+import static com.app.eisenflow.utils.Statics.TASK_ID;
 
 /**
  * Created on 12/21/17.
  */
 
 public class EisenContentProvider extends ContentProvider {
-    private static final int TASK = 100;
-    private static final int TASK_ID = 101;
-
     private EisenDatabaseHelper mDatabaseHelper;
     private static UriMatcher sUriMatcher = buildUriMatcher();
     private static UriMatcher buildUriMatcher() {

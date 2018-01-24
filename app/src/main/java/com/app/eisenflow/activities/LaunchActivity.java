@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.app.eisenflow.R;
 import com.app.eisenflow.utils.Utils;
 
+import static com.app.eisenflow.utils.Statics.SPLASH_TIME;
+
 /**
  * LaunchActivity is an entry point for the app.
  * It shows the app's onboarding tutorial or
@@ -19,9 +21,6 @@ import com.app.eisenflow.utils.Utils;
  */
 
 public class LaunchActivity extends AppCompatActivity {
-    public static final String PREF_FIRST_TIME_USER = "FirstTimeUser";
-    private static final int SPLASH_TIME = 3000;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
