@@ -177,7 +177,7 @@ public class TimerService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
         return new NotificationCompat.Action.Builder(
-                R.drawable.play,
+                R.mipmap.play,
                 getString(R.string.timer_notification_play),
                 actionPlayPendingIntent).build();
     }
@@ -192,7 +192,7 @@ public class TimerService extends Service {
                 PendingIntent.FLAG_UPDATE_CURRENT
         );
         return new NotificationCompat.Action.Builder(
-                R.drawable.pause,
+                R.mipmap.pause,
                 getString(R.string.timer_notification_pause),
                 actionPausePendingIntent).build();
     }
@@ -208,7 +208,7 @@ public class TimerService extends Service {
                 0
         );
         return new NotificationCompat.Action.Builder(
-                R.drawable.close_vector,
+                R.mipmap.close,
                 getString(R.string.timer_notification_dismiss),
                 actionDismissPendingIntent).build();
     }
