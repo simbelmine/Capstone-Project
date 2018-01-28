@@ -42,7 +42,6 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
-import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
 import static com.app.eisenflow.utils.DataUtils.Occurrence.WEEKLY;
 import static com.app.eisenflow.utils.DataUtils.getBooleanValue;
 import static com.app.eisenflow.utils.DataUtils.stringToIntegerCollection;
@@ -87,7 +86,6 @@ public class EisenBottomSheet {
     public EisenBottomSheet(Activity activity) {
         mActivity = activity;
         ButterKnife.bind(this, this.mActivity);
-        mCursor = getCursor();
         mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheetHolder);
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         mBottomSheetBehavior.setPeekHeight(0);
@@ -99,7 +97,7 @@ public class EisenBottomSheet {
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         }
-        setTaskDetails(position);
+        setTaskDetails();
     }
 
     public void closeBottomSheet() {
@@ -135,7 +133,7 @@ public class EisenBottomSheet {
     }
 
     private void startActivityWithTransition(Intent intent) {
-        if (mCursor == null) {
+        if (mCursor == null || mTaskPosition == -1) {
             return;
         }
         Bundle b;
@@ -200,8 +198,11 @@ public class EisenBottomSheet {
         });
     }
 
-    private void setTaskDetails(int position) {
-        if (mCursor != null && mCursor.moveToPosition(position)) {
+    private void setTaskDetails() {
+        if (mCursor == null || mTaskPosition == -1) {
+            return;
+        }
+        if (mCursor != null && mCursor.moveToPosition(mTaskPosition)) {
             int priority = mCursor.getInt(mCursor.getColumnIndex(KEY_PRIORITY));
             String title = mCursor.getString(mCursor.getColumnIndex(KEY_TITLE));
             String date = mCursor.getString(mCursor.getColumnIndex(KEY_DATE));
@@ -320,11 +321,19 @@ public class EisenBottomSheet {
                         break;
                     case R.id.action_delete:
                         deleteTaskAction(mCursor.getInt(mCursor.getColumnIndex(KEY_ROW_ID)));
+                        closeBottomSheet();
+                        mCursor = null;
+                        mTaskPosition = -1;
                         break;
                 }
                 return true;
             }
         });
         popup.show();
+    }
+
+    public void updateCursor(Cursor cursor) {
+        mCursor = cursor;
+        setTaskDetails();
     }
 }

@@ -47,7 +47,6 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     float oldDeltaX = -1;
     private boolean isTriggered_LtoR = false;
     private boolean isTriggered_RtoL = false;
-    private EisenBottomSheet mEisenBottomSheet;
 
     public RecyclerItemSwipeDetector(Activity mContext, TasksViewHolder viewHolder) {
         this.mContext = mContext;
@@ -58,7 +57,6 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
         animZoomOut = AnimationUtils.loadAnimation(this.mContext, R.anim.zoom_out);
 
         currentMenuLayout = getCorrectLayout();
-        mEisenBottomSheet = new EisenBottomSheet(mContext);
 
         //pullToRefreshLayout =  (SwipeRefreshLayout)recyclerView.getParent().getParent();
     }
@@ -324,7 +322,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 
     private void performClick(View v) {
         int taskPosition = mHolder.getAdapterPosition();
-        mEisenBottomSheet.openBottomSheet(taskPosition);
+        mHolder.getAdapter().getBottomSheet().openBottomSheet(taskPosition);
     }
 
     private void performSwipeAction(float deltaX) {

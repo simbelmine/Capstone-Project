@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.app.eisenflow.EisenBottomSheet;
 import com.app.eisenflow.R;
 
 import java.util.HashMap;
@@ -21,12 +22,14 @@ public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter<Ta
     private String mLastSeenMonth;
     public Map<String, Integer> mDateHeaderMap;
     public Map<String, Integer> mMonthHeaderMap;
+    private EisenBottomSheet mEisenBottomSheet;
 
     public TasksCursorRecyclerViewAdapter(Activity context, Cursor cursor) {
         super(context, cursor);
         mContext = context;
         mDateHeaderMap = new HashMap<>();
         mMonthHeaderMap = new HashMap<>();
+        mEisenBottomSheet = new EisenBottomSheet(mContext);
     }
 
     @Override
@@ -61,6 +64,11 @@ public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter<Ta
     public Cursor swapCursor(Cursor newCursor) {
         mDateHeaderMap.clear();
         mMonthHeaderMap.clear();
+        mEisenBottomSheet.updateCursor(newCursor);
         return super.swapCursor(newCursor);
+    }
+
+    public EisenBottomSheet getBottomSheet() {
+        return mEisenBottomSheet;
     }
 }

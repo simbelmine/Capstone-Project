@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.app.eisenflow.EisenBottomSheet;
 import com.app.eisenflow.R;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.DateTimeUtils;
@@ -92,6 +93,10 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
 
     public Cursor getHolderCursor() {
         return mCursor;
+    }
+
+    public TasksCursorRecyclerViewAdapter getAdapter() {
+        return mAdapter;
     }
 
     private void setTaskDetails(Cursor cursor) {
