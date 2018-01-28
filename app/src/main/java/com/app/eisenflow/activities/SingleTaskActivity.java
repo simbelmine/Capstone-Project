@@ -164,7 +164,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-             mCurrentPosition = extras.getInt(EXTRA_TASK_POSITION);
+            mCurrentPosition = extras.getInt(EXTRA_TASK_POSITION);
         }
     }
 
@@ -228,10 +228,6 @@ public class SingleTaskActivity extends AppCompatActivity {
     @OnCheckedChanged ({R.id.daily_rb, R.id.weekly_rb, R.id.monthly_rb, R.id.yearly_rb})
     public void onOccurrenceChecked(CompoundButton button, boolean checked) {
         if (checked) {
-            //ToDo: Add Occurrence from task like that:  mOccurrenceHolder.indexOfChild(button));
-            //ToDo: +before+ : int radioButtonID = radioButtonGroup.getCheckedRadioButtonId();
-            //ToDo:                 View radioButton = radioButtonGroup.findViewById(radioButtonID);
-
             if (checked) {
                 int buttonIdx = mOccurrenceHolder.indexOfChild(button);
                 mTask.setReminderOccurrence(buttonIdx);
@@ -598,16 +594,44 @@ public class SingleTaskActivity extends AppCompatActivity {
             setBackgroundWithAnimation();
             mTaskTitle.setText(mTask.getTitle());
             initDateTime();
-            setReminderOccurrenceChoice();
-            setReminderWhenChoice();
+            setReminderOccurrenceAndWhen(mPriority);
             setVibration();
             mNoteEditText.setText(mTask.getNote());
         }
     }
 
-    private void setReminderOccurrenceChoice() {
-        int choice = mTask.getReminderOccurrence();
-        mOccurrenceHolder.check(choice);
+    private void setReminderOccurrenceAndWhen(DataUtils.Priority priority) {
+        if (priority == DataUtils.Priority.TWO) {
+            // Set Reminder's occurrence.
+            setViewVisibility(mReminderHolder, View.VISIBLE);
+            int occurrenceChoice = mTask.getReminderOccurrence();
+            setReminderOccurrenceChoice(occurrenceChoice);
+            // Set Reminder's when (weekly occurrence).
+            int idxChild = mOccurrenceHolder.indexOfChild(findViewById(R.id.weekly_rb));
+            if (occurrenceChoice == idxChild) {
+                setViewVisibility(mWeekDaysHolder, View.VISIBLE);
+                setReminderWhenChoice();
+            }
+        }
+    }
+
+    private void setReminderOccurrenceChoice(int choice) {
+        int radioButtonId;
+        switch (choice) {
+            case 1:
+                radioButtonId =  R.id.weekly_rb;
+                break;
+            case 2:
+                radioButtonId = R.id.monthly_rb;
+                break;
+            case 3:
+                radioButtonId = R.id.yearly_rb;
+                break;
+            default:
+                radioButtonId = R.id.daily_rb;
+                break;
+        }
+        mOccurrenceHolder.check(radioButtonId);
     }
 
     private void setReminderWhenChoice() {
