@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.app.eisenflow.R;
+import com.app.eisenflow.services.TimerService;
 import com.app.eisenflow.utils.Utils;
 
 import java.util.concurrent.TimeUnit;
@@ -31,15 +32,15 @@ import butterknife.OnClick;
 
 import static com.app.eisenflow.utils.Statics.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.Statics.TAG;
-import static com.app.eisenflow.activities.TimerService.ACTION_ACTIVITY_TO_BACKGROUND;
-import static com.app.eisenflow.activities.TimerService.ACTION_ACTIVITY_TO_FOREGROUND;
-import static com.app.eisenflow.activities.TimerService.ACTION_FINISHED;
-import static com.app.eisenflow.activities.TimerService.ACTION_PAUSE;
-import static com.app.eisenflow.activities.TimerService.ACTION_PLAY;
-import static com.app.eisenflow.activities.TimerService.ACTION_TICK;
-import static com.app.eisenflow.activities.TimerService.LEFT_TIME_MILLIS;
-import static com.app.eisenflow.activities.TimerService.START_TIME;
-import static com.app.eisenflow.activities.TimerService.TOTAL_TIME;
+import static com.app.eisenflow.services.TimerService.ACTION_ACTIVITY_TO_BACKGROUND;
+import static com.app.eisenflow.services.TimerService.ACTION_ACTIVITY_TO_FOREGROUND;
+import static com.app.eisenflow.services.TimerService.ACTION_FINISHED;
+import static com.app.eisenflow.services.TimerService.ACTION_PAUSE;
+import static com.app.eisenflow.services.TimerService.ACTION_PLAY;
+import static com.app.eisenflow.services.TimerService.ACTION_TICK;
+import static com.app.eisenflow.services.TimerService.LEFT_TIME_MILLIS;
+import static com.app.eisenflow.services.TimerService.START_TIME;
+import static com.app.eisenflow.services.TimerService.TOTAL_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
 import static com.app.eisenflow.utils.DateTimeUtils.getCorrectTimerTimeValue;

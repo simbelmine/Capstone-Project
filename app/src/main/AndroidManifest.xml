@@ -39,7 +39,7 @@
             android:enabled="true"
             android:exported="false"></provider>
 
-        <service android:name=".activities.TimerService"/>
+        <service android:name=".services.TimerService"/>
     </application>
 
 </manifest>

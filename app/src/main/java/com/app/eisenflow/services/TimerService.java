@@ -1,4 +1,4 @@
-package com.app.eisenflow.activities;
+package com.app.eisenflow.services;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -15,6 +15,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.app.eisenflow.R;
+import com.app.eisenflow.activities.MainActivity;
+import com.app.eisenflow.activities.TimerActivity;
 import com.app.eisenflow.utils.Utils;
 
 import java.util.concurrent.TimeUnit;
