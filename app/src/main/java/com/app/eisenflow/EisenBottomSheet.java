@@ -113,6 +113,10 @@ public class EisenBottomSheet {
         }
     }
 
+    public boolean isBottomSheetExpanded() {
+        return mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_COLLAPSED;
+    }
+
     @OnClick (R.id.bottom_sheet_done_btn)
     public void onDoneButtonClick()
     {

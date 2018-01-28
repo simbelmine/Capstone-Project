@@ -209,4 +209,13 @@ public class MainActivity extends AppCompatActivity implements
 
         return itemCount;
     }
+
+    @Override
+    public void onBackPressed() {
+        if (mTasksAdapter != null && mTasksAdapter.getBottomSheet().isBottomSheetExpanded()) {
+            mTasksAdapter.getBottomSheet().closeBottomSheet();
+            return;
+        }
+        super.onBackPressed();
+    }
 }
