@@ -1,8 +1,10 @@
 package com.app.eisenflow;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -11,7 +13,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,10 +43,13 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
 import static com.app.eisenflow.utils.DataUtils.Occurrence.WEEKLY;
+import static com.app.eisenflow.utils.DataUtils.getBooleanState;
 import static com.app.eisenflow.utils.DataUtils.getBooleanValue;
 import static com.app.eisenflow.utils.DataUtils.stringToIntegerCollection;
 import static com.app.eisenflow.utils.Statics.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Statics.TAG;
 import static com.app.eisenflow.utils.TaskUtils.addProgressAction;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
 import static com.app.eisenflow.utils.TaskUtils.deleteTaskAction;
@@ -93,6 +97,9 @@ public class EisenBottomSheet {
     }
 
     public void openBottomSheet(int position) {
+        if (mTaskPosition != position) {
+            updateTaskDone();
+        }
         mTaskPosition = position;
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -179,12 +186,11 @@ public class EisenBottomSheet {
                 switch (newState) {
                     case BottomSheetBehavior.STATE_HIDDEN:
                         break;
-                    case BottomSheetBehavior.STATE_EXPANDED: {
-                    }
-                    break;
-                    case BottomSheetBehavior.STATE_COLLAPSED: {
-                    }
-                    break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                        break;
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                        updateTaskDone();
+                        break;
                     case BottomSheetBehavior.STATE_DRAGGING:
                         break;
                     case BottomSheetBehavior.STATE_SETTLING:
@@ -224,7 +230,7 @@ public class EisenBottomSheet {
             setReminderWhen(getReminderWhen(reminderWhen), reminderOccurrence);
             mVibrationValue.setText(isVibrating(isVibrationEnabled));
             mTaskNote.setText(note);
-            isDone = DataUtils.getBooleanValue(done);
+            isDone = DataUtils.getBooleanState(done);
             updateDoneButton(isDone);
 
             DataUtils.Priority priorityType = DataUtils.Priority.valueOf(priority);
@@ -276,7 +282,7 @@ public class EisenBottomSheet {
     }
 
     private String isVibrating(int vibrating) {
-        return getBooleanValue(vibrating) ? mActivity.getString(R.string.vibration_on) : mActivity.getString(R.string.vibration_off);
+        return getBooleanState(vibrating) ? mActivity.getString(R.string.vibration_on) : mActivity.getString(R.string.vibration_off);
     }
 
     private void showBottomSheetOverflowMenu() {
@@ -335,5 +341,19 @@ public class EisenBottomSheet {
     public void updateCursor(Cursor cursor) {
         mCursor = cursor;
         setTaskDetails();
+    }
+
+    private void updateTaskDone() {
+        if (mCursor == null || mTaskPosition == -1) {
+            return;
+        }
+        ContentValues values = new ContentValues();
+        values.put(KEY_IS_DONE, getBooleanValue(isDone));
+
+        if (mCursor != null && mCursor.moveToPosition(mTaskPosition)) {
+            long taskId =  mCursor.getInt(mCursor.getColumnIndex(KEY_ROW_ID));
+            Uri uri = buildFlavorsUri(taskId);
+            mActivity.getContentResolver().update(uri, values, null, null);
+        }
     }
 }

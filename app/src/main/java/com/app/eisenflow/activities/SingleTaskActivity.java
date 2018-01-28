@@ -252,7 +252,7 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     @OnCheckedChanged ({R.id.vibration_switch})
     public void onVibrationSwitchChecked(CompoundButton button, boolean checked) {
-        mTask.setVibrationEnabled(DataUtils.getVibrationStateValue(checked));
+        mTask.setVibrationEnabled(DataUtils.getBooleanValue(checked));
     }
 
     @Override
@@ -647,6 +647,6 @@ public class SingleTaskActivity extends AppCompatActivity {
     }
 
     private void setVibration() {
-        mVibrationSwitch.setChecked(DataUtils.getBooleanValue(mTask.isVibrationEnabled()));
+        mVibrationSwitch.setChecked(DataUtils.getBooleanState(mTask.isVibrationEnabled()));
     }
 }

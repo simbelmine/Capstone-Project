@@ -2,16 +2,13 @@ package com.app.eisenflow.helpers;
 
 import android.app.Activity;
 import android.database.Cursor;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.app.eisenflow.EisenBottomSheet;
 import com.app.eisenflow.R;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.DateTimeUtils;
@@ -26,21 +23,17 @@ import org.joda.time.format.PeriodFormatterBuilder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
-import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE_MILLIS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
-import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PROGRESS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
-import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.Statics.MAX_PROGRESS;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
@@ -199,7 +192,7 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
 
     private boolean isTaskDone(Cursor cursor) {
         int isDoneValue = cursor.getInt(cursor.getColumnIndex(KEY_IS_DONE));
-        return DataUtils.getBooleanValue(isDoneValue);
+        return DataUtils.getBooleanState(isDoneValue);
     }
 
     private void setTaskOverdue(Cursor cursor) {

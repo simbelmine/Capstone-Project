@@ -108,11 +108,11 @@ public class DataUtils {
         }
     }
 
-    public static int getVibrationStateValue(boolean state) {
+    public static int getBooleanValue(boolean state) {
         return state? 1 : 0;
     }
 
-    public static boolean getBooleanValue(int value) {
+    public static boolean getBooleanState(int value) {
         return (value == 1) ? true : false;
     }
 
