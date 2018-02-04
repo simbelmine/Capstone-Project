@@ -172,12 +172,14 @@ public class SingleTaskActivity extends AppCompatActivity {
         // Set Date.
         if (mTask.getDate() == null) {
             mDate.setText(getDateString(mToday));
+            mTask.setDate(getDateString(mToday));
         } else {
             mDate.setText(mTask.getDate());
         }
         // Set Time.
         if (mTask.getTime() == null) {
             mTime.setText(getTimeString(mToday));
+            mTask.setTime(getTimeString(mToday));
         } else {
             mTime.setText(getTimeString(getCalendarTime()));
         }
