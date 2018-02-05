@@ -107,7 +107,7 @@ public class OnAlarmReceiver extends BroadcastReceiver {
             if (oldTaskExists) {
                 notificationHelper.showWeeklyOldTaskNotification();
             } else {
-                TaskReminderHelper.createWeeklyOldTasksTip();
+                TaskReminderHelper.setWeeklyTipAlarms();
             }
         }
     }

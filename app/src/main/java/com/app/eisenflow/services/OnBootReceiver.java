@@ -25,8 +25,8 @@ public class OnBootReceiver extends BroadcastReceiver {
         Log.v(TAG, "OnBootReceive: set evening daily alarm and weekly Sunday alarm");
         // Set the evening daily alarm and the weekly Sunday alarm.
         TaskReminderHelper taskReminderAlarm = new TaskReminderHelper();
-        taskReminderAlarm.createDailyEveningTip();
-        taskReminderAlarm.createWeeklyOldTasksTip();
+        taskReminderAlarm.setDailyTipAlarms();
+        taskReminderAlarm.setWeeklyTipAlarms();
 
         Log.v(TAG, "OnBootReceive: start alarm rescheduling service");
         // Start the alarm rescheduling service.

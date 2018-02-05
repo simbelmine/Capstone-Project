@@ -164,49 +164,53 @@ public class TaskReminderHelper {
     /**
      * Daily Evening Alarms.
      */
-    private static void setDailyTipAlarms() {
-        Context context = ApplicationEisenFlow.getAppContext();
-        Calendar now = Calendar.getInstance();
-        Calendar whenToRepeat = getWhenToRepeat(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), 20);
-        Intent intent = new Intent(context, OnAlarmReceiver.class)
-                .putExtra(KEY_ROW_ID, -1)
-                .putExtra(DAILY_TIP, true)
-                .setAction(DAILY_TIP);
+    public static void setDailyTipAlarms() {
+        if (!isDailyEveningTipSet()) {
+            Context context = ApplicationEisenFlow.getAppContext();
+            Calendar now = Calendar.getInstance();
+            Calendar whenToRepeat = getWhenToRepeat(Calendar.getInstance().get(Calendar.DAY_OF_WEEK), 20);
+            Intent intent = new Intent(context, OnAlarmReceiver.class)
+                    .putExtra(KEY_ROW_ID, -1)
+                    .putExtra(DAILY_TIP, true)
+                    .setAction(DAILY_TIP);
 
-        if (whenToRepeat.before(now)) {
-            whenToRepeat.add(Calendar.DATE, 1);
+            if (whenToRepeat.before(now)) {
+                whenToRepeat.add(Calendar.DATE, 1);
+            }
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    whenToRepeat.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY,
+                    getPendingIntent(context, intent, DAILY_TIP_CODE));
         }
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                whenToRepeat.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY,
-                getPendingIntent(context, intent, DAILY_TIP_CODE));
     }
 
     /**
      * Sunday evening alarms.
      * Triggered if old tasks are not Done.
      */
-    private static void setWeeklyTipAlarms() {
-        Context context = ApplicationEisenFlow.getAppContext();
-        Calendar now = Calendar.getInstance();
-        Calendar whenToRepeat = getWhenToRepeat(Calendar.SUNDAY, 18);
-        Intent intent = new Intent(context, OnAlarmReceiver.class)
-                .putExtra(KEY_ROW_ID, -1)
-                .putExtra(WEEKLY_OLD_TASKS_TIP, true)
-                .putExtra(WEEKLY_WEEK_DAY, Calendar.SUNDAY)
-                .setAction(WEEKLY_OLD_TASKS_TIP);
+    public static void setWeeklyTipAlarms() {
+        if (!isWeeklyTipSet()) {
+            Context context = ApplicationEisenFlow.getAppContext();
+            Calendar now = Calendar.getInstance();
+            Calendar whenToRepeat = getWhenToRepeat(Calendar.SUNDAY, 18);
+            Intent intent = new Intent(context, OnAlarmReceiver.class)
+                    .putExtra(KEY_ROW_ID, -1)
+                    .putExtra(WEEKLY_OLD_TASKS_TIP, true)
+                    .putExtra(WEEKLY_WEEK_DAY, Calendar.SUNDAY)
+                    .setAction(WEEKLY_OLD_TASKS_TIP);
 
-        if (whenToRepeat.before(now)) {
-            whenToRepeat.add(Calendar.DAY_OF_YEAR, 7);
+            if (whenToRepeat.before(now)) {
+                whenToRepeat.add(Calendar.DAY_OF_YEAR, 7);
+            }
+            AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            alarmManager.setRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    whenToRepeat.getTimeInMillis(),
+                    AlarmManager.INTERVAL_DAY * 7,
+                    getPendingIntent(context, intent, WEEKLY_TIP_CODE));
         }
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                whenToRepeat.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY * 7,
-                getPendingIntent(context, intent, WEEKLY_TIP_CODE));
     }
 
     private static Calendar getWhenToRepeat(int dayOfWeek, int hour) {
@@ -225,12 +229,6 @@ public class TaskReminderHelper {
                 (int) id,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    public static void createDailyEveningTip() {
-        if (!isDailyEveningTipSet()) {
-            setDailyTipAlarms();
-        }
     }
 
     public static boolean isWeeklyTipSet() {
@@ -258,11 +256,5 @@ public class TaskReminderHelper {
                 DAILY_TIP_CODE,
                 intent,
                 PendingIntent.FLAG_NO_CREATE) != null;
-    }
-
-    public static void createWeeklyOldTasksTip() {
-        if (!isWeeklyTipSet()) {
-            setWeeklyTipAlarms();
-        }
     }
 }

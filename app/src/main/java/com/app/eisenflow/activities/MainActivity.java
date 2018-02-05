@@ -74,8 +74,8 @@ public class MainActivity extends AppCompatActivity implements
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
         // Set the evening daily alarm and the weekly Sunday alarm.
-        TaskReminderHelper.createDailyEveningTip();
-        TaskReminderHelper.createWeeklyOldTasksTip();
+        TaskReminderHelper.setDailyTipAlarms();
+        TaskReminderHelper.setWeeklyTipAlarms();
 
         int itemsCountLocal = getItemsCountLocal();
     }
