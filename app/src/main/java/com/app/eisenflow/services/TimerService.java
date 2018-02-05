@@ -21,7 +21,7 @@ import com.app.eisenflow.utils.Utils;
 
 import java.util.concurrent.TimeUnit;
 
-import static com.app.eisenflow.utils.Statics.TAG;
+import static com.app.eisenflow.utils.Constants.TAG;
 import static com.app.eisenflow.utils.DateTimeUtils.getCorrectTimerTimeValue;
 
 /**

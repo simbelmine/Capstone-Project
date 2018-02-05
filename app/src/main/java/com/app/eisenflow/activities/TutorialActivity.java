@@ -21,7 +21,7 @@ import com.app.eisenflow.utils.Utils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.app.eisenflow.utils.Statics.PREF_FIRST_TIME_USER;
+import static com.app.eisenflow.utils.Constants.PREF_FIRST_TIME_USER;
 
 /**
  *  TutorialActivity should not contain UI elements that require user input,

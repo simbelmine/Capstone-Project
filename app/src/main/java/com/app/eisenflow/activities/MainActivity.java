@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.app.eisenflow.R;
+import com.app.eisenflow.helpers.TaskReminderHelper;
 import com.app.eisenflow.helpers.TasksCursorRecyclerViewAdapter;
 import com.app.eisenflow.services.TimerService;
 import com.app.eisenflow.utils.Utils;
@@ -33,7 +34,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
-import static com.app.eisenflow.utils.Statics.LOADER_ID;
+import static com.app.eisenflow.utils.Constants.LOADER_ID;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -72,6 +73,9 @@ public class MainActivity extends AppCompatActivity implements
         rotateMonthArrow(false);
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
+        // Set the evening daily alarm and the weekly Sunday alarm.
+        TaskReminderHelper.createDailyEveningTip();
+        TaskReminderHelper.createWeeklyOldTasksTip();
 
         int itemsCountLocal = getItemsCountLocal();
     }

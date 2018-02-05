@@ -1,10 +1,12 @@
 package com.app.eisenflow.utils;
 
+import android.os.Build;
+
 /**
  * Created on 1/23/18.
  */
 
-public class Statics {
+public class Constants {
     /**
      * Launch Activity
      */
@@ -42,4 +44,20 @@ public class Statics {
      * TasksViewHolder
      */
     public static int MAX_PROGRESS = 100;
+    /**
+     * Alarms
+     */
+    public static final String
+            LOCK_NAME_STATIC = "com.app.eisenflow.services.Static";
+    public static final String
+            LOCK_NAME_LOCAL = "com.app.eisenflow.services.Local";
+    public static final String REPEATING_REMINDER = "RepeatingReminder";
+    public static final String WEEK_DAY = "WeekDay";
+    public static final String DAILY_TIP = "DailyTip";
+    public static final String WEEKLY_OLD_TASKS_TIP = "WeeklyOldTasksTip";
+    public static final String WEEKLY_WEEK_DAY = "WeeklyWeekDay";
+    public static final String NOTIFICATION_REMINDER_CHANEL = "R_CH_ID";
+    public static final int NOTIFICATION_REMINDER_ACTION_CODE = 303;
+    public static final int DAILY_TIP_CODE = 401;
+    public static final int WEEKLY_TIP_CODE = 402;
 }

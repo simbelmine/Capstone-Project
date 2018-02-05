@@ -19,7 +19,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.TABLE_NAME;
 
-import static com.app.eisenflow.utils.Statics.TAG;
+import static com.app.eisenflow.utils.Constants.TAG;
 
 /**
  * Created on 12/20/17.

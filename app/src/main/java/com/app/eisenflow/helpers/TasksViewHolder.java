@@ -35,7 +35,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
-import static com.app.eisenflow.utils.Statics.MAX_PROGRESS;
+import static com.app.eisenflow.utils.Constants.MAX_PROGRESS;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
 import static com.app.eisenflow.utils.TaskUtils.getFormattedProgress;
 import static com.app.eisenflow.utils.TaskUtils.setTaskBackgroundByPriority;

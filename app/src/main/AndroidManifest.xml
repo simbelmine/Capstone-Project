@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.app.eisenflow">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:name=".ApplicationEisenFlow"
         android:allowBackup="true"
@@ -40,6 +43,19 @@
             android:exported="false"></provider>
 
         <service android:name=".services.TimerService"/>
+
+        <!-- Alarms -->
+        <receiver android:name=".services.OnBootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".services.OnAlarmReceiver" >
+        </receiver>
+
+        <service android:name=".services.TaskReminderService" >
+        </service>
     </application>
 
 </manifest>

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import com.app.eisenflow.R;
 
-import static com.app.eisenflow.utils.Statics.ARG_SECTION_NUMBER;
+import static com.app.eisenflow.utils.Constants.ARG_SECTION_NUMBER;
 
 /**
  * A placeholder fragment containing a simple view.

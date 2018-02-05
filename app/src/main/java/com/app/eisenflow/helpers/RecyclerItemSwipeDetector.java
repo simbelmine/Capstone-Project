@@ -11,17 +11,16 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 
-import com.app.eisenflow.EisenBottomSheet;
 import com.app.eisenflow.R;
 import com.app.eisenflow.utils.DataUtils;
 
-import static com.app.eisenflow.utils.Statics.ACTION_DELAY;
-import static com.app.eisenflow.utils.Statics.DISMISS_DELAY;
-import static com.app.eisenflow.utils.Statics.DISTANCE;
-import static com.app.eisenflow.utils.Statics.ICON_SHOW_DELAY;
-import static com.app.eisenflow.utils.Statics.MIN_DISTANCE;
-import static com.app.eisenflow.utils.Statics.MIN_LOCK_DISTANCE;
-import static com.app.eisenflow.utils.Statics.TAG;
+import static com.app.eisenflow.utils.Constants.ACTION_DELAY;
+import static com.app.eisenflow.utils.Constants.DISMISS_DELAY;
+import static com.app.eisenflow.utils.Constants.DISTANCE;
+import static com.app.eisenflow.utils.Constants.ICON_SHOW_DELAY;
+import static com.app.eisenflow.utils.Constants.MIN_DISTANCE;
+import static com.app.eisenflow.utils.Constants.MIN_LOCK_DISTANCE;
+import static com.app.eisenflow.utils.Constants.TAG;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;

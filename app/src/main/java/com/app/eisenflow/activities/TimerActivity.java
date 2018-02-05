@@ -30,8 +30,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.app.eisenflow.utils.Statics.EXTRA_TASK_POSITION;
-import static com.app.eisenflow.utils.Statics.TAG;
+import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Constants.TAG;
 import static com.app.eisenflow.services.TimerService.ACTION_ACTIVITY_TO_BACKGROUND;
 import static com.app.eisenflow.services.TimerService.ACTION_ACTIVITY_TO_FOREGROUND;
 import static com.app.eisenflow.services.TimerService.ACTION_FINISHED;

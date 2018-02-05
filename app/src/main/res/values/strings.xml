@@ -86,4 +86,10 @@
     <string name="timer_notification_play">Play</string>
     <string name="timer_notification_pause">Pause</string>
     <string name="timer_notification_dismiss">Dismiss</string>
+
+    <!-- Reminder Notification -->
+    <string name="notification_done">Done</string>
+    <string name="notification_add_progress">Add Progress</string>
+    <string name="daily_evening_tip_notification">Productive day tomorrow? Plan it now!</string>
+    <string name="weekly_tip_notification">Hey, some task are waiting!</string>
 </resources>

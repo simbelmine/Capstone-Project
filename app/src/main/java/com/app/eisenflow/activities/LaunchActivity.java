@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.app.eisenflow.R;
 import com.app.eisenflow.utils.Utils;
 
-import static com.app.eisenflow.utils.Statics.SPLASH_TIME;
+import static com.app.eisenflow.utils.Constants.SPLASH_TIME;
 
 /**
  * LaunchActivity is an entry point for the app.

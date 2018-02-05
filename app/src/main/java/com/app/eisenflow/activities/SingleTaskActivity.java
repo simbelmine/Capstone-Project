@@ -3,6 +3,7 @@ package com.app.eisenflow.activities;
 import android.animation.ValueAnimator;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
@@ -32,6 +33,7 @@ import android.widget.TimePicker;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.Task;
+import com.app.eisenflow.helpers.TaskReminderHelper;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.DateTimeUtils;
 import com.app.eisenflow.utils.Utils;
@@ -64,12 +66,13 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
+import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.DataUtils.integerCollectionToString;
 import static com.app.eisenflow.utils.DataUtils.setViewVisibility;
 import static com.app.eisenflow.utils.DateTimeUtils.getDateString;
 import static com.app.eisenflow.utils.DateTimeUtils.getTimeString;
-import static com.app.eisenflow.utils.Statics.EXTRA_TASK_POSITION;
-import static com.app.eisenflow.utils.Statics.WEEKLY_OCCURRENCE;
+import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Constants.WEEKLY_OCCURRENCE;
 import static com.app.eisenflow.utils.TaskUtils.getTotalDays;
 import static com.app.eisenflow.utils.Utils.createAlertMessage;
 import static com.app.eisenflow.utils.Utils.showAlertMessage;
@@ -195,9 +198,9 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     @OnClick (R.id.decide_holder)
     public void onDecideHolderClick() {
-        mPriority = DataUtils.Priority.TWO;
+        mPriority = TWO;
         setBgPriorityColor();
-        mTask.setPriority(DataUtils.Priority.TWO.getValue());
+        mTask.setPriority(TWO.getValue());
         setViewVisibility(mReminderHolder, View.VISIBLE);
     }
 
@@ -461,10 +464,19 @@ public class SingleTaskActivity extends AppCompatActivity {
             // Insert/Update with created content values.
             ContentValues values = getContentValues();
             if (mTask.getId() == -1) {
-                insertData(values);
+                Uri uri = insertData(values);
+                long taskId = ContentUris.parseId(uri);
+                mTask.setId(taskId);
             } else {
                 updateData(values);
             }
+
+            if (mPriority == TWO) {
+                TaskReminderHelper.setRepeatingReminder(mTask);
+            } else {
+                TaskReminderHelper.setReminder(mTask);
+            }
+
             finish();
         }
     }
@@ -490,7 +502,7 @@ public class SingleTaskActivity extends AppCompatActivity {
             return false;
         }
 
-        if (DataUtils.Priority.valueOf(mTask.getPriority()) == DataUtils.Priority.TWO &&
+        if (DataUtils.Priority.valueOf(mTask.getPriority()) == TWO &&
                 mCheckedDaysOfWeek != null && mCheckedDaysOfWeek.isEmpty() &&
                 mTask.getReminderOccurrence() == WEEKLY_OCCURRENCE) {
             Object alertMessage = createAlertMessage(
@@ -562,8 +574,8 @@ public class SingleTaskActivity extends AppCompatActivity {
         getContentResolver().update(uri, values, null, null);
     }
 
-    private void insertData(ContentValues values){
-        getContentResolver().insert(CONTENT_URI, values);
+    private Uri insertData(ContentValues values){
+        return getContentResolver().insert(CONTENT_URI, values);
     }
 
     private ContentValues getContentValues() {
@@ -603,7 +615,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     }
 
     private void setReminderOccurrenceAndWhen(DataUtils.Priority priority) {
-        if (priority == DataUtils.Priority.TWO) {
+        if (priority == TWO) {
             // Set Reminder's occurrence.
             setViewVisibility(mReminderHolder, View.VISIBLE);
             int occurrenceChoice = mTask.getReminderOccurrence();

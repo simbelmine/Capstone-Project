@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import com.app.eisenflow.ApplicationEisenFlow;
 import com.app.eisenflow.R;
@@ -15,6 +13,7 @@ import com.app.eisenflow.activities.TimerActivity;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Random;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_NOTE;
@@ -24,7 +23,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
-import static com.app.eisenflow.utils.Statics.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 
 /**
  * Created on 12/31/17.
@@ -145,5 +144,10 @@ public class TaskUtils {
 
     public static String getFormattedProgress(int progress) {
         return String.valueOf(progress) + "%";
+    }
+
+    public static int generateRandomId() {
+        Random r = new Random();
+        return r.nextInt(100 - 1) + 1;
     }
 }

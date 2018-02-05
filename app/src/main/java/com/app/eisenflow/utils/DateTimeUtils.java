@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.app.eisenflow.utils.Statics.TAG;
+import static com.app.eisenflow.utils.Constants.TAG;
 
 /**
  * Created on 12/23/17.
@@ -265,7 +265,7 @@ public class DateTimeUtils {
         }
     }
 
-    public int getMonthDays(String date, int monthToAdd) {
+    public static int getMonthDays(String date, int monthToAdd) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(getDate(date));
         int month = cal.get(Calendar.MONTH);

@@ -7,7 +7,6 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.util.Log;
 
 import static com.app.eisenflow.database.EisenContract.AUTHORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_DIR_TYPE;
@@ -16,8 +15,8 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.ORDER_BY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.TABLE_NAME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
-import static com.app.eisenflow.utils.Statics.TASK;
-import static com.app.eisenflow.utils.Statics.TASK_ID;
+import static com.app.eisenflow.utils.Constants.TASK;
+import static com.app.eisenflow.utils.Constants.TASK_ID;
 
 /**
  * Created on 12/21/17.

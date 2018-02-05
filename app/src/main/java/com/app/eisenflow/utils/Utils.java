@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
-import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,7 +21,9 @@ import android.widget.TextView;
 import com.app.eisenflow.ApplicationEisenFlow;
 import com.app.eisenflow.R;
 
-import static com.app.eisenflow.utils.Statics.PREF_FIRST_TIME_USER;
+import java.util.Random;
+
+import static com.app.eisenflow.utils.Constants.PREF_FIRST_TIME_USER;
 
 /**
  * Created on 12/19/17.
@@ -154,6 +155,12 @@ public class Utils {
         return Uri.parse("android.resource://" +
                 ApplicationEisenFlow.getAppContext().getPackageName() +
                 "/" + com.app.eisenflow.R.raw.task_complete);
+    }
+
+    public static Uri getNotificationSoundUri() {
+        return Uri.parse("android.resource://" +
+                ApplicationEisenFlow.getAppContext().getPackageName() +
+                "/" + R.raw.task_notification);
     }
 
     public static void forceEditTextToLooseFocus(Activity activity, MotionEvent event) {
