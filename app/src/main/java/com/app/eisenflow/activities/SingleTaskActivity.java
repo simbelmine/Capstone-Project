@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -66,13 +67,13 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
+import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Constants.WEEKLY_OCCURRENCE;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.DataUtils.integerCollectionToString;
 import static com.app.eisenflow.utils.DataUtils.setViewVisibility;
 import static com.app.eisenflow.utils.DateTimeUtils.getDateString;
 import static com.app.eisenflow.utils.DateTimeUtils.getTimeString;
-import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
-import static com.app.eisenflow.utils.Constants.WEEKLY_OCCURRENCE;
 import static com.app.eisenflow.utils.TaskUtils.getTotalDays;
 import static com.app.eisenflow.utils.Utils.createAlertMessage;
 import static com.app.eisenflow.utils.Utils.showAlertMessage;
@@ -276,6 +277,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                navigateBackIfRoot();
                 backWithTransition();
                 return true;
             case R.id.action_save_task:
@@ -284,6 +286,19 @@ public class SingleTaskActivity extends AppCompatActivity {
         }
 
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        navigateBackIfRoot();
+    }
+
+    private void navigateBackIfRoot() {
+        if (isTaskRoot()) {
+            Intent upIntent = new Intent(this, LaunchActivity.class);
+            startActivity(upIntent);
+        }
     }
 
     private void backWithTransition() {
