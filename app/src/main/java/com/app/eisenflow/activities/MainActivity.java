@@ -156,6 +156,9 @@ public class MainActivity extends AppCompatActivity implements
     @OnClick (R.id.fab)
     public void onFabClick() {
         startActivity(new Intent(MainActivity.this, SingleTaskActivity.class));
+        if (mTasksAdapter != null && mTasksAdapter.getBottomSheet().isBottomSheetExpanded()) {
+            mTasksAdapter.getBottomSheet().closeBottomSheet();
+        }
     }
 
     @Override
