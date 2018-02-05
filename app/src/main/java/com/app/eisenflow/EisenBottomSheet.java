@@ -22,6 +22,7 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.app.eisenflow.activities.SingleTaskActivity;
+import com.app.eisenflow.helpers.TaskReminderHelper;
 import com.app.eisenflow.utils.DataUtils;
 
 import java.util.ArrayList;
@@ -44,7 +45,12 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
+import static com.app.eisenflow.helpers.TaskReminderHelper.cancelReminder;
+import static com.app.eisenflow.helpers.TaskReminderHelper.cancelRepeatingReminder;
+import static com.app.eisenflow.utils.Constants.TAG;
 import static com.app.eisenflow.utils.DataUtils.Occurrence.WEEKLY;
+import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.DataUtils.getBooleanState;
 import static com.app.eisenflow.utils.DataUtils.getBooleanValue;
 import static com.app.eisenflow.utils.DataUtils.stringToIntegerCollection;
@@ -237,7 +243,7 @@ public class EisenBottomSheet {
             updateDoneButton(isDone);
 
             DataUtils.Priority priorityType = DataUtils.Priority.valueOf(priority);
-            if (priorityType == DataUtils.Priority.TWO) {
+            if (priorityType == TWO) {
                 mTaskProgressHolder.setVisibility(View.VISIBLE);
                 mTaskProgressValue.setText(getFormattedProgress(calculateProgress(totalDays, progress)));
             } else {
@@ -248,7 +254,7 @@ public class EisenBottomSheet {
 
     private void setReminderOccurrence(String occurrence, int priority) {
         DataUtils.Priority priorityType = DataUtils.Priority.valueOf(priority);
-        if (TextUtils.isEmpty(occurrence) || priorityType != DataUtils.Priority.TWO) {
+        if (TextUtils.isEmpty(occurrence) || priorityType != TWO) {
             mReminderHolder.setVisibility(View.GONE);
         } else {
             mTaskReminderOccurrence.setText(occurrence);
@@ -356,9 +362,26 @@ public class EisenBottomSheet {
         values.put(KEY_IS_DONE, getBooleanValue(isDone));
 
         if (mCursor != null && mCursor.moveToPosition(mTaskPosition)) {
-            long taskId =  mCursor.getInt(mCursor.getColumnIndex(KEY_ROW_ID));
+            Task task = cursorToTask(mCursor);
+            long taskId =  task.getId();
             Uri uri = buildFlavorsUri(taskId);
             mActivity.getContentResolver().update(uri, values, null, null);
+
+            // Cancel task's alarm if done, otherwise - reschedule.
+            DataUtils.Priority priority = DataUtils.Priority.valueOf(task.getPriority());
+            if (isDone) {
+                if (priority == TWO) {
+                    cancelRepeatingReminder((int)taskId);
+                } else {
+                    cancelReminder((int)taskId);
+                }
+            } else {
+                if (priority == TWO) {
+                    TaskReminderHelper.setRepeatingReminder(task);
+                } else {
+                    TaskReminderHelper.setReminder(task);
+                }
+            }
         }
     }
 }
