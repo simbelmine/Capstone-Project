@@ -15,20 +15,15 @@ import com.app.eisenflow.helpers.TaskReminderHelper;
 
 import java.util.Calendar;
 
-import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
-import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
 import static com.app.eisenflow.utils.Constants.DAILY_TIP;
-import static com.app.eisenflow.utils.Constants.REPEATING_REMINDER;
 import static com.app.eisenflow.utils.Constants.TAG;
 import static com.app.eisenflow.utils.Constants.WEEKLY_OLD_TASKS_TIP;
-import static com.app.eisenflow.utils.Constants.WEEKLY_WEEK_DAY;
-import static com.app.eisenflow.utils.Constants.WEEK_DAY;
 import static com.app.eisenflow.utils.DateTimeUtils.getCalendar;
 
 /**
@@ -48,15 +43,8 @@ public class OnAlarmReceiver extends BroadcastReceiver {
         NotificationHelper notification = new NotificationHelper();
 
         long taskId = intent.getExtras().getLong(KEY_ROW_ID);
-        boolean isReminder = intent.getBooleanExtra(REPEATING_REMINDER, false);
-        String weekDay = intent.getStringExtra(WEEK_DAY);
-        int weekDayOfTip = intent.getIntExtra(WEEKLY_WEEK_DAY, -1);
         boolean isWeeklyTip = intent.getBooleanExtra(WEEKLY_OLD_TASKS_TIP, false);
         boolean isDailyTip = intent.getBooleanExtra(DAILY_TIP, false);
-
-        Log.v(TAG, "*** taskId = " + taskId);
-        Log.v(TAG, "*** isDailyTip = " + isDailyTip);
-        Log.v(TAG, "*** isWeeklyTip = " + isWeeklyTip);
 
         if(taskId > 0) {
             Log.v(TAG, "OnAlarmReceiver: Show Reminder Notifications (Single and Repeating)");
@@ -82,10 +70,6 @@ public class OnAlarmReceiver extends BroadcastReceiver {
                 notification.showEveningTipNotifications();
             }
         }
-
-        Log.v(TAG, "OnAlarmReceiver: start alarm rescheduling service");
-        // Start the alarm rescheduling service.
-//        context.startService(new Intent(context, TaskReminderService.class));
 
         Log.v(TAG, "OnAlarmReceiver: unregister OnAlarm Broadcast Receiver");
         // Unregister the broadcast after Notifications are shown.
