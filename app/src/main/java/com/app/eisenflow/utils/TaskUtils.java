@@ -23,7 +23,10 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
+import static com.app.eisenflow.helpers.TaskReminderHelper.cancelReminder;
+import static com.app.eisenflow.helpers.TaskReminderHelper.cancelRepeatingReminder;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 
 /**
  * Created on 12/31/17.
@@ -56,10 +59,17 @@ public class TaskUtils {
         }
     }
 
-    public static void deleteTaskAction(int taskId) {
+    public static void deleteTaskAction(int taskId, int priorityValue) {
         Context context = ApplicationEisenFlow.getAppContext();
         Uri uri = buildFlavorsUri(taskId);
         context.getContentResolver().delete(uri, null, null);
+
+        DataUtils.Priority priority = DataUtils.Priority.valueOf(priorityValue);
+        if (priority == TWO) {
+            cancelRepeatingReminder(taskId);
+        } else {
+            cancelReminder(taskId);
+        }
     }
 
     private static String getMessageToShare(Cursor cursor) {

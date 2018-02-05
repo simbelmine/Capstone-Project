@@ -329,7 +329,9 @@ public class EisenBottomSheet {
                         shareTaskAction(mCursor, mTaskPosition);
                         break;
                     case R.id.action_delete:
-                        deleteTaskAction(mCursor.getInt(mCursor.getColumnIndex(KEY_ROW_ID)));
+                        deleteTaskAction(
+                                mCursor.getInt(mCursor.getColumnIndex(KEY_ROW_ID)),
+                                mCursor.getInt(mCursor.getColumnIndex(KEY_PRIORITY)));
                         closeBottomSheet();
                         mCursor = null;
                         mTaskPosition = -1;

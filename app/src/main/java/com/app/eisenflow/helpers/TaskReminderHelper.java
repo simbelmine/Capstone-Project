@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
 import com.app.eisenflow.ApplicationEisenFlow;
 import com.app.eisenflow.Task;
@@ -20,7 +19,6 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.utils.Constants.DAILY_TIP;
 import static com.app.eisenflow.utils.Constants.DAILY_TIP_CODE;
 import static com.app.eisenflow.utils.Constants.REPEATING_REMINDER;
-import static com.app.eisenflow.utils.Constants.TAG;
 import static com.app.eisenflow.utils.Constants.WEEKLY_OLD_TASKS_TIP;
 import static com.app.eisenflow.utils.Constants.WEEKLY_TIP_CODE;
 import static com.app.eisenflow.utils.Constants.WEEKLY_WEEK_DAY;
@@ -39,7 +37,7 @@ public class TaskReminderHelper {
     public static void setReminder(Task task) {
         Context context = ApplicationEisenFlow.getAppContext();
         long taskId = task.getId();
-        Log.v(TAG, "--- taskId = " + taskId);
+
         Intent intent = new Intent(context, OnAlarmReceiver.class)
                 .putExtra(KEY_ROW_ID, taskId);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -213,24 +211,6 @@ public class TaskReminderHelper {
         }
     }
 
-    private static Calendar getWhenToRepeat(int dayOfWeek, int hour) {
-        Calendar whenToRepeat;
-        whenToRepeat = Calendar.getInstance();
-        whenToRepeat.set(Calendar.DAY_OF_WEEK, dayOfWeek);
-        whenToRepeat.set(Calendar.HOUR_OF_DAY, hour);
-        whenToRepeat.set(Calendar.MINUTE, 0);
-        whenToRepeat.set(Calendar.SECOND, 0);
-        return whenToRepeat;
-    }
-
-    private static PendingIntent getPendingIntent(Context context, Intent intent, long id) {
-        return PendingIntent.getBroadcast(
-                context,
-                (int) id,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
     public static boolean isWeeklyTipSet() {
         Context context = ApplicationEisenFlow.getAppContext();
         Intent intent = new Intent(context, OnAlarmReceiver.class)
@@ -256,5 +236,42 @@ public class TaskReminderHelper {
                 DAILY_TIP_CODE,
                 intent,
                 PendingIntent.FLAG_NO_CREATE) != null;
+    }
+
+    public static void cancelReminder(int taskId) {
+        Context context = ApplicationEisenFlow.getAppContext();
+        Intent intent = new Intent(context, OnAlarmReceiver.class)
+                .putExtra(KEY_ROW_ID, taskId);
+        PendingIntent pendingIntent = getPendingIntent(context, intent, taskId);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+    }
+
+    public static void cancelRepeatingReminder(int taskId) {
+        Context context = ApplicationEisenFlow.getAppContext();
+        Intent intent = new Intent(context, OnAlarmReceiver.class)
+                .putExtra(KEY_ROW_ID, taskId)
+                .putExtra(REPEATING_REMINDER, true);
+        PendingIntent pendingIntent = getPendingIntent(context, intent, taskId);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+    }
+
+    private static Calendar getWhenToRepeat(int dayOfWeek, int hour) {
+        Calendar whenToRepeat;
+        whenToRepeat = Calendar.getInstance();
+        whenToRepeat.set(Calendar.DAY_OF_WEEK, dayOfWeek);
+        whenToRepeat.set(Calendar.HOUR_OF_DAY, hour);
+        whenToRepeat.set(Calendar.MINUTE, 0);
+        whenToRepeat.set(Calendar.SECOND, 0);
+        return whenToRepeat;
+    }
+
+    private static PendingIntent getPendingIntent(Context context, Intent intent, long id) {
+        return PendingIntent.getBroadcast(
+                context,
+                (int) id,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
     }
 }

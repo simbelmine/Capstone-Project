@@ -236,7 +236,9 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                 Cursor cursor = mHolder.getHolderCursor();
                 if (cursor != null && cursor.moveToPosition(mHolder.getAdapterPosition())) {
                     if (mHolder.mUndoButton.getVisibility() == View.VISIBLE) {
-                        deleteTaskAction(cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID)));
+                        deleteTaskAction(
+                                cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID)),
+                                cursor.getInt(cursor.getColumnIndex(KEY_PRIORITY)));
                         swipe(null, 0);
                     }
                 }
