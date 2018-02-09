@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -175,6 +176,12 @@ public class Utils {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
+        }
+    }
+
+    public static void setOrientation(Activity activity) {
+        if(activity.getResources().getBoolean(R.bool.landscape_only)){
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }
 }

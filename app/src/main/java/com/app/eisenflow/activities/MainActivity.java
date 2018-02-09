@@ -35,6 +35,7 @@ import butterknife.OnClick;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
 import static com.app.eisenflow.utils.Constants.LOADER_ID;
+import static com.app.eisenflow.utils.Utils.setOrientation;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements
 
         initViews();
         rotateMonthArrow(false);
+        setOrientation(this);
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
 
         // Set the evening daily alarm and the weekly Sunday alarm.
