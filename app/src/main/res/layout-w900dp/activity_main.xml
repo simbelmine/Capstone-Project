@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/default_title_holder"
     tools:openDrawer="start">
 
     <android.support.design.widget.CoordinatorLayout
@@ -15,8 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:theme="@style/AppTheme.AppBarOverlay"
-            android:background="@color/default_title_holder"
+            android:background="@color/transparent"
             app:expanded="false"
+            app:elevation="0dp"
             android:id="@+id/app_bar_layout">
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -62,8 +64,7 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:weightSum="2"
-            android:layout_marginTop="?attr/actionBarSize"
-            android:background="@color/default_title_holder">
+            android:layout_marginTop="?attr/actionBarSize">
 
             <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                 android:id="@+id/material_calendar_view"
@@ -73,7 +74,7 @@
                 android:paddingLeft="@dimen/activity_double_spacing"
                 android:paddingRight="@dimen/activity_double_spacing"
                 android:paddingBottom="@dimen/activity_double_spacing"
-                android:paddingTop="@dimen/activity_half_spacing"
+                android:paddingTop="@dimen/activity_vertical_spacing"
                 app:mcv_selectionColor="@color/colorAccent"
                 app:mcv_arrowColor="@color/arrow_color"
                 app:mcv_headerTextAppearance="@style/MaterialCalendarHeader"
@@ -85,23 +86,26 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:layout_marginLeft="@dimen/activity_horizontal_spacing"
+                android:layout_marginRight="@dimen/activity_double_spacing"
+                android:layout_marginTop="@dimen/activity_vertical_spacing"
+                android:elevation="@dimen/list_container_elevation"
                 android:fitsSystemWindows="true"
                 android:background="@color/white"
                 tools:context=".activities.MainActivity">
 
                 <include layout="@layout/content_main" />
                 <include layout="@layout/bottom_sheet"/>
-
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/fab"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="@dimen/fab_margin"
-                    app:srcCompat="@mipmap/plus" />
-
             </android.support.design.widget.CoordinatorLayout>
         </LinearLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@mipmap/plus" />
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
