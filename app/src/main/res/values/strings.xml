@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">EisenFlow</string>
     <string name="action_settings">Settings</string>
+    <string name="action_today">Today</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Open drawer</string>
