@@ -7,7 +7,7 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
-    <item android:id="@+id/menu_item"
+    <item android:id="@+id/action_today"
         android:icon="@mipmap/ic_today"
         android:title="@string/action_today"
         app:showAsAction="always"/>

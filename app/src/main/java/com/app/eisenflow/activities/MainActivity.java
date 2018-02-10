@@ -29,6 +29,8 @@ import com.app.eisenflow.services.TimerService;
 import com.app.eisenflow.utils.Utils;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
+import java.util.Calendar;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements
         if (Utils.isServiceRunning(TimerService.class)) {
             stopService(new Intent(this, TimerService.class));
         }
+        setCalendarCurrentDate();
     }
 
     private void initViews() {
@@ -123,6 +126,14 @@ public class MainActivity extends AppCompatActivity implements
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+
+        switch (id) {
+            case R.id.action_settings:
+                return true;
+            case R.id.action_today:
+                setCalendarCurrentDate();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -218,6 +229,11 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return itemCount;
+    }
+
+    private void setCalendarCurrentDate() {
+        mMaterialCalendarView.setCurrentDate(Calendar.getInstance());
+        mMaterialCalendarView.setSelectedDate(Calendar.getInstance());
     }
 
     @Override
