@@ -8,7 +8,7 @@
         android:title="@string/action_settings"
         app:showAsAction="never" />
     <item android:id="@+id/menu_item"
-        android:icon="@mipmap/ic_today_white_48dp"
+        android:icon="@mipmap/ic_today"
         android:title="@string/action_today"
         app:showAsAction="always"/>
 </menu>
