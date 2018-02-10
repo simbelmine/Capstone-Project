@@ -23,6 +23,7 @@ public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter<Ta
     public Map<String, Integer> mDateHeaderMap;
     public Map<String, Integer> mMonthHeaderMap;
     private EisenBottomSheet mEisenBottomSheet;
+    private int mCurrantDateRow = -1;
 
     public TasksCursorRecyclerViewAdapter(Activity context, Cursor cursor) {
         super(context, cursor);
@@ -70,5 +71,13 @@ public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter<Ta
 
     public EisenBottomSheet getBottomSheet() {
         return mEisenBottomSheet;
+    }
+
+    public void setCurrentDateRow(int row) {
+        mCurrantDateRow = row;
+    }
+
+    public int getCurrentDateRow() {
+        return mCurrantDateRow;
     }
 }

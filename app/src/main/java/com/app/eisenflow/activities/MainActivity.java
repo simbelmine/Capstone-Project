@@ -15,6 +15,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -133,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
             case R.id.action_today:
                 setCalendarCurrentDate();
+                scrollListToCurrentMonth();
                 return true;
         }
 
@@ -234,6 +236,20 @@ public class MainActivity extends AppCompatActivity implements
     private void setCalendarCurrentDate() {
         mMaterialCalendarView.setCurrentDate(Calendar.getInstance());
         mMaterialCalendarView.setSelectedDate(Calendar.getInstance());
+    }
+
+    private void scrollListToCurrentMonth() {
+        final int row = mTasksAdapter.getCurrentDateRow();
+        if (row != -1) {
+            final RecyclerView.SmoothScroller smoothScroller = new LinearSmoothScroller(this) {
+                @Override
+                protected int getVerticalSnapPreference() {
+                    return LinearSmoothScroller.SNAP_TO_START;
+                }
+            };
+            smoothScroller.setTargetPosition(row);
+            mLinearLayoutManager.startSmoothScroll(smoothScroller);
+        }
     }
 
     @Override

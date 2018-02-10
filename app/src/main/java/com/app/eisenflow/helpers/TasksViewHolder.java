@@ -34,8 +34,8 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_OC
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
-import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.Constants.MAX_PROGRESS;
+import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
 import static com.app.eisenflow.utils.TaskUtils.getFormattedProgress;
 import static com.app.eisenflow.utils.TaskUtils.setTaskBackgroundByPriority;
@@ -224,6 +224,8 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
         if (mapTaskId == currTaskId) {
             mMonthName.setText(monthName);
             mMonthName.setVisibility(View.VISIBLE);
+            // Set Current Date Row.
+            updateCurrantDateRow(cursor);
         } else {
             mMonthName.setVisibility(View.GONE);
         }
@@ -275,6 +277,17 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
             if(days == 1) daysSuffix = " day ";
 
             return "Due in " + formatter.print(period) + days + daysSuffix;
+        }
+    }
+
+    private void updateCurrantDateRow(Cursor cursor) {
+        String taskDate = cursor.getString(cursor.getColumnIndex(KEY_DATE));
+        String taskTime= cursor.getString(cursor.getColumnIndex(KEY_TIME));
+        Calendar rowDate = DateTimeUtils.getCalendar(taskDate, taskTime);
+        Calendar now = Calendar.getInstance();
+
+        if (rowDate.get(Calendar.MONTH) == now.get(Calendar.MONTH)) {
+            mAdapter.setCurrentDateRow(getAdapterPosition());
         }
     }
 }
