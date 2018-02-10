@@ -32,7 +32,8 @@
         <activity
             android:name=".activities.SingleTaskActivity"
             android:parentActivityName=".activities.MainActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            android:theme="@style/SingleTaskActivityTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".activities.MainActivity"/>

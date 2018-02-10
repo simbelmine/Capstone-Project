@@ -12,7 +12,14 @@
     </style>
 
     <!-- SingleTask Activity theme. -->
-    <style name="SingleTaskActivityTheme" parent="AppTheme">
+    <style name="SingleTaskActivityTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
     </style>
 
     <style name="MyToolbarStyle" parent="ThemeOverlay.AppCompat.ActionBar">
@@ -22,7 +29,6 @@
 
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:textColorSecondary">@color/white</item>
-        <item name="actionMenuTextColor">@color/white</item>
     </style>
 
     <style name="MaterialCalendarHeader" parent="TextAppearance.MaterialCalendarWidget.Header">
