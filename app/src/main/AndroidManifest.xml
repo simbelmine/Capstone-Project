@@ -39,6 +39,14 @@
                 android:value=".activities.MainActivity"/>
         </activity>
         <activity
+            android:name=".activities.PreviewActivity"
+            android:parentActivityName=".activities.MainActivity"
+            android:theme="@style/SingleTaskActivityTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity"/>
+        </activity>
+        <activity
             android:name=".activities.TimerActivity"
             android:launchMode="singleTask"/>
 

@@ -124,11 +124,6 @@ public class SingleTaskActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getResources().getBoolean(R.bool.landscape_only)) {
-            setFinishOnTouchOutside(false);
-        }
-
         setContentView(R.layout.activity_single_task);
         ButterKnife.bind(this);
 

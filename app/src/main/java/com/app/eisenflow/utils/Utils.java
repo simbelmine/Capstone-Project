@@ -184,4 +184,8 @@ public class Utils {
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         }
     }
+
+    public static boolean isTablet(Activity activity) {
+        return activity.getResources().getBoolean(R.bool.landscape_only);
+    }
 }

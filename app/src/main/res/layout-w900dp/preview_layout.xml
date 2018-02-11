@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_sheet_holder"
+    android:layout_width="match_parent"
+    android:layout_height="340dp"
+    android:background="@color/transparent">
+
+    <RelativeLayout
+        android:id="@+id/bottom_sheet_title_holder"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/bottom_sheet_title_holder_image"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/default_title_holder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:clickable="true"/>
+
+        <ImageView
+            android:id="@+id/bottom_sheet_done_btn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_spacing"
+            app:srcCompat="@drawable/not_done"
+            />
+
+        <TextView
+            android:id="@+id/bottom_sheet_task_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/bottom_sheet_done_btn"
+            android:layout_toLeftOf="@+id/bottom_sheet_edit_btn"
+            android:layout_marginLeft="@dimen/activity_half_spacing"
+            android:background="@color/transparent"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            tools:text="Single Task Name hshdshdshdhjfhjhdfshfdhsdhhjshjshdfshhfj" />
+
+        <ImageView
+            android:id="@+id/bottom_sheet_edit_btn"
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/activity_horizontal_spacing"
+            android:layout_marginRight="4dp"
+            android:layout_toLeftOf="@id/bottom_sheet_menu_btn"
+            android:paddingBottom="6dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            app:srcCompat="@mipmap/pencil" />
+
+        <ImageView
+            android:id="@+id/bottom_sheet_menu_btn"
+            android:layout_width="32dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            app:srcCompat="@drawable/menu" />
+    </RelativeLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_title_holder">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/clock_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/task_icon_size"
+                android:layout_marginLeft="@dimen/activity_horizontal_spacing"
+                android:layout_marginStart="@dimen/activity_horizontal_spacing"
+                android:layout_marginTop="24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/calendar_clock" />
+
+            <TextView
+                android:id="@+id/due_date_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_half_spacing"
+                android:layout_marginStart="@dimen/activity_half_spacing"
+                android:layout_marginTop="24dp"
+                android:layout_toEndOf="@+id/clock_icon"
+                android:layout_toRightOf="@+id/clock_icon"
+                android:gravity="center_vertical"
+                android:text="@string/due_date_txt"
+                android:textSize="@dimen/task_font_size"
+                app:layout_constraintStart_toEndOf="@+id/clock_icon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <FrameLayout
+                android:id="@+id/date_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="@dimen/activity_double_spacing"
+                android:layout_marginStart="@dimen/activity_double_spacing"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:orientation="horizontal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/due_date_txt">
+
+                <TextView
+                    android:id="@+id/bottom_sheet_date_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/activity_horizontal_spacing"
+                    android:layout_marginStart="@dimen/activity_horizontal_spacing"
+                    android:text="Fri, May 27, 2016"
+                    android:textColor="@color/botom_sheet_data_color"
+                    android:textSize="17sp"
+                    tools:layout_editor_absoluteX="50dp"
+                    tools:layout_editor_absoluteY="140dp"
+                    tools:text="Fri, May 27, 2016" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/time_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.184"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/date_holder"
+                app:layout_constraintTop_toBottomOf="@+id/due_date_txt">
+
+                <TextView
+                    android:id="@+id/bottom_sheet_time_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="07:41 PM"
+                    android:textColor="@color/botom_sheet_data_color"
+                    android:textSize="17sp"
+                    tools:layout_editor_absoluteX="370dp"
+                    tools:layout_editor_absoluteY="135dp"
+                    tools:text="07:41 PM" />
+
+            </FrameLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/bottom_sheet_reminder_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/date_holder"
+                app:layout_constraintVertical_bias="0.0">
+
+                <TextView
+                    android:id="@+id/reminder_lable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/activity_half_spacing"
+                    android:text="@string/reminder_txt"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/reminder_icon"
+                    app:layout_constraintTop_toBottomOf="@+id/date_holder" />
+
+                <TextView
+                    android:id="@+id/bottom_sheet_when_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="44dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/botom_sheet_data_color"
+                    android:textSize="17sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_occurrence_txt"
+                    tools:text="Mon, Tue, Wed" />
+
+                <TextView
+                    android:id="@+id/bottom_sheet_occurrence_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="44dp"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/botom_sheet_data_color"
+                    android:textSize="17sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/reminder_lable"
+                    tools:text="Weekly" />
+
+                <ImageView
+                    android:id="@+id/reminder_icon"
+                    android:layout_width="@dimen/task_icon_size"
+                    android:layout_height="@dimen/task_icon_size"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:srcCompat="@drawable/repeat_reminder" />
+            </android.support.constraint.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/vibration_img"
+                android:layout_width="@dimen/task_icon_size"
+                android:layout_height="@dimen/task_icon_size"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_reminder_holder"
+                app:srcCompat="@mipmap/ic_vibration_black" />
+
+            <TextView
+                android:id="@+id/vibration_lbl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="24dp"
+                android:text="@string/vibration_txt"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@+id/vibration_img"
+                app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_reminder_holder" />
+
+            <TextView
+                android:id="@+id/bottom_sheet_vibration_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="44dp"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/botom_sheet_data_color"
+                android:textSize="17sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/vibration_img"
+                tools:text="Yes" />
+
+            <ImageView
+                android:id="@+id/note_img"
+                android:layout_width="@dimen/task_icon_size"
+                android:layout_height="@dimen/task_icon_size"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_vibration_txt"
+                app:srcCompat="@drawable/note" />
+
+            <TextView
+                android:id="@+id/note_lbl"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/task_icon_size"
+                android:layout_marginLeft="@dimen/activity_half_spacing"
+                android:layout_marginStart="@dimen/activity_half_spacing"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:text="@string/note_txt"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@+id/note_img"
+                app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_vibration_txt" />
+
+            <TextView
+                android:id="@+id/bottom_sheet_note_txt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="44dp"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:gravity="top"
+                android:lines="3"
+                android:textColor="@color/botom_sheet_data_color"
+                android:textSize="17sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/note_img"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="Some examplary code  for the Note." />
+
+            <FrameLayout
+                android:id="@+id/bottom_sheet_progress_holder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="24dp"
+                android:visibility="invisible"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/bottom_sheet_progres_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/date"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    tools:text="10%" />
+            </FrameLayout>
+
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.constraint.ConstraintLayout>

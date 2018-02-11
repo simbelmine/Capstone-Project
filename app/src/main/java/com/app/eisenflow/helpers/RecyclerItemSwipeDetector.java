@@ -1,6 +1,7 @@
 package com.app.eisenflow.helpers;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -12,11 +13,13 @@ import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 
 import com.app.eisenflow.R;
+import com.app.eisenflow.activities.PreviewActivity;
 import com.app.eisenflow.utils.DataUtils;
 
 import static com.app.eisenflow.utils.Constants.ACTION_DELAY;
 import static com.app.eisenflow.utils.Constants.DISMISS_DELAY;
 import static com.app.eisenflow.utils.Constants.DISTANCE;
+import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.Constants.ICON_SHOW_DELAY;
 import static com.app.eisenflow.utils.Constants.MIN_DISTANCE;
 import static com.app.eisenflow.utils.Constants.MIN_LOCK_DISTANCE;
@@ -28,12 +31,13 @@ import static com.app.eisenflow.utils.TaskUtils.addProgressAction;
 import static com.app.eisenflow.utils.TaskUtils.deleteTaskAction;
 import static com.app.eisenflow.utils.TaskUtils.shareTaskAction;
 import static com.app.eisenflow.utils.TaskUtils.startTimerActivityAction;
+import static com.app.eisenflow.utils.Utils.isTablet;
 
 /**
  * Created on 5/1/16.
  */
 public class RecyclerItemSwipeDetector implements View.OnTouchListener {
-    private Activity mContext;
+    private Activity mActivity;
     private boolean motionInterceptDisallowed = false;
     private float downX, upX;
     private TasksViewHolder mHolder;
@@ -48,12 +52,12 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
     private boolean isTriggered_RtoL = false;
 
     public RecyclerItemSwipeDetector(Activity mContext, TasksViewHolder viewHolder) {
-        this.mContext = mContext;
+        this.mActivity = mContext;
         this.mHolder = viewHolder;
-        this.recyclerView = this.mContext.findViewById(R.id.tasks_recycler_view);
+        this.recyclerView = this.mActivity.findViewById(R.id.tasks_recycler_view);
 
-        animZoomIn = AnimationUtils.loadAnimation(this.mContext, R.anim.zoom_in);
-        animZoomOut = AnimationUtils.loadAnimation(this.mContext, R.anim.zoom_out);
+        animZoomIn = AnimationUtils.loadAnimation(this.mActivity, R.anim.zoom_in);
+        animZoomOut = AnimationUtils.loadAnimation(this.mActivity, R.anim.zoom_out);
 
         currentMenuLayout = getCorrectLayout();
 
@@ -281,7 +285,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
                         switch (priority) {
                             case ONE:
                                 Log.v(TAG, "Action: Timer");
-                                startTimerActivityAction(mContext, mHolder.getAdapterPosition());
+                                startTimerActivityAction(mActivity, mHolder.getAdapterPosition());
                                 swipe(null, 0);
                                 mHolder.mUndoLayout.setVisibility(View.INVISIBLE);
                                 mHolder.mDeleteActionLayout.setVisibility(View.VISIBLE);
@@ -323,7 +327,13 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
 
     private void performClick(View v) {
         int taskPosition = mHolder.getAdapterPosition();
-        mHolder.getAdapter().getBottomSheet().openBottomSheet(taskPosition);
+        if (!isTablet(mActivity)) {
+            mHolder.getAdapter().getBottomSheet().openBottomSheet(taskPosition);
+        } else {
+            Intent previewIntent = new Intent(mActivity, PreviewActivity.class);
+            previewIntent.putExtra(EXTRA_TASK_POSITION, taskPosition);
+            mActivity.startActivity(previewIntent);
+        }
     }
 
     private void performSwipeAction(float deltaX) {
