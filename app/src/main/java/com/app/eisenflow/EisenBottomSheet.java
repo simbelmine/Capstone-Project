@@ -26,7 +26,9 @@ import com.app.eisenflow.helpers.TaskReminderHelper;
 import com.app.eisenflow.utils.DataUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -281,7 +283,7 @@ public class EisenBottomSheet {
         if (TextUtils.isEmpty(when)) {
             return null;
         }
-        List<Integer> whenValues = new ArrayList<>(stringToIntegerCollection(when));
+        Set<Integer> whenValues = new HashSet<>(stringToIntegerCollection(when));
         StringBuilder sb = new StringBuilder();
         for (Integer i : whenValues) {
             String whenValue = DataUtils.When.valueOf(i);

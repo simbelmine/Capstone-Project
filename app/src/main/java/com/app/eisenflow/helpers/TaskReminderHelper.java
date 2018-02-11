@@ -13,7 +13,9 @@ import com.app.eisenflow.utils.DataUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.utils.Constants.DAILY_TIP;
@@ -99,7 +101,7 @@ public class TaskReminderHelper {
         Calendar whenToRepeat = getCalendarTime(task.getTime());
         Calendar now = Calendar.getInstance();
         String weeklyOccurrenceString = task.getReminderWhen();
-        List<Integer> weeklyOccurrenceList = (ArrayList<Integer>) stringToIntegerCollection(weeklyOccurrenceString);
+        Set<Integer> weeklyOccurrenceList = (HashSet<Integer>) stringToIntegerCollection(weeklyOccurrenceString);
 
         for (Integer weekDay : weeklyOccurrenceList) {
             // Set extra and action to distinct the different alarms.
