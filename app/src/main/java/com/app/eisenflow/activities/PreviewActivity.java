@@ -116,10 +116,8 @@ public class PreviewActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         mCursor = getCursor();
-        if (mTaskPosition != -1) {
-            updateTaskDone();
-            setTaskDetails();
-        }
+        updateTaskDone();
+        setTaskDetails();
     }
 
     @OnClick(R.id.bottom_sheet_done_btn)
@@ -185,7 +183,7 @@ public class PreviewActivity extends AppCompatActivity {
     }
 
     private void setTaskDetails() {
-        if (mCursor == null) {
+        if (mCursor == null || mTaskPosition == -1) {
             return;
         }
         if (mCursor != null && mCursor.moveToPosition(mTaskPosition)) {
@@ -196,8 +194,6 @@ public class PreviewActivity extends AppCompatActivity {
             int reminderOccurrence = mCursor.getInt(mCursor.getColumnIndex(KEY_REMINDER_OCCURRENCE));
             String reminderWhen = mCursor.getString(mCursor.getColumnIndex(KEY_REMINDER_WHEN));
             String note = mCursor.getString(mCursor.getColumnIndex(KEY_NOTE));
-            double totalDays = mCursor.getDouble(mCursor.getColumnIndex(KEY_TOTAL_DAYS_PERIOD));
-            int progress = mCursor.getInt(mCursor.getColumnIndex(KEY_PROGRESS));
             int done = mCursor.getInt(mCursor.getColumnIndex(KEY_IS_DONE));
             int isVibrationEnabled = mCursor.getInt(mCursor.getColumnIndex(KEY_IS_VIBRATION_ENABLED));
 
@@ -212,14 +208,30 @@ public class PreviewActivity extends AppCompatActivity {
             mTaskNote.setText(note);
             isDone = DataUtils.getBooleanState(done);
             updateDoneButton(isDone);
+            setTaskProgress();
+        }
+    }
 
-            DataUtils.Priority priorityType = DataUtils.Priority.valueOf(priority);
-            if (priorityType == TWO) {
-                mTaskProgressHolder.setVisibility(View.VISIBLE);
-                mTaskProgressValue.setText(getFormattedProgress(calculateProgress(totalDays, progress)));
-            } else {
-                mTaskProgressHolder.setVisibility(View.INVISIBLE);
-            }
+    private void updateTaskProgress() {
+        if (mCursor == null || mTaskPosition == -1) {
+            return;
+        }
+        if (mCursor != null && mCursor.moveToPosition(mTaskPosition)) {
+            setTaskProgress();
+        }
+    }
+
+    private void setTaskProgress() {
+        int priority = mCursor.getInt(mCursor.getColumnIndex(KEY_PRIORITY));
+        int progress = mCursor.getInt(mCursor.getColumnIndex(KEY_PROGRESS));
+        double totalDays = mCursor.getDouble(mCursor.getColumnIndex(KEY_TOTAL_DAYS_PERIOD));
+
+        DataUtils.Priority priorityType = DataUtils.Priority.valueOf(priority);
+        if (priorityType == TWO) {
+            mTaskProgressHolder.setVisibility(View.VISIBLE);
+            mTaskProgressValue.setText(getFormattedProgress(calculateProgress(totalDays, progress)));
+        } else {
+            mTaskProgressHolder.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -301,6 +313,8 @@ public class PreviewActivity extends AppCompatActivity {
                         break;
                     case R.id.action_add_progress:
                         addProgressAction(mCursor, mTaskPosition);
+                        mCursor = getCursor();
+                        updateTaskProgress();
                         break;
                     case R.id.action_share:
                         shareTaskAction(mCursor, mTaskPosition);
@@ -311,6 +325,7 @@ public class PreviewActivity extends AppCompatActivity {
                                 mCursor.getInt(mCursor.getColumnIndex(KEY_PRIORITY)));
                         mCursor = null;
                         mTaskPosition = -1;
+                        finish();
                         break;
                 }
                 return true;
@@ -353,6 +368,12 @@ public class PreviewActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        updateTaskDone();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         updateTaskDone();
     }
 }
