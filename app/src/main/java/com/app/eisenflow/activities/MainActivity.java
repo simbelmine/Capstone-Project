@@ -39,6 +39,7 @@ import butterknife.OnClick;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
 import static com.app.eisenflow.utils.Constants.LOADER_ID;
 import static com.app.eisenflow.utils.Utils.setOrientation;
+import static com.app.eisenflow.utils.Utils.isTablet;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
@@ -161,11 +162,13 @@ public class MainActivity extends AppCompatActivity implements
 
     @OnClick (R.id.toolbar_month_container)
     public void onToolbarMonthClick() {
-        boolean isExpanded = mCurrentState == State.EXPANDED ? true : false;
-        rotateMonthArrow(isExpanded);
-        isExpanded = !isExpanded;
-        ViewCompat.setNestedScrollingEnabled(mTasksRecyclerView, isExpanded);
-        mAppBarLayout.setExpanded(isExpanded, true);
+        if (!isTablet(this)) {
+            boolean isExpanded = mCurrentState == State.EXPANDED ? true : false;
+            rotateMonthArrow(isExpanded);
+            isExpanded = !isExpanded;
+            ViewCompat.setNestedScrollingEnabled(mTasksRecyclerView, isExpanded);
+            mAppBarLayout.setExpanded(isExpanded, true);
+        }
     }
 
     @OnClick (R.id.fab)
