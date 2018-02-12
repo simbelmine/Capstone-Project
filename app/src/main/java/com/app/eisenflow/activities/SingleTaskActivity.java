@@ -16,12 +16,10 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -37,7 +35,6 @@ import android.widget.TimePicker;
 import com.app.eisenflow.R;
 import com.app.eisenflow.Task;
 import com.app.eisenflow.helpers.TaskReminderHelper;
-import com.app.eisenflow.utils.Constants;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.DateTimeUtils;
 import com.app.eisenflow.utils.Utils;
@@ -79,6 +76,7 @@ import static com.app.eisenflow.utils.DateTimeUtils.getDateString;
 import static com.app.eisenflow.utils.DateTimeUtils.getTimeString;
 import static com.app.eisenflow.utils.TaskUtils.getTotalDays;
 import static com.app.eisenflow.utils.Utils.createAlertMessage;
+import static com.app.eisenflow.utils.Utils.isTablet;
 import static com.app.eisenflow.utils.Utils.showAlertMessage;
 
 /**
@@ -297,11 +295,27 @@ public class SingleTaskActivity extends AppCompatActivity {
         navigateBackIfRoot();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (isTablet(this)) {
+            backToPreview();
+        }
+    }
+
     private void navigateBackIfRoot() {
         if (isTaskRoot()) {
             Intent upIntent = new Intent(this, LaunchActivity.class);
             startActivity(upIntent);
+        } else if(isTablet(this)) {
+            backToPreview();
         }
+    }
+
+    private void backToPreview() {
+        Intent intent = new Intent(this, PreviewActivity.class);
+        intent.putExtra(EXTRA_TASK_POSITION, mCurrentPosition);
+        startActivity(intent);
     }
 
     private void backWithTransition() {
@@ -495,6 +509,9 @@ public class SingleTaskActivity extends AppCompatActivity {
                 TaskReminderHelper.setReminder(mTask);
             }
 
+            if (isTablet(this)) {
+                backToPreview();
+            }
             finish();
         }
     }

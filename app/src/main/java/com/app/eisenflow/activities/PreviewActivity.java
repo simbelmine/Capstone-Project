@@ -143,6 +143,7 @@ public class PreviewActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SingleTaskActivity.class);
             intent.putExtra(EXTRA_TASK_POSITION, mTaskPosition);
             startActivityWithTransition(intent);
+            finish();
         }
     }
 
