@@ -12,6 +12,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,6 +45,7 @@ import static com.app.eisenflow.utils.Utils.isTablet;
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         AppBarLayout.OnOffsetChangedListener,
+        SwipeRefreshLayout.OnRefreshListener,
         LoaderManager.LoaderCallbacks<Cursor> {
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.fab) FloatingActionButton mFab;
@@ -54,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.toolbar_arrow) ImageView mToolbarArrow;
     @BindView(R.id.material_calendar_view) MaterialCalendarView mMaterialCalendarView;
     @BindView(R.id.tasks_recycler_view) RecyclerView mTasksRecyclerView;
+    @BindView(R.id.refresh_container) SwipeRefreshLayout mRefreshContainer;
 
     private ActionBarDrawerToggle mToggle;
     private RecyclerView.LayoutManager mLinearLayoutManager;
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements
         rotateMonthArrow(false);
         setOrientation(this);
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        mRefreshContainer.setRefreshing(true);
 
         // Set the evening daily alarm and the weekly Sunday alarm.
         TaskReminderHelper.setDailyTipAlarms();
@@ -109,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements
         mTasksRecyclerView.setLayoutManager(mLinearLayoutManager);
         mTasksRecyclerView.setAdapter(mTasksAdapter);
         ViewCompat.setNestedScrollingEnabled(mTasksRecyclerView, false);
+
+        mRefreshContainer.setOnRefreshListener(this);
     }
 
     @Override
@@ -198,15 +204,12 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        // ToDo: Add -> ((SimpleCursorAdapter) getListAdapter()).swapCursor(c);
-        // mFlavorAdapter.swapCursor(data);
-
+        mRefreshContainer.setRefreshing(false);
         switch (loader.getId()) {
             case LOADER_ID:
                 if (data == null) {
                     return;
                 }
-
                 mTasksAdapter.swapCursor(data);
                 break;
             default:
@@ -218,6 +221,11 @@ public class MainActivity extends AppCompatActivity implements
     public void onLoaderReset(Loader<Cursor> loader) {
         // ToDo: Add -> ((SimpleCursorAdapter) getListAdapter()).swapCursor(null);
         // mFlavorAdapter.swapCursor(null);
+    }
+
+    @Override
+    public void onRefresh() {
+        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     private void rotateMonthArrow(boolean isExpanded) {
