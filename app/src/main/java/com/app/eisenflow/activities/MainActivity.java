@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements
         if (verticalOffset == 0) {
             mCurrentState = State.EXPANDED;
             rotateMonthArrow(true);
+            mTasksAdapter.getBottomSheet().closeBottomSheet();
             ViewCompat.setNestedScrollingEnabled(mTasksRecyclerView, true);
         } else if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {
             mCurrentState = State.COLLAPSED;
