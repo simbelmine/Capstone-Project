@@ -108,7 +108,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_marginLeft="@dimen/activity_horizontal_spacing"
-            android:layout_marginRight="@dimen/activity_double_spacing"
+            android:layout_marginRight="@dimen/list_container_right_spacing"
             android:layout_marginTop="@dimen/activity_vertical_spacing"
             android:elevation="8dp"
             android:fitsSystemWindows="true"

@@ -44,6 +44,7 @@
     <dimen name="card_top_month_margin">4dp</dimen>
     <dimen name="card_bottom_margin">4dp</dimen>
     <dimen name="list_container_elevation">8dp</dimen>
+    <dimen name="list_container_right_spacing">43dp</dimen>
 
     <!-- Timer Activity -->
     <dimen name="task_name_buttons_margin">30dp</dimen>
