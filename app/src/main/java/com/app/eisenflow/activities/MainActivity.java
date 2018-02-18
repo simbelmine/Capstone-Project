@@ -21,17 +21,19 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.app.eisenflow.R;
+import com.app.eisenflow.ScrollToDateTask;
 import com.app.eisenflow.decorators.EventDecoratorFeederTask;
 import com.app.eisenflow.helpers.TaskReminderHelper;
 import com.app.eisenflow.helpers.TasksCursorRecyclerViewAdapter;
 import com.app.eisenflow.services.TimerService;
 import com.app.eisenflow.utils.Utils;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.util.Calendar;
 
@@ -41,13 +43,14 @@ import butterknife.OnClick;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
 import static com.app.eisenflow.utils.Constants.LOADER_ID;
-import static com.app.eisenflow.utils.Utils.setOrientation;
 import static com.app.eisenflow.utils.Utils.isTablet;
+import static com.app.eisenflow.utils.Utils.setOrientation;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
         AppBarLayout.OnOffsetChangedListener,
         SwipeRefreshLayout.OnRefreshListener,
+        OnDateSelectedListener,
         LoaderManager.LoaderCallbacks<Cursor> {
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.fab) FloatingActionButton mFab;
@@ -125,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements
         ViewCompat.setNestedScrollingEnabled(mTasksRecyclerView, false);
 
         mRefreshContainer.setOnRefreshListener(this);
+
+        mMaterialCalendarView.setOnDateChangedListener(this);
     }
 
     @Override
@@ -239,6 +244,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onRefresh() {
         getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+        new ScrollToDateTask(this, mLinearLayoutManager, date).execute();
     }
 
     private void rotateMonthArrow(boolean isExpanded) {
