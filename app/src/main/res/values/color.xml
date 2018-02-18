@@ -43,9 +43,10 @@
 
     <!-- Main Activity -->
     <color name="list_item_bg">#ffebeff1</color>
+    <color name="calendar_event_color">#a5a5a5</color>
 
     <!-- Bottom Sheet -->
-    <color name="botom_sheet_data_color">#778899</color>
+    <color name="bottom_sheet_data_color">#778899</color>
 
     <!-- Timer Activity-->
     <color name="timer_color">#6e3e39</color>

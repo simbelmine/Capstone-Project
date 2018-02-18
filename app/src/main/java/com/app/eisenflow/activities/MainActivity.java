@@ -21,10 +21,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.app.eisenflow.R;
+import com.app.eisenflow.decorators.EventDecoratorFeederTask;
 import com.app.eisenflow.helpers.TaskReminderHelper;
 import com.app.eisenflow.helpers.TasksCursorRecyclerViewAdapter;
 import com.app.eisenflow.services.TimerService;
@@ -87,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements
         TaskReminderHelper.setDailyTipAlarms();
         TaskReminderHelper.setWeeklyTipAlarms();
 
+        // Add Event decorators.
+        new EventDecoratorFeederTask(mMaterialCalendarView).execute();
+
         int itemsCountLocal = getItemsCountLocal();
     }
 
@@ -97,6 +102,11 @@ public class MainActivity extends AppCompatActivity implements
             stopService(new Intent(this, TimerService.class));
         }
         setCalendarCurrentDate();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     private void initViews() {
@@ -212,6 +222,8 @@ public class MainActivity extends AppCompatActivity implements
                     return;
                 }
                 mTasksAdapter.swapCursor(data);
+                mMaterialCalendarView.removeDecorators();
+                new EventDecoratorFeederTask(mMaterialCalendarView).execute();
                 break;
             default:
                 throw new IllegalArgumentException("no loader id handled!");
