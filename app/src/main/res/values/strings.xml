@@ -32,7 +32,7 @@
     <string name="got_it">Got It</string>
 
     <!-- Single Task Activity -->
-        <!-- Others -->
+    <!-- Others -->
     <string name="save_button_text">Save</string>
     <string name="enter_task_hint">Enter task name...</string>
     <string name="quadrantOne">Do It Now</string>
@@ -61,10 +61,10 @@
     <string name="add_task_date_alert">Your date is in the past.</string>
     <string name="add_task_time_alert">Your time is in the past.</string>
     <string name="priority_0_tip_snackbar">To help your productivity, schedule \'Do it now\' just for the next day.</string>
-        <!-- Content Descriptions -->
+    <!-- Content Descriptions -->
     <string name="close_button_description">Close Single Task Activity</string>
     <string name="save_button_description">Save Task and Exit</string>
-    
+
     <!-- Main Activity -->
     <string name="share_task_title">Share EisenFlow task</string>
     <string name="share_task_message">Delegated task from EisenFlow. \n\n
@@ -93,4 +93,6 @@
     <string name="notification_add_progress">Add Progress</string>
     <string name="daily_evening_tip_notification">Productive day tomorrow? Plan it now!</string>
     <string name="weekly_tip_notification">Hey, some task are waiting!</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
