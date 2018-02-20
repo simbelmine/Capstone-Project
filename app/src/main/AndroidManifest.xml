@@ -67,15 +67,19 @@
 
         <service android:name=".services.TaskReminderService"></service>
 
-        <receiver android:name=".EisenWidgetProvider">
+        <!-- Widget -->
+        <receiver android:name=".widget.WidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/eisen_widget_provider_info" />
+                android:resource="@xml/widget_provider_info" />
         </receiver>
+        <service
+            android:name=".widget.UpdateWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

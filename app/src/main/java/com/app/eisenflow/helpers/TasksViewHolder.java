@@ -38,6 +38,7 @@ import static com.app.eisenflow.utils.Constants.MAX_PROGRESS;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
 import static com.app.eisenflow.utils.TaskUtils.getFormattedProgress;
+import static com.app.eisenflow.utils.TaskUtils.getTimeLeft;
 import static com.app.eisenflow.utils.TaskUtils.setTaskBackgroundByPriority;
 
 /**
@@ -244,40 +245,6 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
         Calendar calendarDate = Calendar.getInstance();
         calendarDate.setTime(date);
         return DateTimeUtils.getMonthName(calendarDate);
-    }
-
-    private String getTimeLeft(Cursor cursor) {
-        String date = cursor.getString(cursor.getColumnIndex(KEY_DATE));
-        String time = cursor.getString(cursor.getColumnIndex(KEY_TIME));
-        Calendar cal = DateTimeUtils.getCalendar(date, time);
-
-        DateTime startDate = DateTime.now();
-        DateTime endDate = new DateTime(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), 0, 0);
-
-        Period period = new Period(startDate, endDate);
-
-        if(period.getDays() < 0) {
-            return "Overdue";
-        }
-        else if(DateUtils.isToday(endDate.toLocalDate())) {
-            return "Due Today";
-        }
-        else if(period.getDays() == 0) {
-            return "Due Tomorrow";
-        }
-        else {
-            PeriodFormatter formatter = new PeriodFormatterBuilder()
-                    .appendYears().appendSuffix(" year ", " years ")
-                    .appendMonths().appendSuffix(" month ", " months ")
-                    .appendWeeks().appendSuffix(" week ", " weeks ")
-                    .toFormatter();
-
-            int days = period.getDays()+1;
-            String daysSuffix = " days ";
-            if(days == 1) daysSuffix = " day ";
-
-            return "Due in " + formatter.print(period) + days + daysSuffix;
-        }
     }
 
     private void updateCurrantDateRow(Cursor cursor) {

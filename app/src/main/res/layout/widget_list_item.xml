@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_list_item_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+    <ImageView
+        android:id="@+id/done_check_box"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@mipmap/not_done_dark"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/activity_half_spacing"/>
+    <LinearLayout
+        android:id="@+id/widget_task_details_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/activity_half_spacing"
+        android:layout_toRightOf="@id/done_check_box"
+        android:orientation="vertical"
+        android:layout_centerVertical="true">
+        <TextView
+            android:id="@+id/widget_task_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Task Title"/>
+        <TextView
+            android:id="@+id/widget_task_due_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Due Tomorrow"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/widget_task_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="5%"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="@dimen/activity_half_spacing"
+        android:layout_centerVertical="true"/>
+</RelativeLayout>
