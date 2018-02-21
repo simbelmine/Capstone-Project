@@ -1,13 +1,18 @@
 package com.app.eisenflow.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
 import com.app.eisenflow.R;
+import com.app.eisenflow.activities.SingleTaskActivity;
+
+import static com.app.eisenflow.utils.Constants.TAG;
 
 /**
  * Implementation of App Widget functionality.
@@ -34,8 +39,12 @@ public class WidgetProvider extends AppWidgetProvider {
         //setting adapter to listview of the widget
         views.setRemoteAdapter(appWidgetId, R.id.widget_list_view,
                 serviceIntent);
-
-
+        // template to handle the click listener for each list item
+        Intent clickIntentTemplate = new Intent(context, SingleTaskActivity.class);
+        PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
+                .addNextIntentWithParentStack(clickIntentTemplate)
+                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setPendingIntentTemplate(R.id.widget_list_view, clickPendingIntentTemplate);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

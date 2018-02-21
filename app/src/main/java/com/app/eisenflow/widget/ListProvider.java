@@ -16,6 +16,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
+import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.Constants.MAX_PROGRESS;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
@@ -71,6 +72,10 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
         remoteView.setTextViewText(R.id.widget_task_due_date, timeLeft);
         setTaskProgress(remoteView);
         setTextBackground(remoteView, priorityValue);
+
+        Intent fillInIntent = new Intent();
+        fillInIntent.putExtra(EXTRA_TASK_POSITION, position);
+        remoteView.setOnClickFillInIntent(R.id.widget_task_details_container, fillInIntent);
 
         return remoteView;
     }
