@@ -60,4 +60,9 @@ public class Constants {
     public static final int NOTIFICATION_REMINDER_ACTION_CODE = 303;
     public static final int DAILY_TIP_CODE = 401;
     public static final int WEEKLY_TIP_CODE = 402;
+
+    /**
+     * Widget
+     */
+    public static final String WIDGET_TO_TASK_ACTION = "WidgetToTaskAction";
 }

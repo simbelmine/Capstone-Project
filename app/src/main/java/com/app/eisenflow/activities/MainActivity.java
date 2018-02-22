@@ -42,6 +42,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
+import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.Constants.LOADER_ID;
 import static com.app.eisenflow.utils.Utils.isTablet;
 import static com.app.eisenflow.utils.Utils.setOrientation;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements
     private ActionBarDrawerToggle mToggle;
     private RecyclerView.LayoutManager mLinearLayoutManager;
     private TasksCursorRecyclerViewAdapter mTasksAdapter;
+    private int mTaskPosition = -1;
 
     public enum State {
         EXPANDED,
@@ -95,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements
         // Add Event decorators.
         new EventDecoratorFeederTask(mMaterialCalendarView).execute();
 
+        mTaskPosition = getIntent().getIntExtra(EXTRA_TASK_POSITION, -1);
+
         int itemsCountLocal = getItemsCountLocal();
     }
 
@@ -103,6 +107,9 @@ public class MainActivity extends AppCompatActivity implements
         super.onResume();
         if (Utils.isServiceRunning(TimerService.class)) {
             stopService(new Intent(this, TimerService.class));
+        }
+        if (mTaskPosition != -1 && mTasksAdapter != null) {
+            mTasksAdapter.getBottomSheet().openBottomSheet(mTaskPosition);
         }
         setCalendarCurrentDate();
     }

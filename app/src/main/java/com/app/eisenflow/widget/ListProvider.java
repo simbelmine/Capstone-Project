@@ -18,6 +18,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.Constants.MAX_PROGRESS;
+import static com.app.eisenflow.utils.Constants.WIDGET_TO_TASK_ACTION;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
 import static com.app.eisenflow.utils.TaskUtils.getFormattedProgress;
@@ -37,12 +38,11 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
         mWidgetId = intent.getIntExtra(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
-        mCursor = getCursor();
     }
 
     @Override
     public void onCreate() {
-
+        mCursor = getCursor();
     }
 
     @Override
@@ -75,6 +75,7 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
         Intent fillInIntent = new Intent();
         fillInIntent.putExtra(EXTRA_TASK_POSITION, position);
+        fillInIntent.setAction(WIDGET_TO_TASK_ACTION);
         remoteView.setOnClickFillInIntent(R.id.widget_task_details_container, fillInIntent);
 
         return remoteView;

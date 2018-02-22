@@ -10,9 +10,11 @@ import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
 import com.app.eisenflow.R;
+import com.app.eisenflow.activities.MainActivity;
 import com.app.eisenflow.activities.SingleTaskActivity;
 
 import static com.app.eisenflow.utils.Constants.TAG;
+import static com.app.eisenflow.utils.Constants.WIDGET_TO_TASK_ACTION;
 
 /**
  * Implementation of App Widget functionality.
@@ -39,11 +41,15 @@ public class WidgetProvider extends AppWidgetProvider {
         //setting adapter to listview of the widget
         views.setRemoteAdapter(appWidgetId, R.id.widget_list_view,
                 serviceIntent);
+
+
         // template to handle the click listener for each list item
-        Intent clickIntentTemplate = new Intent(context, SingleTaskActivity.class);
-        PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
-                .addNextIntentWithParentStack(clickIntentTemplate)
-                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent clickIntentTemplate = new Intent(context, WidgetProvider.class);
+        PendingIntent clickPendingIntentTemplate = PendingIntent.getBroadcast(
+                context,
+                0,
+                clickIntentTemplate,
+                PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.widget_list_view, clickPendingIntentTemplate);
 
         // Instruct the widget manager to update the widget
@@ -56,6 +62,18 @@ public class WidgetProvider extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
+    }
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        switch (intent.getAction()) {
+            case WIDGET_TO_TASK_ACTION:
+                Intent intentToStart = new Intent(context, MainActivity.class);
+                intentToStart.putExtras(intent);
+                context.startActivity(intentToStart);
+                break;
+        }
+            super.onReceive(context, intent);
     }
 
     @Override
