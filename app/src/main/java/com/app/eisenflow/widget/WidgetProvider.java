@@ -6,14 +6,11 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.activities.MainActivity;
-import com.app.eisenflow.activities.SingleTaskActivity;
 
-import static com.app.eisenflow.utils.Constants.TAG;
 import static com.app.eisenflow.utils.Constants.WIDGET_TO_TASK_ACTION;
 
 /**
@@ -51,6 +48,15 @@ public class WidgetProvider extends AppWidgetProvider {
                 clickIntentTemplate,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         views.setPendingIntentTemplate(R.id.widget_list_view, clickPendingIntentTemplate);
+
+        // Click on Home icon.
+        Intent clickIntentHome = new Intent(context, MainActivity.class);
+        PendingIntent clickPendingIntentHome = PendingIntent.getActivity(
+                context,
+                0,
+                clickIntentHome,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.widget_home_icon, clickPendingIntentHome);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

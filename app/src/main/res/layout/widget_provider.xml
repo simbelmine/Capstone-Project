@@ -5,6 +5,19 @@
     android:background="@color/white"
     android:padding="@dimen/widget_margin">
 
+    <RelativeLayout
+        android:id="@+id/widget_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/widget_toolbar_height"
+        android:background="@color/colorAccent">
+        <ImageView
+            android:id="@+id/widget_home_icon"
+            android:layout_width="@dimen/widget_toolbar_home_icon_size"
+            android:layout_height="@dimen/widget_toolbar_home_icon_size"
+            android:layout_marginLeft="@dimen/activity_horizontal_spacing"
+            android:src="@mipmap/fish_icon_negative"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
     <ListView
         android:id="@+id/widget_list_view"
         android:layout_width="match_parent"
@@ -13,7 +26,8 @@
         android:layout_centerVertical="true"
         android:layout_margin="8dp"
         android:contentDescription="@string/appwidget_text"
-        tools:listitem="@layout/widget_list_item"/>
+        tools:listitem="@layout/widget_list_item"
+        android:layout_below="@+id/widget_toolbar"/>
 
     <TextView
         android:id="@+id/empty_view"
