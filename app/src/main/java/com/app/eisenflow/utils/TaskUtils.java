@@ -9,7 +9,9 @@ import android.view.View;
 
 import com.app.eisenflow.ApplicationEisenFlow;
 import com.app.eisenflow.R;
+import com.app.eisenflow.Task;
 import com.app.eisenflow.activities.TimerActivity;
+import com.app.eisenflow.helpers.TaskReminderHelper;
 
 import net.danlew.android.joda.DateUtils;
 
@@ -23,6 +25,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_NOTE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PROGRESS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
@@ -30,10 +33,13 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
 import static com.app.eisenflow.helpers.TaskReminderHelper.cancelReminder;
 import static com.app.eisenflow.helpers.TaskReminderHelper.cancelRepeatingReminder;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
+import static com.app.eisenflow.utils.DataUtils.getBooleanState;
+import static com.app.eisenflow.utils.DataUtils.getBooleanValue;
 
 /**
  * Created on 12/31/17.
@@ -202,4 +208,33 @@ public class TaskUtils {
         }
     }
 
+    public static void updateTaskDoneState(Context context, Cursor cursor, int position) {
+        if (cursor != null && cursor.moveToPosition(position)) {
+            int isDoneValue = cursor.getInt(cursor.getColumnIndex(KEY_IS_DONE));
+            boolean isDone = !getBooleanState(isDoneValue); // Get the opposite value to save.
+            ContentValues values = new ContentValues();
+            values.put(KEY_IS_DONE, getBooleanValue(isDone));
+
+            Task task = cursorToTask(cursor);
+            long taskId = task.getId();
+            Uri uri = buildFlavorsUri(taskId);
+            context.getContentResolver().update(uri, values, null, null);
+
+            // Cancel task's alarm if done, otherwise - reschedule.
+            DataUtils.Priority priority = DataUtils.Priority.valueOf(task.getPriority());
+            if (isDone) {
+                if (priority == TWO) {
+                    cancelRepeatingReminder((int) taskId);
+                } else {
+                    cancelReminder((int) taskId);
+                }
+            } else {
+                if (priority == TWO) {
+                    TaskReminderHelper.setRepeatingReminder(task);
+                } else {
+                    TaskReminderHelper.setReminder(task);
+                }
+            }
+        }
+    }
 }

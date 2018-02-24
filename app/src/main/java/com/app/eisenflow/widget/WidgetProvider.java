@@ -4,16 +4,28 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.widget.RemoteViews;
 
 import com.app.eisenflow.R;
+import com.app.eisenflow.Task;
 import com.app.eisenflow.activities.MainActivity;
 
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
+import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Constants.WIDGET_DONE_ACTION;
 import static com.app.eisenflow.utils.Constants.WIDGET_REFRESH_ACTION;
 import static com.app.eisenflow.utils.Constants.WIDGET_TO_TASK_ACTION;
+import static com.app.eisenflow.utils.DataUtils.getBooleanState;
+import static com.app.eisenflow.utils.DataUtils.getBooleanValue;
+import static com.app.eisenflow.utils.TaskUtils.updateTaskDoneState;
 
 /**
  * Implementation of App Widget functionality.
@@ -86,16 +98,26 @@ public class WidgetProvider extends AppWidgetProvider {
                 context.startActivity(intentToStart);
                 break;
             case WIDGET_REFRESH_ACTION:
-                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-                ComponentName thisAppWidgetComponentName =
-                        new ComponentName(context.getPackageName(),getClass().getName()
-                        );
-                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
-                        thisAppWidgetComponentName);
-                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list_view);
+                refreshWidget(context);
+                break;
+            case WIDGET_DONE_ACTION:
+                int position = intent.getIntExtra(EXTRA_TASK_POSITION, -1);
+                Cursor cursor = getCursor();
+                updateTaskDoneState(context, cursor, position);
+                refreshWidget(context);
                 break;
         }
             super.onReceive(context, intent);
+    }
+
+    private void refreshWidget(Context context) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName thisAppWidgetComponentName =
+                new ComponentName(context.getPackageName(),getClass().getName()
+                );
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
+                thisAppWidgetComponentName);
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list_view);
     }
 
     @Override

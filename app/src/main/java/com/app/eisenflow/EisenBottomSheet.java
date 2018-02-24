@@ -64,6 +64,7 @@ import static com.app.eisenflow.utils.TaskUtils.getFormattedProgress;
 import static com.app.eisenflow.utils.TaskUtils.setTaskBackgroundByPriority;
 import static com.app.eisenflow.utils.TaskUtils.shareTaskAction;
 import static com.app.eisenflow.utils.TaskUtils.startTimerActivityAction;
+import static com.app.eisenflow.utils.TaskUtils.updateTaskDoneState;
 
 /**
  * Created on 1/15/18.
@@ -105,7 +106,8 @@ public class EisenBottomSheet {
 
     public void openBottomSheet(int position) {
         if (mTaskPosition != position) {
-            updateTaskDone();
+            //updateTaskDone();
+            updateTaskDoneState(mActivity, mCursor, mTaskPosition);
         }
         mTaskPosition = position;
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
@@ -200,7 +202,8 @@ public class EisenBottomSheet {
                     case BottomSheetBehavior.STATE_EXPANDED:
                         break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
-                        updateTaskDone();
+//                        updateTaskDone();
+                        updateTaskDoneState(mActivity, mCursor, mTaskPosition);
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
                         break;
@@ -354,36 +357,5 @@ public class EisenBottomSheet {
     public void updateCursor(Cursor cursor) {
         mCursor = cursor;
         setTaskDetails();
-    }
-
-    private void updateTaskDone() {
-        if (mCursor == null || mTaskPosition == -1) {
-            return;
-        }
-        ContentValues values = new ContentValues();
-        values.put(KEY_IS_DONE, getBooleanValue(isDone));
-
-        if (mCursor != null && mCursor.moveToPosition(mTaskPosition)) {
-            Task task = cursorToTask(mCursor);
-            long taskId =  task.getId();
-            Uri uri = buildFlavorsUri(taskId);
-            mActivity.getContentResolver().update(uri, values, null, null);
-
-            // Cancel task's alarm if done, otherwise - reschedule.
-            DataUtils.Priority priority = DataUtils.Priority.valueOf(task.getPriority());
-            if (isDone) {
-                if (priority == TWO) {
-                    cancelRepeatingReminder((int)taskId);
-                } else {
-                    cancelReminder((int)taskId);
-                }
-            } else {
-                if (priority == TWO) {
-                    TaskReminderHelper.setRepeatingReminder(task);
-                } else {
-                    TaskReminderHelper.setReminder(task);
-                }
-            }
-        }
     }
 }
