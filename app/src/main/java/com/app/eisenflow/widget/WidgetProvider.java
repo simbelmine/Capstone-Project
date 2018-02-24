@@ -3,6 +3,7 @@ package com.app.eisenflow.widget;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.widget.RemoteViews;
 import com.app.eisenflow.R;
 import com.app.eisenflow.activities.MainActivity;
 
+import static com.app.eisenflow.utils.Constants.WIDGET_REFRESH_ACTION;
 import static com.app.eisenflow.utils.Constants.WIDGET_TO_TASK_ACTION;
 
 /**
@@ -20,27 +22,22 @@ public class WidgetProvider extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
-
         CharSequence widgetText = context.getString(R.string.appwidget_text);
-        // Construct the RemoteViews object
+        // Construct the RemoteViews object.
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_provider);
-        //views.setTextViewText(R.id.appwidget_text, widgetText);
-        // this was setting the text to the only textView inside the widget
 
-        //RemoteViews Service needed to provide adapter for ListView
+        // RemoteViews Service needed to provide adapter for ListView
         Intent serviceIntent = new Intent(context, UpdateWidgetService.class);
-        //passing app widget id to that RemoteViews Service
+        // Pass the app widget id to that RemoteViews Service.
         serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
-        //setting a unique Uri to the intent
-        //don't know its purpose to me right now
+        // Set a unique Uri to the intent.
         serviceIntent.setData(Uri.parse(
                 serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
-        //setting adapter to listview of the widget
+        // Set the adapter to listview of the widget.
         views.setRemoteAdapter(appWidgetId, R.id.widget_list_view,
                 serviceIntent);
 
-
-        // template to handle the click listener for each list item
+        // Create template to handle the click listener for each list item.
         Intent clickIntentTemplate = new Intent(context, WidgetProvider.class);
         PendingIntent clickPendingIntentTemplate = PendingIntent.getBroadcast(
                 context,
@@ -57,6 +54,16 @@ public class WidgetProvider extends AppWidgetProvider {
                 clickIntentHome,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.widget_home_icon, clickPendingIntentHome);
+
+        // Click on Refresh icon.
+        Intent clickIntentRefresh = new Intent(context, WidgetProvider.class);
+        clickIntentRefresh.setAction(WIDGET_REFRESH_ACTION);
+        PendingIntent clickPendingIntentRefresh = PendingIntent.getBroadcast(
+                context,
+                0,
+                clickIntentRefresh,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.widget_refresh_icon, clickPendingIntentRefresh);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -77,6 +84,15 @@ public class WidgetProvider extends AppWidgetProvider {
                 Intent intentToStart = new Intent(context, MainActivity.class);
                 intentToStart.putExtras(intent);
                 context.startActivity(intentToStart);
+                break;
+            case WIDGET_REFRESH_ACTION:
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                ComponentName thisAppWidgetComponentName =
+                        new ComponentName(context.getPackageName(),getClass().getName()
+                        );
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(
+                        thisAppWidgetComponentName);
+                appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_list_view);
                 break;
         }
             super.onReceive(context, intent);

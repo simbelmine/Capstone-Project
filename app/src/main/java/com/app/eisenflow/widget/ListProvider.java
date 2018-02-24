@@ -42,7 +42,6 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onCreate() {
-        mCursor = getCursor();
     }
 
     @Override
@@ -61,7 +60,6 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
                 mCursor == null || !mCursor.moveToPosition(position)) {
             return null;
         }
-
         final RemoteViews remoteView = new RemoteViews(
                 mContext.getPackageName(), R.layout.widget_list_item);
         int priorityValue = mCursor.getInt(mCursor.getColumnIndex(KEY_PRIORITY));
@@ -98,7 +96,7 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onDataSetChanged() {
-
+        mCursor = getCursor();
     }
 
     @Override

@@ -53,7 +53,8 @@
             android:name=".database.EisenContentProvider"
             android:authorities="com.app.eisenflow.provider"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true"
+            android:grantUriPermissions="true"/>
 
         <service android:name=".services.TimerService" />
 
