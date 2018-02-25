@@ -5,6 +5,8 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -13,6 +15,7 @@ import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -25,6 +28,7 @@ import com.app.eisenflow.R;
 import java.util.Random;
 
 import static com.app.eisenflow.utils.Constants.PREF_FIRST_TIME_USER;
+import static com.app.eisenflow.utils.Constants.TAG;
 
 /**
  * Created on 12/19/17.
@@ -187,5 +191,35 @@ public class Utils {
 
     public static boolean isTablet(Activity activity) {
         return activity.getResources().getBoolean(R.bool.landscape_only);
+    }
+
+    public static String getAppVersionString() {
+        Context context = ApplicationEisenFlow.getAppContext();
+        StringBuilder builder = new StringBuilder();
+        try {
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+            String version = pInfo.versionName;
+            int verCode = pInfo.versionCode;
+
+            builder.append(version + " ");
+            builder.append(verCode);
+        } catch (PackageManager.NameNotFoundException ex) {
+            Log.e(TAG, "AboutDialogException: " + ex.getMessage());
+        }
+        return builder.toString();
+    }
+
+    public static String getPhoneName() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(Build.MANUFACTURER);
+        builder.append(Build.MODEL);
+        return builder.toString();
+    }
+
+    public static String getDeviceOS() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("releaseV: " + android.os.Build.VERSION.RELEASE + " ");
+        builder.append("sdkV: " + android.os.Build.VERSION.SDK_INT);
+        return builder.toString();
     }
 }

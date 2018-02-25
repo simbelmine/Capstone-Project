@@ -1,7 +1,9 @@
 package com.app.eisenflow.activities;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -15,6 +17,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
@@ -45,11 +48,15 @@ import butterknife.OnClick;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
+import static com.app.eisenflow.utils.Constants.APP_EMAIL;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_PRIORITY;
 import static com.app.eisenflow.utils.Constants.LOADER_ID;
 import static com.app.eisenflow.utils.Constants.PREF_FIRST_TIME_USER;
 import static com.app.eisenflow.utils.TaskUtils.bulkDoneTasksDelete;
+import static com.app.eisenflow.utils.Utils.getAppVersionString;
+import static com.app.eisenflow.utils.Utils.getDeviceOS;
+import static com.app.eisenflow.utils.Utils.getPhoneName;
 import static com.app.eisenflow.utils.Utils.isTablet;
 import static com.app.eisenflow.utils.Utils.setOrientation;
 
@@ -216,7 +223,8 @@ public class MainActivity extends AppCompatActivity implements
                 closeDrawer();
                 return true;
             case R.id.nav_send_feedback:
-//                sendFeedback();
+                sendFeedback();
+                closeDrawer();
                 return true;
             case R.id.nav_rate_app:
 //                showRateDialog();
@@ -357,6 +365,64 @@ public class MainActivity extends AppCompatActivity implements
             smoothScroller.setTargetPosition(row);
             mLinearLayoutManager.startSmoothScroll(smoothScroller);
         }
+    }
+
+    private void sendFeedback() {
+        String address = APP_EMAIL;
+        String subject = getEmailSubjectReport();
+        String body = getEmailBodyReport();
+        String chooserTitle = getString(R.string.chooserTitle);
+
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + address));
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{address});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
+
+        // Verify that the intent will resolve to an activity
+        ComponentName emailApp = emailIntent.resolveActivity(getPackageManager());
+        ComponentName unsupportedAction = ComponentName.unflattenFromString("com.android.fallback/.Fallback");
+        boolean hasEmailApp = emailApp != null && !emailApp.equals(unsupportedAction);
+
+        if (hasEmailApp) {
+            startActivity(Intent.createChooser(emailIntent, chooserTitle));
+        }
+        else {
+            showAlertDialog("Email account not set up.", getResources().getColor(R.color.firstQuadrant));
+        }
+    }
+
+    private String getEmailSubjectReport() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(getString(R.string.app_name) + " ");
+        builder.append(getAppVersionString() + " ");
+        builder.append(getPhoneName() + " ");
+        builder.append(getDeviceOS());
+        return builder.toString();
+    }
+
+    private String getEmailBodyReport() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(getString(R.string.app_name));
+        builder.append(System.getProperty("line.separator"));
+        builder.append(getString(R.string.report_body));
+        return builder.toString();
+    }
+
+    private void showAlertDialog(String messageToShow, int colorMsg) {
+        int theme;
+        if(colorMsg == R.color.date) {
+            theme = R.style.MyTipDialogStyle;
+        }
+        else {
+            theme =  R.style.MyAlertDialogStyle;
+        }
+
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(MainActivity.this, theme);
+        builder.setTitle(getResources().getString(R.string.add_task_alert_title));
+        builder.setMessage(messageToShow);
+        builder.setPositiveButton(getResources().getString(android.R.string.ok), null);
+        builder.show();
     }
 
     private void closeDrawer() {

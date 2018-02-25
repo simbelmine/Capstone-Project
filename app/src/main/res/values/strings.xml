@@ -95,4 +95,9 @@
     <string name="weekly_tip_notification">Hey, some task are waiting!</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+
+    <!-- Send Report E-Mail -->
+    <string name="chooserTitle">Send report to developer</string>
+    <string name="report_body">Kind Regards!\nTell me about your experience with the app. What went wrong?</string>
+
 </resources>
