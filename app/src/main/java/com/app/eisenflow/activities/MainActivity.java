@@ -198,46 +198,46 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.nav_view_all:
                 applyFilter(null);
                 closeDrawer();
-                return true;
+                return false;
             case R.id.nav_show_do_it:
                 applyFilter(DataUtils.Priority.ONE);
                 closeDrawer();
-                return true;
+                return false;
             case R.id.nav_show_decide:
                 applyFilter(DataUtils.Priority.TWO);
                 closeDrawer();
-                return true;
+                return false;
             case R.id.nav_show_delegate:
                 applyFilter(DataUtils.Priority.THREE);
                 closeDrawer();
-                return true;
+                return false;
             case R.id.nav_show_drop_it:
                 applyFilter(DataUtils.Priority.FOUR);
                 closeDrawer();
-                return true;
+                return false;
             case R.id.clear_all_done:
                 bulkDoneTasksDelete();
                 closeDrawer();
-                return true;
+                return false;
             case R.id.nav_open_tutorial:
                 Utils.saveSharedBooleanSetting(
                         MainActivity.this,
                         PREF_FIRST_TIME_USER,
                         true);
                 startActivity(new Intent(this, LaunchActivity.class));
-                return true;
+                return false;
             case R.id.nav_info:
                 startActivity(new Intent(this, AboutDialogActivity.class));
                 closeDrawer();
-                return true;
+                return false;
             case R.id.nav_send_feedback:
                 sendFeedback();
                 closeDrawer();
-                return true;
+                return false;
             case R.id.nav_rate_app:
                 showRateDialog();
                 closeDrawer();
-                return true;
+                return false;
         }
         return false;
     }
