@@ -17,6 +17,7 @@ public class Constants {
      */
     public static final String TAG = "eisen";
     public static final int LOADER_ID = 0x02;
+    public static final String EXTRA_TASK_PRIORITY = "TaskPriority";
     /**
      * SingleTask Activity
      */

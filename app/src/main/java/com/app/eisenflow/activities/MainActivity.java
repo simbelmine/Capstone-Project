@@ -10,6 +10,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,6 +31,7 @@ import com.app.eisenflow.decorators.EventDecoratorFeederTask;
 import com.app.eisenflow.helpers.TaskReminderHelper;
 import com.app.eisenflow.helpers.TasksCursorRecyclerViewAdapter;
 import com.app.eisenflow.services.TimerService;
+import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.Utils;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
@@ -42,7 +44,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Constants.EXTRA_TASK_PRIORITY;
 import static com.app.eisenflow.utils.Constants.LOADER_ID;
 import static com.app.eisenflow.utils.Utils.isTablet;
 import static com.app.eisenflow.utils.Utils.setOrientation;
@@ -172,7 +176,58 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.nav_view_all:
+                applyFilter(null);
+                closeDrawer();
+                return true;
+            case R.id.nav_show_do_it:
+                applyFilter(DataUtils.Priority.ONE);
+                closeDrawer();
+                return true;
+            case R.id.nav_show_decide:
+                applyFilter(DataUtils.Priority.TWO);
+                closeDrawer();
+                return true;
+            case R.id.nav_show_delegate:
+                applyFilter(DataUtils.Priority.THREE);
+                closeDrawer();
+                return true;
+            case R.id.nav_show_drop_it:
+                applyFilter(DataUtils.Priority.FOUR);
+                closeDrawer();
+                return true;
+            case R.id.clear_all_done:
+//                deleteDoneTasks();
+//                justRefreshDecorators = true;
+//                startListFeedingTask();
+                closeDrawer();
+                return true;
+            case R.id.nav_open_tutorial:
+//                mainSharedPrefs.edit().putBoolean(SplashScreens.TUTORIAL_ACTIVATED, false).apply();
+//                startActivity(new Intent(this, SplashScreens.class));
+                return true;
+            case R.id.nav_info:
+                closeDrawer();
+//                startActivity(new Intent(this, AboutDialog.class));
+                return true;
+            case R.id.nav_send_feedback:
+//                sendFeedback();
+                return true;
+            case R.id.nav_rate_app:
+//                showRateDialog();
+                return true;
+        }
         return false;
+    }
+
+    private void applyFilter(DataUtils.Priority priority) {
+        Bundle bundle = new Bundle();
+        if (priority != null) {
+            bundle.putInt(EXTRA_TASK_PRIORITY, priority.getValue());
+        }
+        getSupportLoaderManager().restartLoader(LOADER_ID, bundle, this);
     }
 
     @Override
@@ -210,14 +265,22 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String selection = null;
+        String[] selectionArgs = null;
+        if (args != null && args.containsKey(EXTRA_TASK_PRIORITY)) {
+            int priority = args.getInt(EXTRA_TASK_PRIORITY);
+            selection = KEY_PRIORITY+"=?";
+            selectionArgs = new String[]{priority+""};
+        }
+
         switch (id) {
             case LOADER_ID:
                 return new CursorLoader(
                         this,
                         CONTENT_URI,
                         null,
-                        null,
-                        null,
+                        selection,
+                        selectionArgs,
                         null
                 );
             default:
@@ -291,6 +354,11 @@ public class MainActivity extends AppCompatActivity implements
             smoothScroller.setTargetPosition(row);
             mLinearLayoutManager.startSmoothScroll(smoothScroller);
         }
+    }
+
+    private void closeDrawer() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
     }
 
     @Override
