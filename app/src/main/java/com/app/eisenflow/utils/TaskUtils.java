@@ -24,6 +24,7 @@ import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Random;
 
+import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_NOTE;
@@ -83,6 +84,14 @@ public class TaskUtils {
         } else {
             cancelReminder(taskId);
         }
+    }
+
+    public static void bulkDoneTasksDelete() {
+        Context context = ApplicationEisenFlow.getAppContext();
+        context.getContentResolver().delete(
+                CONTENT_URI,
+                KEY_IS_DONE+"=?",
+                new String[]{getBooleanValue(true)+""});
     }
 
     private static String getMessageToShare(Cursor cursor) {

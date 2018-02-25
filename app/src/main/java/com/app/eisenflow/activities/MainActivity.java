@@ -48,6 +48,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_PRIORITY;
 import static com.app.eisenflow.utils.Constants.LOADER_ID;
+import static com.app.eisenflow.utils.TaskUtils.bulkDoneTasksDelete;
 import static com.app.eisenflow.utils.Utils.isTablet;
 import static com.app.eisenflow.utils.Utils.setOrientation;
 
@@ -199,9 +200,7 @@ public class MainActivity extends AppCompatActivity implements
                 closeDrawer();
                 return true;
             case R.id.clear_all_done:
-//                deleteDoneTasks();
-//                justRefreshDecorators = true;
-//                startListFeedingTask();
+                bulkDoneTasksDelete();
                 closeDrawer();
                 return true;
             case R.id.nav_open_tutorial:
