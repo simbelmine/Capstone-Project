@@ -1,5 +1,7 @@
 package com.app.eisenflow.activities;
 
+import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,8 +25,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -34,6 +41,7 @@ import com.app.eisenflow.decorators.EventDecoratorFeederTask;
 import com.app.eisenflow.helpers.TaskReminderHelper;
 import com.app.eisenflow.helpers.TasksCursorRecyclerViewAdapter;
 import com.app.eisenflow.services.TimerService;
+import com.app.eisenflow.utils.Constants;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.Utils;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -227,7 +235,8 @@ public class MainActivity extends AppCompatActivity implements
                 closeDrawer();
                 return true;
             case R.id.nav_rate_app:
-//                showRateDialog();
+                showRateDialog();
+                closeDrawer();
                 return true;
         }
         return false;
@@ -423,6 +432,50 @@ public class MainActivity extends AppCompatActivity implements
         builder.setMessage(messageToShow);
         builder.setPositiveButton(getResources().getString(android.R.string.ok), null);
         builder.show();
+    }
+
+    public void showRateDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.rate_dialog);
+        final Button rate = (Button) dialog.findViewById(R.id.rate_btn);
+        rate.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                rate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Uri uri = Uri.parse("market://details?id=" + getPackageName());
+                        Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
+
+                        try {
+                            startActivity(myAppLinkToMarket);
+                        } catch (ActivityNotFoundException e) {
+                            Log.e(Constants.TAG, "Rate App Exception: " + e.getMessage());
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName()));
+                            startActivity(intent);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+
+        final Button not_now = (Button) dialog.findViewById(R.id.not_now_btn);
+        not_now.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                not_now.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
+
+        dialog.show();
     }
 
     private void closeDrawer() {
