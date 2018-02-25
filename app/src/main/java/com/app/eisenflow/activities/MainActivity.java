@@ -48,6 +48,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_PRIORITY;
 import static com.app.eisenflow.utils.Constants.LOADER_ID;
+import static com.app.eisenflow.utils.Constants.PREF_FIRST_TIME_USER;
 import static com.app.eisenflow.utils.TaskUtils.bulkDoneTasksDelete;
 import static com.app.eisenflow.utils.Utils.isTablet;
 import static com.app.eisenflow.utils.Utils.setOrientation;
@@ -204,8 +205,11 @@ public class MainActivity extends AppCompatActivity implements
                 closeDrawer();
                 return true;
             case R.id.nav_open_tutorial:
-//                mainSharedPrefs.edit().putBoolean(SplashScreens.TUTORIAL_ACTIVATED, false).apply();
-//                startActivity(new Intent(this, SplashScreens.class));
+                Utils.saveSharedBooleanSetting(
+                        MainActivity.this,
+                        PREF_FIRST_TIME_USER,
+                        true);
+                startActivity(new Intent(this, LaunchActivity.class));
                 return true;
             case R.id.nav_info:
                 closeDrawer();
@@ -243,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    @OnClick (R.id.toolbar_month_container)
+    @OnClick(R.id.toolbar_month_container)
     public void onToolbarMonthClick() {
         if (!isTablet(this)) {
             boolean isExpanded = mCurrentState == State.EXPANDED ? true : false;
@@ -254,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    @OnClick (R.id.fab)
+    @OnClick(R.id.fab)
     public void onFabClick() {
         startActivity(new Intent(MainActivity.this, SingleTaskActivity.class));
         if (mTasksAdapter != null && mTasksAdapter.getBottomSheet().isBottomSheetExpanded()) {
@@ -268,8 +272,8 @@ public class MainActivity extends AppCompatActivity implements
         String[] selectionArgs = null;
         if (args != null && args.containsKey(EXTRA_TASK_PRIORITY)) {
             int priority = args.getInt(EXTRA_TASK_PRIORITY);
-            selection = KEY_PRIORITY+"=?";
-            selectionArgs = new String[]{priority+""};
+            selection = KEY_PRIORITY + "=?";
+            selectionArgs = new String[]{priority + ""};
         }
 
         switch (id) {
