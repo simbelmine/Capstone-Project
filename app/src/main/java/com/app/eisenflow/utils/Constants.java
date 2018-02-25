@@ -1,7 +1,5 @@
 package com.app.eisenflow.utils;
 
-import android.os.Build;
-
 /**
  * Created on 1/23/18.
  */
@@ -11,7 +9,7 @@ public class Constants {
      * Launch Activity
      */
     public static final String PREF_FIRST_TIME_USER = "FirstTimeUser";
-    public static final int SPLASH_TIME = 3000;
+    public static final int SPLASH_TIME = 800;
     /**
      * Main Activity
      */
