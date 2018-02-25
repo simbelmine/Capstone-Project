@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/splashscreen_bg"
+    >
+    <LinearLayout
+        android:id="@+id/logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_margin="@dimen/activity_vertical_spacing">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_launcher_app"
+            android:layout_marginLeft="@dimen/activity_horizontal_spacing" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:text="@string/app_name"
+            android:layout_marginLeft="@dimen/activity_horizontal_spacing"
+            android:fontFamily="sans-serif-thin" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:text="Version "
+        android:layout_margin="@dimen/activity_horizontal_spacing"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/date"
+        android:textSize="@dimen/splash_content_text_size_big"
+        android:fontFamily="sans-serif-thin" />
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/version"
+        android:layout_margin="@dimen/activity_vertical_spacing"
+        android:text="Eisen Flow is an productivity application based on Eisenhower's productivity matrix."
+        android:textColor="@color/white"
+        android:textSize="@dimen/splash_content_text_size_small"
+        android:fontFamily="sans-serif-light" />
+
+    <Button
+        android:id="@+id/about_ok"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="50dp"
+        android:textColor="@color/white"
+        android:text="@android:string/ok"
+        android:fontFamily="sans-serif-light"
+        android:layout_below="@+id/info"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/activity_vertical_spacing"
+        android:background="@color/splashscreen_bg"
+        android:elevation="4dp" />
+</RelativeLayout>

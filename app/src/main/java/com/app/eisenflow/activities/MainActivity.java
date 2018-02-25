@@ -212,8 +212,8 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(new Intent(this, LaunchActivity.class));
                 return true;
             case R.id.nav_info:
+                startActivity(new Intent(this, AboutDialogActivity.class));
                 closeDrawer();
-//                startActivity(new Intent(this, AboutDialog.class));
                 return true;
             case R.id.nav_send_feedback:
 //                sendFeedback();

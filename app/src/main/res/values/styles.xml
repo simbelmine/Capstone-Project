@@ -39,6 +39,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="NoTitleDialog" parent="@style/Theme.AppCompat.Dialog">
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="MyAlertDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
         <item name="colorAccent">@color/white</item>
         <item name="android:textColorPrimary">@color/firstQuadrant</item>

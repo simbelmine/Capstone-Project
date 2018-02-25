@@ -48,6 +48,9 @@
         <activity
             android:name=".activities.TimerActivity"
             android:launchMode="singleTask" />
+        <activity
+            android:name=".activities.AboutDialogActivity"
+            android:theme="@style/NoTitleDialog"/>
 
         <provider
             android:name=".database.EisenContentProvider"
