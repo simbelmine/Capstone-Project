@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.app.eisenflow.activities.SingleTaskActivity;
 import com.app.eisenflow.helpers.TaskReminderHelper;
 import com.app.eisenflow.utils.DataUtils;
+import com.app.eisenflow.widget.WidgetProvider;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -136,11 +137,13 @@ public class EisenBottomSheet {
             isDone = true;
         }
         updateDoneButton(isDone);
+        WidgetProvider.refreshWidget(mActivity);
     }
 
     @OnClick (R.id.bottom_sheet_menu_btn)
     public void onMenuButtonClick() {
         showBottomSheetOverflowMenu();
+        WidgetProvider.refreshWidget(mActivity);
     }
 
     @OnClick (R.id.bottom_sheet_edit_btn)

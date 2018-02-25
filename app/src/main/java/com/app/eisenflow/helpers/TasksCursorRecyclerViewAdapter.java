@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.app.eisenflow.EisenBottomSheet;
 import com.app.eisenflow.R;
+import com.app.eisenflow.widget.WidgetProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -66,6 +67,7 @@ public class TasksCursorRecyclerViewAdapter extends CursorRecyclerViewAdapter<Ta
         mDateHeaderMap.clear();
         mMonthHeaderMap.clear();
         mEisenBottomSheet.updateCursor(newCursor);
+        WidgetProvider.refreshWidget(mContext);
         return super.swapCursor(newCursor);
     }
 
