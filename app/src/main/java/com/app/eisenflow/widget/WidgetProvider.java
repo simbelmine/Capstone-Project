@@ -8,20 +8,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.activities.MainActivity;
+import com.app.eisenflow.utils.Utils;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.Constants.TAG;
+import static com.app.eisenflow.utils.Constants.WIDGET_CLEAR_DONE_ACTION;
 import static com.app.eisenflow.utils.Constants.WIDGET_DONE_ACTION;
 import static com.app.eisenflow.utils.Constants.WIDGET_REFRESH_ACTION;
 import static com.app.eisenflow.utils.Constants.WIDGET_TO_TASK_ACTION;
 import static com.app.eisenflow.utils.DataUtils.getBooleanState;
+import static com.app.eisenflow.utils.TaskUtils.bulkDoneTasksDelete;
 import static com.app.eisenflow.utils.TaskUtils.updateTaskDoneState;
 
 /**
@@ -74,6 +78,16 @@ public class WidgetProvider extends AppWidgetProvider {
                 PendingIntent.FLAG_UPDATE_CURRENT);
         views.setOnClickPendingIntent(R.id.widget_refresh_icon, clickPendingIntentRefresh);
 
+        // Click on clear done icon.
+        Intent clickIntentClearDone = new Intent(context, WidgetProvider.class);
+        clickIntentClearDone.setAction(WIDGET_CLEAR_DONE_ACTION);
+        PendingIntent clickPendingIntentClearDone = PendingIntent.getBroadcast(
+                context,
+                0,
+                clickIntentClearDone,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.widget_clear_done_icon, clickPendingIntentClearDone);
+
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
@@ -88,6 +102,9 @@ public class WidgetProvider extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (intent == null || TextUtils.isEmpty(intent.getAction())) {
+            return;
+        }
         switch (intent.getAction()) {
             case WIDGET_TO_TASK_ACTION:
                 Intent intentToStart = new Intent(context, MainActivity.class);
@@ -106,6 +123,10 @@ public class WidgetProvider extends AppWidgetProvider {
                     updateTaskDoneState(context, cursor, !isDone); // Get the opposite value to save.
                     refreshWidget(context);
                 }
+                break;
+            case WIDGET_CLEAR_DONE_ACTION:
+                bulkDoneTasksDelete();
+                refreshWidget(context);
                 break;
         }
             super.onReceive(context, intent);

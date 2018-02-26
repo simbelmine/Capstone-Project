@@ -68,5 +68,6 @@ public class Constants {
      */
     public static final String WIDGET_TO_TASK_ACTION = "WidgetToTaskAction";
     public static final String WIDGET_REFRESH_ACTION = "WidgetRefreshAction";
+    public static final String WIDGET_CLEAR_DONE_ACTION = "WidgetClearDoneAction";
     public static final String WIDGET_DONE_ACTION = "WidgetDoneAction";
 }

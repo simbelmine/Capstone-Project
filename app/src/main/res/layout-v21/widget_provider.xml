@@ -28,6 +28,16 @@
             android:layout_alignParentRight="true"
             android:clickable="true"
             android:background="?android:attr/selectableItemBackgroundBorderless"/>
+        <ImageView
+            android:id="@+id/widget_clear_done_icon"
+            android:layout_width="@dimen/widget_toolbar_icon_size"
+            android:layout_height="@dimen/widget_toolbar_icon_size"
+            android:src="@mipmap/clear_all_white"
+            android:layout_marginRight="@dimen/activity_horizontal_spacing"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/widget_refresh_icon"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackgroundBorderless"/>
     </RelativeLayout>
     <ListView
         android:id="@+id/widget_list_view"
