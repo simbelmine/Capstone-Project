@@ -107,4 +107,9 @@
     <string name="not_now_btn">Not now</string>
     <string name="rate_alert">Something went wrong. \nPlease try again later!</string>
 
+    <!-- Settings -->
+    <string name="settings_task_filter_key">filter_key</string>
+    <string name="settings_task_filter">Main Settings</string>
+    <string name="settings_filter_title">Task Filter</string>
+    <string name="settings_filter_summary">Task filter will affect both app and widget.</string>
 </resources>

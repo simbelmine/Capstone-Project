@@ -51,6 +51,8 @@
         <activity
             android:name=".activities.AboutDialogActivity"
             android:theme="@style/NoTitleDialog"/>
+        <activity android:name=".activities.Settings"
+            android:theme="@style/AppTheme"/>
 
         <provider
             android:name=".database.EisenContentProvider"

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="taskFilter">
+        <item>Show all</item>
+        <item>Do It Now</item>
+        <item>Decide When</item>
+        <item>Delegate It</item>
+        <item>Drop It</item>
+    </string-array>
+
+    <string-array name="taskFilterValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+</resources>

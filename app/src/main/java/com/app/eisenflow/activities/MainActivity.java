@@ -4,9 +4,11 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements
     private RecyclerView.LayoutManager mLinearLayoutManager;
     private TasksCursorRecyclerViewAdapter mTasksAdapter;
     private int mTaskPosition = -1;
+    private boolean isLoaderSet;
 
     public enum State {
         EXPANDED,
@@ -108,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements
         initViews();
         rotateMonthArrow(false);
         setOrientation(this);
-        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        //getSupportLoaderManager().initLoader(LOADER_ID, null, this);
         mRefreshContainer.setRefreshing(true);
 
         // Set the evening daily alarm and the weekly Sunday alarm.
@@ -126,6 +129,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        Log.v(Constants.TAG, "onResume");
+        applyFilter(DataUtils.Priority.valueOf(getFilterValue()));
+
         if (Utils.isServiceRunning(TimerService.class)) {
             stopService(new Intent(this, TimerService.class));
         }
@@ -175,13 +181,9 @@ public class MainActivity extends AppCompatActivity implements
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         switch (id) {
             case R.id.action_settings:
+                startActivity(new Intent(this, Settings.class));
                 return true;
             case R.id.action_today:
                 setCalendarCurrentDate();
@@ -245,10 +247,15 @@ public class MainActivity extends AppCompatActivity implements
 
     private void applyFilter(DataUtils.Priority priority) {
         Bundle bundle = new Bundle();
-        if (priority != null) {
+        if (priority != null && priority != DataUtils.Priority.DEFAULT) {
             bundle.putInt(EXTRA_TASK_PRIORITY, priority.getValue());
         }
-        getSupportLoaderManager().restartLoader(LOADER_ID, bundle, this);
+        if (isLoaderSet) {
+            getSupportLoaderManager().restartLoader(LOADER_ID, bundle, this);
+        } else {
+            isLoaderSet = true;
+            getSupportLoaderManager().initLoader(LOADER_ID, bundle, this);
+        }
     }
 
     @Override
@@ -334,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onRefresh() {
-        getSupportLoaderManager().initLoader(LOADER_ID, null, this);
+        applyFilter(DataUtils.Priority.valueOf(getFilterValue()));
     }
 
     @Override
@@ -477,6 +484,14 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         dialog.show();
+    }
+
+    private int getFilterValue() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        String priorityFilterValue = sharedPreferences.getString(
+                getResources().getString(R.string.settings_task_filter_key),
+                "0");
+        return Integer.valueOf(priorityFilterValue);
     }
 
     private void closeDrawer() {
