@@ -217,10 +217,7 @@ public class TaskUtils {
         }
     }
 
-    public static void updateTaskDoneState(Context context, Cursor cursor, int position) {
-        if (cursor != null && cursor.moveToPosition(position)) {
-            int isDoneValue = cursor.getInt(cursor.getColumnIndex(KEY_IS_DONE));
-            boolean isDone = !getBooleanState(isDoneValue); // Get the opposite value to save.
+    public static void updateTaskDoneState(Context context, Cursor cursor, int position, boolean isDone) {
             ContentValues values = new ContentValues();
             values.put(KEY_IS_DONE, getBooleanValue(isDone));
 
@@ -244,6 +241,5 @@ public class TaskUtils {
                     TaskReminderHelper.setReminder(task);
                 }
             }
-        }
     }
 }

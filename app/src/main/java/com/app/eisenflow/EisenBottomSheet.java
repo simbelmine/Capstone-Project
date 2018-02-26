@@ -1,10 +1,8 @@
 package com.app.eisenflow;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,13 +20,10 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.app.eisenflow.activities.SingleTaskActivity;
-import com.app.eisenflow.helpers.TaskReminderHelper;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.widget.WidgetProvider;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -47,17 +42,11 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
-import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
-import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
-import static com.app.eisenflow.helpers.TaskReminderHelper.cancelReminder;
-import static com.app.eisenflow.helpers.TaskReminderHelper.cancelRepeatingReminder;
-import static com.app.eisenflow.utils.Constants.TAG;
+import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.DataUtils.Occurrence.WEEKLY;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.DataUtils.getBooleanState;
-import static com.app.eisenflow.utils.DataUtils.getBooleanValue;
 import static com.app.eisenflow.utils.DataUtils.stringToIntegerCollection;
-import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.TaskUtils.addProgressAction;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
 import static com.app.eisenflow.utils.TaskUtils.deleteTaskAction;
@@ -107,8 +96,9 @@ public class EisenBottomSheet {
 
     public void openBottomSheet(int position) {
         if (mTaskPosition != position) {
-            //updateTaskDone();
-            updateTaskDoneState(mActivity, mCursor, mTaskPosition);
+            int isDoneValue = mCursor.getInt(mCursor.getColumnIndex(KEY_IS_DONE));
+            isDone = getBooleanState(isDoneValue);
+            updateDoneButton(isDone);
         }
         mTaskPosition = position;
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
@@ -205,8 +195,7 @@ public class EisenBottomSheet {
                     case BottomSheetBehavior.STATE_EXPANDED:
                         break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
-//                        updateTaskDone();
-                        updateTaskDoneState(mActivity, mCursor, mTaskPosition);
+                        updateTaskDoneState(mActivity, mCursor, mTaskPosition, isDone);
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
                         break;
