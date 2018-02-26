@@ -39,6 +39,7 @@ import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
 import static com.app.eisenflow.utils.TaskUtils.getFormattedProgress;
 import static com.app.eisenflow.utils.TaskUtils.getTimeLeft;
+import static com.app.eisenflow.utils.TaskUtils.isTaskDone;
 import static com.app.eisenflow.utils.TaskUtils.setTaskBackgroundByPriority;
 
 /**
@@ -189,11 +190,6 @@ public class TasksViewHolder extends RecyclerView.ViewHolder {
         else {
             mDoneCrossLine.setVisibility(View.GONE);
         }
-    }
-
-    private boolean isTaskDone(Cursor cursor) {
-        int isDoneValue = cursor.getInt(cursor.getColumnIndex(KEY_IS_DONE));
-        return DataUtils.getBooleanState(isDoneValue);
     }
 
     private void setTaskOverdue(Cursor cursor) {

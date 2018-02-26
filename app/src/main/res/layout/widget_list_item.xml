@@ -49,5 +49,6 @@
         tools:text="5%"
         android:layout_alignParentRight="true"
         android:layout_marginRight="@dimen/activity_half_spacing"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:textColor="@color/colorPrimaryDark"/>
 </RelativeLayout>

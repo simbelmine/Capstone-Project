@@ -256,4 +256,9 @@ public class TaskUtils {
                 }
             }
     }
+
+    public static boolean isTaskDone(Cursor cursor) {
+        int isDoneValue = cursor.getInt(cursor.getColumnIndex(KEY_IS_DONE));
+        return DataUtils.getBooleanState(isDoneValue);
+    }
 }

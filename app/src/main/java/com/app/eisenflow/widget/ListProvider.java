@@ -10,12 +10,18 @@ import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import com.app.eisenflow.ApplicationEisenFlow;
 import com.app.eisenflow.R;
 import com.app.eisenflow.utils.DataUtils;
+import com.app.eisenflow.utils.DateTimeUtils;
 
+import java.util.Calendar;
+
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
@@ -28,6 +34,7 @@ import static com.app.eisenflow.utils.DataUtils.getBooleanState;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
 import static com.app.eisenflow.utils.TaskUtils.getFormattedProgress;
 import static com.app.eisenflow.utils.TaskUtils.getTimeLeft;
+import static com.app.eisenflow.utils.TaskUtils.isTaskDone;
 
 /**
  * Created on 2/19/18.
@@ -76,6 +83,7 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
         setTaskProgress(remoteView);
         setTextBackground(remoteView, priorityValue);
         updateDoneButtons(mCursor, remoteView);
+        setTaskOverdue(mCursor, remoteView);
 
         // Accept clicks on each list item.
         Intent fillInIntent = new Intent();
@@ -178,6 +186,23 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
         } else {
             remoteView.setImageViewResource(R.id.widget_done_check_box, R.mipmap.not_done_dark);
             remoteView.setViewVisibility(R.id.widget_done_cross_line, View.INVISIBLE);
+        }
+    }
+
+    private void setTaskOverdue(Cursor cursor, RemoteViews remoteViews) {
+        Context context = ApplicationEisenFlow.getAppContext();
+        String taskDate = cursor.getString(cursor.getColumnIndex(KEY_DATE));
+        String taskTime= cursor.getString(cursor.getColumnIndex(KEY_TIME));
+        Calendar calDate = DateTimeUtils.getCalendar(taskDate, taskTime);
+
+        if(DateTimeUtils.isPastDate(calDate) && !isTaskDone(cursor)) {
+            remoteViews.setTextColor(
+                    R.id.widget_task_due_date,
+                    context.getResources().getColor(R.color.firstQuadrant));
+        } else {
+            remoteViews.setTextColor(
+                    R.id.widget_task_due_date,
+                    context.getResources().getColor(R.color.colorPrimaryDark));
         }
     }
 }
