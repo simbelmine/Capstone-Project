@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
+        mTaskPosition = -1;
     }
 
     private void initViews() {
