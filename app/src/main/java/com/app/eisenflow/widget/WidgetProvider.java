@@ -103,7 +103,7 @@ public class WidgetProvider extends AppWidgetProvider {
                 if (cursor != null && cursor.moveToPosition(position)) {
                     int isDoneValue = cursor.getInt(cursor.getColumnIndex(KEY_IS_DONE));
                     boolean isDone = getBooleanState(isDoneValue);
-                    updateTaskDoneState(context, cursor, position, !isDone); // Get the opposite value to save.
+                    updateTaskDoneState(context, cursor, !isDone); // Get the opposite value to save.
                     refreshWidget(context);
                 }
                 break;

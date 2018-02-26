@@ -62,14 +62,15 @@
         <service android:name=".services.TimerService" />
 
         <!-- Alarms -->
-        <receiver android:name=".services.OnBootReceiver">
+        <receiver android:name=".receivers.OnBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".services.OnAlarmReceiver"></receiver>
+        <receiver android:name=".receivers.OnAlarmReceiver"/>
+        <receiver android:name=".receivers.OnNotificationActionReceiver"/>
 
-        <service android:name=".services.TaskReminderService"></service>
+        <service android:name=".services.TaskReminderService"/>
 
         <!-- Widget -->
         <receiver android:name=".widget.WidgetProvider">

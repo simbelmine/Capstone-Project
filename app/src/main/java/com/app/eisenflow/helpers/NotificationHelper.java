@@ -13,16 +13,17 @@ import com.app.eisenflow.R;
 import com.app.eisenflow.Task;
 import com.app.eisenflow.activities.MainActivity;
 import com.app.eisenflow.activities.SingleTaskActivity;
-import com.app.eisenflow.services.OnAlarmReceiver;
+import com.app.eisenflow.receivers.OnAlarmReceiver;
+import com.app.eisenflow.receivers.OnNotificationActionReceiver;
 import com.app.eisenflow.utils.DataUtils;
 
 import java.util.Calendar;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
+import static com.app.eisenflow.utils.Constants.NOTFICATION_ACTION_DONE;
 import static com.app.eisenflow.utils.Constants.NOTIFICATION_REMINDER_ACTION_CODE;
 import static com.app.eisenflow.utils.Constants.NOTIFICATION_REMINDER_CHANEL;
-import static com.app.eisenflow.utils.Constants.WEEK_DAY;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.DateTimeUtils.getCalendar;
 import static com.app.eisenflow.utils.TaskUtils.generateRandomId;
@@ -38,7 +39,7 @@ public class NotificationHelper {
         Context context = ApplicationEisenFlow.getAppContext();
 
         Intent taskIntent = new Intent(context, SingleTaskActivity.class);
-        taskIntent.putExtra(KEY_ROW_ID, task.getId());
+        taskIntent.putExtras(intent);
         PendingIntent pendingIntentOpenTask = PendingIntent.getActivity(
                 context,
                 0,
@@ -63,7 +64,7 @@ public class NotificationHelper {
             notificationBuilder.addAction(getNotificationActionAddProgress(intent, (int)task.getId()));
         }
         else {
-            notificationBuilder.addAction(getNotificationActionDone(intent, (int)task.getId()));
+            notificationBuilder.addAction(getNotificationActionDone(intent));
         }
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
@@ -87,14 +88,11 @@ public class NotificationHelper {
                 actionAddProgressPendingIntent).build();
     }
 
-    private NotificationCompat.Action getNotificationActionDone(Intent intent, int taskId) {
+    private NotificationCompat.Action getNotificationActionDone(Intent intent) {
         Context context = ApplicationEisenFlow.getAppContext();
-        String weekDay = intent.getStringExtra(WEEK_DAY);
-
-        Intent actionDone = new Intent(context, OnAlarmReceiver.class)
-                .putExtra(KEY_ROW_ID, taskId)
-                .putExtra(WEEK_DAY, weekDay)
-                .setAction("ACTION_NOTIFICATION_DONE");
+        Intent actionDone = new Intent(context, OnNotificationActionReceiver.class)
+                .setAction(NOTFICATION_ACTION_DONE);
+        actionDone.putExtras(intent);
         PendingIntent actionDonePendingIntent = PendingIntent.getBroadcast(
                 context,
                 NOTIFICATION_REMINDER_ACTION_CODE,

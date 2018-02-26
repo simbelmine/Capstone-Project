@@ -1,4 +1,4 @@
-package com.app.eisenflow.services;
+package com.app.eisenflow.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.util.Log;
 import com.app.eisenflow.Task;
 import com.app.eisenflow.helpers.NotificationHelper;
 import com.app.eisenflow.helpers.TaskReminderHelper;
+import com.app.eisenflow.services.WakefulIntentService;
 
 import java.util.Calendar;
 

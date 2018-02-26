@@ -8,18 +8,17 @@ import android.os.Build;
 
 import com.app.eisenflow.ApplicationEisenFlow;
 import com.app.eisenflow.Task;
-import com.app.eisenflow.services.OnAlarmReceiver;
+import com.app.eisenflow.receivers.OnAlarmReceiver;
 import com.app.eisenflow.utils.DataUtils;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.utils.Constants.DAILY_TIP;
 import static com.app.eisenflow.utils.Constants.DAILY_TIP_CODE;
+import static com.app.eisenflow.utils.Constants.NOTFICATION_ACTION_DONE;
 import static com.app.eisenflow.utils.Constants.REPEATING_REMINDER;
 import static com.app.eisenflow.utils.Constants.WEEKLY_OLD_TASKS_TIP;
 import static com.app.eisenflow.utils.Constants.WEEKLY_TIP_CODE;
@@ -41,7 +40,8 @@ public class TaskReminderHelper {
         long taskId = task.getId();
 
         Intent intent = new Intent(context, OnAlarmReceiver.class)
-                .putExtra(KEY_ROW_ID, taskId);
+                .putExtra(KEY_ROW_ID, taskId)
+                .setAction(NOTFICATION_ACTION_DONE);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             alarmManager.setExact(

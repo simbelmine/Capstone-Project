@@ -195,7 +195,7 @@ public class EisenBottomSheet {
                     case BottomSheetBehavior.STATE_EXPANDED:
                         break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
-                        updateTaskDoneState(mActivity, mCursor, mTaskPosition, isDone);
+                        updateTaskDoneState(mActivity, mCursor, isDone);
                         break;
                     case BottomSheetBehavior.STATE_DRAGGING:
                         break;
