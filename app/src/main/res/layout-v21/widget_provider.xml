@@ -17,7 +17,7 @@
             android:layout_marginLeft="@dimen/activity_horizontal_spacing"
             android:src="@mipmap/fish_icon_negative"
             android:layout_centerVertical="true"
-            android:background="?android:attr/selectableItemBackground"/>
+            android:background="?android:attr/selectableItemBackgroundBorderless"/>
         <ImageView
             android:id="@+id/widget_refresh_icon"
             android:layout_width="@dimen/widget_toolbar_icon_size"
@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:clickable="true"
-            android:background="?android:attr/selectableItemBackground"/>
+            android:background="?android:attr/selectableItemBackgroundBorderless"/>
     </RelativeLayout>
     <ListView
         android:id="@+id/widget_list_view"
