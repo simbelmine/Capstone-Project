@@ -217,7 +217,7 @@ public class TaskUtils {
         }
     }
 
-    public static void updateTaskDoneState(Context context, Cursor cursor, int position, boolean isDone) {
+    public static void updateTaskDoneState(Context context, Cursor cursor, boolean isDone) {
             ContentValues values = new ContentValues();
             values.put(KEY_IS_DONE, getBooleanValue(isDone));
 
