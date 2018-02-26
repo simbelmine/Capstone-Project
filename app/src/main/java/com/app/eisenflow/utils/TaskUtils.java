@@ -60,6 +60,20 @@ public class TaskUtils {
         TaskUtils.updateProgress(cursor, position, progress);
     }
 
+    public static void addProgressAction(Cursor cursor) {
+        Context context = ApplicationEisenFlow.getAppContext();
+        int progressToUpdate = 1;
+        int progress = cursor.getInt(cursor.getColumnIndex(KEY_PROGRESS));
+        progressToUpdate += progress;
+
+        int id = cursor.getInt(cursor.getColumnIndex(KEY_ROW_ID));
+        ContentValues values = new ContentValues();
+        values.put(KEY_PROGRESS, progressToUpdate);
+
+        Uri uri = buildFlavorsUri(id);
+        context.getContentResolver().update(uri, values, null, null);
+    }
+
     public static void shareTaskAction(Cursor cursor, int position) {
         Context context = ApplicationEisenFlow.getAppContext();
         if (cursor != null && cursor.moveToPosition(position)) {

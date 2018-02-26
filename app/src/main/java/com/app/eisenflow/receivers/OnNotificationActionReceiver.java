@@ -12,9 +12,11 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
-import static com.app.eisenflow.utils.Constants.NOTFICATION_ACTION_DONE;
+import static com.app.eisenflow.utils.Constants.NOTIFICATION_ACTION_ADD_PROGRESS;
+import static com.app.eisenflow.utils.Constants.NOTIFICATION_ACTION_DONE;
 import static com.app.eisenflow.utils.Constants.TAG;
 import static com.app.eisenflow.utils.DataUtils.getBooleanState;
+import static com.app.eisenflow.utils.TaskUtils.addProgressAction;
 import static com.app.eisenflow.utils.TaskUtils.updateTaskDoneState;
 
 /**
@@ -35,11 +37,14 @@ public class OnNotificationActionReceiver extends BroadcastReceiver {
                 null);
         if (cursor != null && cursor.moveToFirst()) {
             switch (action) {
-                case NOTFICATION_ACTION_DONE:
+                case NOTIFICATION_ACTION_DONE:
                     int isDoneValue = cursor.getInt(cursor.getColumnIndex(KEY_IS_DONE));
                     boolean isDone = getBooleanState(isDoneValue);
                     updateTaskDoneState(context, cursor, !isDone);
-
+                    closeNotification(context, (int)taskId);
+                    break;
+                case NOTIFICATION_ACTION_ADD_PROGRESS:
+                    addProgressAction(cursor);
                     closeNotification(context, (int)taskId);
                     break;
             }

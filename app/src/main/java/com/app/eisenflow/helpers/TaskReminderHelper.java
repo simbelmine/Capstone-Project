@@ -18,7 +18,6 @@ import java.util.Set;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.utils.Constants.DAILY_TIP;
 import static com.app.eisenflow.utils.Constants.DAILY_TIP_CODE;
-import static com.app.eisenflow.utils.Constants.NOTFICATION_ACTION_DONE;
 import static com.app.eisenflow.utils.Constants.REPEATING_REMINDER;
 import static com.app.eisenflow.utils.Constants.WEEKLY_OLD_TASKS_TIP;
 import static com.app.eisenflow.utils.Constants.WEEKLY_TIP_CODE;

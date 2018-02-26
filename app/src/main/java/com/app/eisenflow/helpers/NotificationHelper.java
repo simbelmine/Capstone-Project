@@ -13,7 +13,6 @@ import com.app.eisenflow.R;
 import com.app.eisenflow.Task;
 import com.app.eisenflow.activities.MainActivity;
 import com.app.eisenflow.activities.SingleTaskActivity;
-import com.app.eisenflow.receivers.OnAlarmReceiver;
 import com.app.eisenflow.receivers.OnNotificationActionReceiver;
 import com.app.eisenflow.utils.DataUtils;
 
@@ -21,7 +20,8 @@ import java.util.Calendar;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
-import static com.app.eisenflow.utils.Constants.NOTFICATION_ACTION_DONE;
+import static com.app.eisenflow.utils.Constants.NOTIFICATION_ACTION_ADD_PROGRESS;
+import static com.app.eisenflow.utils.Constants.NOTIFICATION_ACTION_DONE;
 import static com.app.eisenflow.utils.Constants.NOTIFICATION_REMINDER_ACTION_CODE;
 import static com.app.eisenflow.utils.Constants.NOTIFICATION_REMINDER_CHANEL;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
@@ -60,8 +60,8 @@ public class NotificationHelper {
         Calendar taskCalendarDate = getCalendar(task.getDate(), task.getTime());
         Calendar now = Calendar.getInstance();
 
-        if(priority == TWO && taskCalendarDate.getTimeInMillis() < now.getTimeInMillis()) {
-            notificationBuilder.addAction(getNotificationActionAddProgress(intent, (int)task.getId()));
+        if(priority == TWO && taskCalendarDate.getTimeInMillis() > now.getTimeInMillis()) {
+            notificationBuilder.addAction(getNotificationActionAddProgress(intent));
         }
         else {
             notificationBuilder.addAction(getNotificationActionDone(intent));
@@ -71,11 +71,11 @@ public class NotificationHelper {
         notificationManager.notify((int)task.getId(), notificationBuilder.build());
     }
 
-    private NotificationCompat.Action getNotificationActionAddProgress(Intent intent, int taskId) {
+    private NotificationCompat.Action getNotificationActionAddProgress(Intent intent) {
         Context context = ApplicationEisenFlow.getAppContext();
-        Intent actionAddProgress = new Intent(context, OnAlarmReceiver.class)
-                .putExtra(KEY_ROW_ID, taskId)
-                .setAction("ACTION_NOTIFICATION_ADD_PROGRESS");
+        Intent actionAddProgress = new Intent(context, OnNotificationActionReceiver.class)
+                .setAction(NOTIFICATION_ACTION_ADD_PROGRESS);
+        actionAddProgress.putExtras(intent);
         PendingIntent actionAddProgressPendingIntent = PendingIntent.getBroadcast(
                 context,
                 NOTIFICATION_REMINDER_ACTION_CODE,
@@ -91,7 +91,7 @@ public class NotificationHelper {
     private NotificationCompat.Action getNotificationActionDone(Intent intent) {
         Context context = ApplicationEisenFlow.getAppContext();
         Intent actionDone = new Intent(context, OnNotificationActionReceiver.class)
-                .setAction(NOTFICATION_ACTION_DONE);
+                .setAction(NOTIFICATION_ACTION_DONE);
         actionDone.putExtras(intent);
         PendingIntent actionDonePendingIntent = PendingIntent.getBroadcast(
                 context,

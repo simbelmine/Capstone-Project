@@ -60,7 +60,8 @@ public class Constants {
     public static final int NOTIFICATION_REMINDER_ACTION_CODE = 303;
     public static final int DAILY_TIP_CODE = 401;
     public static final int WEEKLY_TIP_CODE = 402;
-    public static final String NOTFICATION_ACTION_DONE = "NotificationActionDone";
+    public static final String NOTIFICATION_ACTION_DONE = "NotificationActionDone";
+    public static final String NOTIFICATION_ACTION_ADD_PROGRESS = "NotificationActionAddProgress";
 
     /**
      * Widget
