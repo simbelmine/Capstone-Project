@@ -17,6 +17,7 @@ import com.app.eisenflow.utils.DateTimeUtils;
 
 import java.util.Calendar;
 
+import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
@@ -35,6 +36,7 @@ import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
 import static com.app.eisenflow.utils.TaskUtils.getFormattedProgress;
 import static com.app.eisenflow.utils.TaskUtils.getTimeLeft;
 import static com.app.eisenflow.utils.TaskUtils.isTaskDone;
+import static com.app.eisenflow.utils.Utils.getFilterValue;
 
 /**
  * Created on 2/19/18.
@@ -117,8 +119,23 @@ public class ListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     @Override
     public void onDataSetChanged() {
-        Log.v(TAG, "onDataSetChanged");
-        mCursor = getCursor();
+        int filterValue = getFilterValue();
+        String selection = null;
+        String[] selectionArgs = null;
+        if (filterValue != 0) {
+            selection = KEY_PRIORITY+"=?";
+            selectionArgs = new String[]{String.valueOf(filterValue)};
+        }
+
+        Cursor query = mContext.getContentResolver().query(
+                CONTENT_URI,
+                null,
+                selection,
+                selectionArgs,
+                null);
+        if (query != null) {
+            mCursor = query;
+        }
     }
 
     @Override

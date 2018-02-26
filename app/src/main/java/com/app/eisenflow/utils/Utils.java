@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
@@ -221,5 +222,14 @@ public class Utils {
         builder.append("releaseV: " + android.os.Build.VERSION.RELEASE + " ");
         builder.append("sdkV: " + android.os.Build.VERSION.SDK_INT);
         return builder.toString();
+    }
+
+    public static int getFilterValue() {
+        Context context = ApplicationEisenFlow.getAppContext();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        String priorityFilterValue = sharedPreferences.getString(
+                context.getResources().getString(R.string.settings_task_filter_key),
+                "0");
+        return Integer.valueOf(priorityFilterValue);
     }
 }

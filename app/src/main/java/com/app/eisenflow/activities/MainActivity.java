@@ -66,6 +66,7 @@ import static com.app.eisenflow.utils.Constants.PREF_FIRST_TIME_USER;
 import static com.app.eisenflow.utils.TaskUtils.bulkDoneTasksDelete;
 import static com.app.eisenflow.utils.Utils.getAppVersionString;
 import static com.app.eisenflow.utils.Utils.getDeviceOS;
+import static com.app.eisenflow.utils.Utils.getFilterValue;
 import static com.app.eisenflow.utils.Utils.getPhoneName;
 import static com.app.eisenflow.utils.Utils.isTablet;
 import static com.app.eisenflow.utils.Utils.setOrientation;
@@ -484,14 +485,6 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         dialog.show();
-    }
-
-    private int getFilterValue() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        String priorityFilterValue = sharedPreferences.getString(
-                getResources().getString(R.string.settings_task_filter_key),
-                "0");
-        return Integer.valueOf(priorityFilterValue);
     }
 
     private void closeDrawer() {
