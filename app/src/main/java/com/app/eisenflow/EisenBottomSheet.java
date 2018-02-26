@@ -96,9 +96,11 @@ public class EisenBottomSheet {
 
     public void openBottomSheet(int position) {
         if (mTaskPosition != position) {
-            int isDoneValue = mCursor.getInt(mCursor.getColumnIndex(KEY_IS_DONE));
-            isDone = getBooleanState(isDoneValue);
-            updateDoneButton(isDone);
+            if (mCursor != null && mCursor.moveToPosition(mTaskPosition)) {
+                int isDoneValue = mCursor.getInt(mCursor.getColumnIndex(KEY_IS_DONE));
+                isDone = getBooleanState(isDoneValue);
+                updateDoneButton(isDone);
+            }
         }
         mTaskPosition = position;
         if (mBottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED) {
