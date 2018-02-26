@@ -40,8 +40,7 @@ public class TaskReminderHelper {
         long taskId = task.getId();
 
         Intent intent = new Intent(context, OnAlarmReceiver.class)
-                .putExtra(KEY_ROW_ID, taskId)
-                .setAction(NOTFICATION_ACTION_DONE);
+                .putExtra(KEY_ROW_ID, taskId);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             alarmManager.setExact(
