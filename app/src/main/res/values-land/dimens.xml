@@ -1,0 +1,4 @@
+<resources>
+    <!-- Bottom Sheet -->
+    <dimen name="bottom_sheet_height">240dp</dimen>
+</resources>

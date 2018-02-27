@@ -55,4 +55,7 @@
     <dimen name="widget_toolbar_height">40dp</dimen>
     <dimen name="widget_toolbar_home_icon_size">30dp</dimen>
     <dimen name="widget_toolbar_icon_size">25dp</dimen>
+
+    <!-- Bottom Sheet -->
+    <dimen name="bottom_sheet_height">340dp</dimen>
 </resources>
