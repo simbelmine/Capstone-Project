@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/settings_task_filter">
+        <ListPreference
+            android:title="@string/settings_filter_title"
+            android:summary="@string/settings_filter_summary"
+            android:key="@string/settings_task_filter_key"
+            android:defaultValue="1"
+            android:entries="@array/taskFilter"
+            android:entryValues="@array/taskFilterValues"
+            />
+    </PreferenceCategory>
+    <PreferenceCategory/>
+</PreferenceScreen>

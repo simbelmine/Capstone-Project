@@ -15,6 +15,10 @@
     <style name="SingleTaskActivityTheme" parent="AppTheme">
     </style>
 
+    <!-- Settings Activity theme. -->
+    <style name="SettingsActivityTheme" parent="AppTheme">
+    </style>
+
     <style name="MyToolbarStyle" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
