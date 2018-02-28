@@ -21,6 +21,8 @@ public class Constants {
      * SingleTask Activity
      */
     public static final int WEEKLY_OCCURRENCE = 1;
+    public static final String TASK_PERSISTENT_OBJECT = "TaskPersistentObject";
+    public static final String TASK_PERSISTENT_PRIORITY = "TaskPersistentPriority";
     /**
      * EisenContent Provider
      */

@@ -50,6 +50,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 
 import static android.text.TextUtils.isEmpty;
 import static com.app.eisenflow.EisenBottomSheet.EXTRA_TRANSITION_NAME;
@@ -68,6 +69,8 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri
 import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Constants.TASK_PERSISTENT_OBJECT;
+import static com.app.eisenflow.utils.Constants.TASK_PERSISTENT_PRIORITY;
 import static com.app.eisenflow.utils.Constants.WEEKLY_OCCURRENCE;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.DataUtils.integerCollectionToString;
@@ -134,6 +137,12 @@ public class SingleTaskActivity extends AppCompatActivity {
 
         setTransitionName();
         getCurrentPosition();
+
+
+        if (savedInstanceState != null) {
+            mTask = savedInstanceState.getParcelable(TASK_PERSISTENT_OBJECT);
+            mPriority = (DataUtils.Priority) savedInstanceState.getSerializable(TASK_PERSISTENT_PRIORITY);
+        }
     }
 
     private void init() {
@@ -150,9 +159,14 @@ public class SingleTaskActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         initDateTime();
-        if (!isNewTask()) {
-            populateData();
-        }
+        populateData();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(TASK_PERSISTENT_OBJECT, mTask);
+        outState.putSerializable(TASK_PERSISTENT_PRIORITY, mPriority);
     }
 
     private void setTransitionName() {
@@ -255,11 +269,24 @@ public class SingleTaskActivity extends AppCompatActivity {
         } else {
             mCheckedDaysOfWeek.remove(buttonIdx);
         }
+        mTask.setReminderWhen(integerCollectionToString(mCheckedDaysOfWeek));
     }
 
     @OnCheckedChanged ({R.id.vibration_switch})
     public void onVibrationSwitchChecked(CompoundButton button, boolean checked) {
         mTask.setVibrationEnabled(DataUtils.getBooleanValue(checked));
+    }
+
+    @OnTextChanged (R.id.task_name)
+    public void onTaskTitleChanged (CharSequence text) {
+        String featureName = text.toString();
+        mTask.setTitle(featureName);
+    }
+
+    @OnTextChanged (R.id.note_edit_text)
+    public void onTaskNoteChanged (CharSequence text) {
+        String featureName = text.toString();
+        mTask.setNote(featureName);
     }
 
     @Override
@@ -637,16 +664,18 @@ public class SingleTaskActivity extends AppCompatActivity {
     private void populateData() {
         Cursor cursor = getCursor();
         if (cursor != null && cursor.moveToPosition(mCurrentPosition)) {
-            mTask = cursorToTask(cursor);
-
-            mPriority = DataUtils.Priority.valueOf(mTask.getPriority());
-            setBackgroundWithAnimation();
-            mTaskTitle.setText(mTask.getTitle());
-            initDateTime();
-            setReminderOccurrenceAndWhen(mPriority);
-            setVibration();
-            mNoteEditText.setText(mTask.getNote());
+            if (!isNewTask()) {
+                mTask = cursorToTask(cursor);
+            }
         }
+
+        mPriority = DataUtils.Priority.valueOf(mTask.getPriority());
+        setBackgroundWithAnimation();
+        mTaskTitle.setText(mTask.getTitle());
+        initDateTime();
+        setReminderOccurrenceAndWhen(mPriority);
+        setVibration();
+        mNoteEditText.setText(mTask.getNote());
     }
 
     private void setReminderOccurrenceAndWhen(DataUtils.Priority priority) {

@@ -523,6 +523,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/occurrence_holder">
 
                     <TableRow
+                        android:id="@+id/week_days_row_1"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:gravity="center"
@@ -576,6 +577,7 @@
                     </TableRow>
 
                     <TableRow
+                        android:id="@+id/week_days_row_2"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:gravity="center"
