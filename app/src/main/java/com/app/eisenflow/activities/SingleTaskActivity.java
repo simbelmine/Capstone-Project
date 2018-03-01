@@ -121,6 +121,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     private int mCurrentPosition = -1;
     private int mTaskId = -1;
     private boolean isRedTipShown;
+    private boolean isTaskSaved;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -142,6 +143,9 @@ public class SingleTaskActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             mTask = savedInstanceState.getParcelable(TASK_PERSISTENT_OBJECT);
             mPriority = (DataUtils.Priority) savedInstanceState.getSerializable(TASK_PERSISTENT_PRIORITY);
+            if (mTask != null) {
+                isTaskSaved = true;
+            }
         }
     }
 
@@ -664,7 +668,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     private void populateData() {
         Cursor cursor = getCursor();
         if (cursor != null && cursor.moveToPosition(mCurrentPosition)) {
-            if (!isNewTask()) {
+            if (!isNewTask() && !isTaskSaved) {
                 mTask = cursorToTask(cursor);
             }
         }
@@ -676,6 +680,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         setReminderOccurrenceAndWhen(mPriority);
         setVibration();
         mNoteEditText.setText(mTask.getNote());
+        isTaskSaved = false;
     }
 
     private void setReminderOccurrenceAndWhen(DataUtils.Priority priority) {
