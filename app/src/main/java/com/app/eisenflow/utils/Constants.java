@@ -24,6 +24,7 @@ public class Constants {
     public static final int WEEKLY_OCCURRENCE = 1;
     public static final String TASK_PERSISTENT_OBJECT = "TaskPersistentObject";
     public static final String TASK_PERSISTENT_PRIORITY = "TaskPersistentPriority";
+    public static final String IS_FROM_PREVIEW = "isFromPreview";
     /**
      * EisenContent Provider
      */

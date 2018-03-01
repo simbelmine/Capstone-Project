@@ -52,6 +52,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
 import static com.app.eisenflow.helpers.TaskReminderHelper.cancelReminder;
 import static com.app.eisenflow.helpers.TaskReminderHelper.cancelRepeatingReminder;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Constants.IS_FROM_PREVIEW;
 import static com.app.eisenflow.utils.DataUtils.Occurrence.WEEKLY;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.DataUtils.getBooleanState;
@@ -152,6 +153,7 @@ public class PreviewActivity extends AppCompatActivity {
             return;
         }
         Bundle b;
+        intent.putExtra(IS_FROM_PREVIEW, true);
         // Start activity with transition animation if Android version bigger or equal than Jelly Bean.
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN &&
                 mCursor != null && mCursor.moveToPosition(mTaskPosition) && !isTablet(this)) {

@@ -69,6 +69,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri
 import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Constants.IS_FROM_PREVIEW;
 import static com.app.eisenflow.utils.Constants.TASK_PERSISTENT_OBJECT;
 import static com.app.eisenflow.utils.Constants.TASK_PERSISTENT_PRIORITY;
 import static com.app.eisenflow.utils.Constants.WEEKLY_OCCURRENCE;
@@ -122,6 +123,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     private int mTaskId = -1;
     private boolean isRedTipShown;
     private boolean isTaskSaved;
+    private boolean isOpenedFromPreview;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -146,6 +148,9 @@ public class SingleTaskActivity extends AppCompatActivity {
             if (mTask != null) {
                 isTaskSaved = true;
             }
+        }
+        if (getIntent() != null) {
+            isOpenedFromPreview = getIntent().getBooleanExtra(IS_FROM_PREVIEW, false);
         }
     }
 
@@ -329,7 +334,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (isTablet(this)) {
+        if (isTablet(this) && isOpenedFromPreview) {
             backToPreview();
         }
     }
@@ -338,7 +343,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         if (isTaskRoot()) {
             Intent upIntent = new Intent(this, LaunchActivity.class);
             startActivity(upIntent);
-        } else if(isTablet(this)) {
+        } else if(isTablet(this) && isOpenedFromPreview) {
             backToPreview();
         }
     }
@@ -540,7 +545,7 @@ public class SingleTaskActivity extends AppCompatActivity {
                 TaskReminderHelper.setReminder(mTask);
             }
 
-            if (isTablet(this)) {
+            if (isTablet(this) && isOpenedFromPreview) {
                 backToPreview();
             }
             finish();
