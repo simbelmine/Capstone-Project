@@ -17,6 +17,7 @@ public class Constants {
     public static final int LOADER_ID = 0x02;
     public static final String EXTRA_TASK_PRIORITY = "TaskPriority";
     public static final String APP_EMAIL = "eisenflow.app@gmail.com";
+    public static final String IS_BOTTOM_SHEET_OPEN = "isBottomSheetOpen";
     /**
      * SingleTask Activity
      */

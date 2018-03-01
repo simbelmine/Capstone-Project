@@ -61,6 +61,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.utils.Constants.APP_EMAIL;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_PRIORITY;
+import static com.app.eisenflow.utils.Constants.IS_BOTTOM_SHEET_OPEN;
 import static com.app.eisenflow.utils.Constants.LOADER_ID;
 import static com.app.eisenflow.utils.Constants.PREF_FIRST_TIME_USER;
 import static com.app.eisenflow.utils.TaskUtils.bulkDoneTasksDelete;
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements
     private RecyclerView.LayoutManager mLinearLayoutManager;
     private TasksCursorRecyclerViewAdapter mTasksAdapter;
     private int mTaskPosition = -1;
+    private boolean isBottomSheetOpen;
     private boolean isLoaderSet;
 
     public enum State {
@@ -122,7 +124,11 @@ public class MainActivity extends AppCompatActivity implements
         // Add Event decorators.
         new EventDecoratorFeederTask(mMaterialCalendarView).execute();
 
-        mTaskPosition = getIntent().getIntExtra(EXTRA_TASK_POSITION, -1);
+        if (savedInstanceState != null) {
+            isBottomSheetOpen = savedInstanceState.getBoolean(IS_BOTTOM_SHEET_OPEN);
+        } else {
+            mTaskPosition = getIntent().getIntExtra(EXTRA_TASK_POSITION, -1);
+        }
 
         int itemsCountLocal = getItemsCountLocal();
     }
@@ -136,8 +142,14 @@ public class MainActivity extends AppCompatActivity implements
         if (Utils.isServiceRunning(TimerService.class)) {
             stopService(new Intent(this, TimerService.class));
         }
-        if (mTaskPosition != -1 && mTasksAdapter != null) {
-            mTasksAdapter.getBottomSheet().openBottomSheet(mTaskPosition);
+
+        if (mTasksAdapter != null) {
+            if (isBottomSheetOpen) {
+                mTaskPosition = mTasksAdapter.getBottomSheet().getPosition();
+            }
+            if (mTaskPosition != -1) {
+                mTasksAdapter.getBottomSheet().openBottomSheet(mTaskPosition);
+            }
         }
         setCalendarCurrentDate();
     }
@@ -146,6 +158,14 @@ public class MainActivity extends AppCompatActivity implements
     protected void onPause() {
         super.onPause();
         mTaskPosition = -1;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (mTasksAdapter != null) {
+            outState.putBoolean(IS_BOTTOM_SHEET_OPEN, mTasksAdapter.getBottomSheet().isBottomSheetExpanded());
+        }
     }
 
     private void initViews() {
