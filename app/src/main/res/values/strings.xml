@@ -30,6 +30,7 @@
     <string name="next">Next</string>
     <string name="skip">Skip</string>
     <string name="got_it">Got It</string>
+    <string name="finish">Finish</string>
 
     <!-- Single Task Activity -->
     <!-- Others -->
@@ -82,6 +83,12 @@
 
     <!-- Timer Activity -->
     <string name="timer_alert_message">To start, enter time!</string>
+    <string name="timer_hour_hint">0</string>
+    <string name="timer_hour_text">H</string>
+    <string name="timer_minutes_hint">00</string>
+    <string name="timer_minutes_text">M</string>
+    <string name="timer_seconds_hint">00</string>
+    <string name="timer_seconds_text">S</string>
 
     <!-- Timer Notification -->
     <string name="timer_notification_title">EisenFlow Timer</string>
@@ -117,4 +124,27 @@
 
     <!-- Widget -->
     <string name="widget_empty_view">No tasks to show</string>
+
+    <!-- About Dialog -->
+    <string name="about_version">Version </string>
+    <string name="about_info">Eisen Flow is an productivity application based on Eisenhower\'s productivity matrix.</string>
+
+    <!-- Content Description -->
+    <string name="app_icon">About dialog icon</string>
+    <string name="close_activity">Close</string>
+    <string name="timer_play_button">Play button</string>
+    <string name="timer_pause_button">Pause button</string>
+    <string name="timer_progress">Round progress bar</string>
+    <string name="calendar_month">Calendar month</string>
+    <string name="bottom_sheet_edit">Preview Edit task</string>
+    <string name="bottom_sheet_menu">Preview menu</string>
+    <string name="tutorial_eisen_matrix">Eisenhower matrix of importance</string>
+    <string name="action_icon">Action</string>
+    <string name="done_cross_line">Done crossing line</string>
+    <string name="tutorial_page_one">Page one</string>
+    <string name="tutorial_page_two">Page two</string>
+    <string name="tutorial_page_next">Next page</string>
+    <string name="widget_done_check">Done check</string>
+    <string name="preview_title">Preview Title</string>
+
 </resources>

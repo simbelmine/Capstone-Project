@@ -68,23 +68,23 @@
                     android:clickable="true"
                     android:orientation="horizontal"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    >
+                    android:focusable="true">
                     <TextView
                         android:id="@+id/toolbar_month"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="top"
                         tools:text="January"
-                        android:text="January"
                         style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
                         />
+
                     <ImageView
                         android:id="@+id/toolbar_arrow"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_gravity="top"
-                        app:srcCompat="@drawable/arrow_up_vector"
-                        />
+                        android:contentDescription="@string/calendar_month"
+                        app:srcCompat="@drawable/arrow_up_vector" />
                 </LinearLayout>
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>

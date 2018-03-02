@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
-                android:hint="0"
+                android:hint="@string/timer_hour_hint"
                 android:inputType="phone"
                 android:textColor="@color/timer_color"
                 android:textSize="45sp" />
@@ -66,7 +66,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="H"
+                android:text="@string/timer_hour_text"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
             <!-- MINUTES -->
@@ -75,7 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/transparent"
-                android:hint="00"
+                android:hint="@string/timer_minutes_hint"
                 android:inputType="phone"
                 android:textColor="@color/timer_color"
                 android:textSize="45sp" />
@@ -83,7 +83,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="M"
+                android:text="@string/timer_minutes_text"
                 android:textColor="@color/white"
                 android:textSize="20sp" />
             <!-- SECONDS -->
@@ -105,7 +105,7 @@
                     android:cursorVisible="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:hint="00"
+                    android:hint="@string/timer_seconds_hint"
                     android:inputType="phone"
                     android:textColor="@color/timer_color"
                     android:textSize="20sp" />
@@ -115,9 +115,9 @@
                     android:layout_height="wrap_content"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:text="S"
+                    android:text="@string/timer_seconds_text"
                     android:textColor="@color/white"
-                    android:textSize="10sp" />
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -146,6 +146,7 @@
                 android:layout_width="250dp"
                 android:layout_height="250dp"
                 android:layout_gravity="center"
+                android:contentDescription="@string/timer_progress"
                 android:src="@drawable/circle_bottom" />
 
             <View
@@ -154,7 +155,7 @@
                 android:layout_height="190dp"
                 android:layout_gravity="center"
                 android:background="@drawable/circle_top_button_selector"
-                android:clickable="true"/>
+                android:clickable="true" android:focusable="true" />
 
             <RelativeLayout
                 android:layout_width="100dp"
@@ -165,17 +166,19 @@
                     android:id="@+id/play_btn"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/play"
+                    android:clickable="false"
+                    android:contentDescription="@string/timer_play_button"
                     android:visibility="visible"
-                    android:clickable="false"/>
+                    app:srcCompat="@drawable/play" />
 
                 <ImageView
                     android:id="@+id/pause_btn"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:srcCompat="@drawable/pause"
+                    android:clickable="false"
+                    android:contentDescription="@string/timer_pause_button"
                     android:visibility="invisible"
-                    android:clickable="false"/>
+                    app:srcCompat="@drawable/pause" />
             </RelativeLayout>
 
             <ProgressBar
@@ -203,6 +206,7 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="@dimen/activity_horizontal_spacing"
             android:layout_marginTop="10dp"
+            android:contentDescription="@string/close_activity"
             android:src="@mipmap/close" />
     </LinearLayout>
 

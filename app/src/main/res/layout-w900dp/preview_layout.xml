@@ -20,10 +20,11 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@color/default_title_holder"
+            android:clickable="true"
+            android:contentDescription="@string/preview_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:clickable="true"/>
+            app:layout_constraintTop_toTopOf="parent" android:focusable="true"/>
 
         <ImageView
             android:id="@+id/bottom_sheet_done_btn"
@@ -32,8 +33,8 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/activity_horizontal_spacing"
-            app:srcCompat="@drawable/not_done"
-            />
+            android:contentDescription="@string/widget_done_check"
+            app:srcCompat="@drawable/not_done" />
 
         <TextView
             android:id="@+id/bottom_sheet_task_name"
@@ -58,6 +59,7 @@
             android:layout_marginLeft="@dimen/activity_horizontal_spacing"
             android:layout_marginRight="4dp"
             android:layout_toLeftOf="@id/bottom_sheet_menu_btn"
+            android:contentDescription="@string/bottom_sheet_edit"
             android:paddingBottom="6dp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
@@ -70,6 +72,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
+            android:contentDescription="@string/bottom_sheet_menu"
             android:paddingLeft="2dp"
             android:paddingRight="2dp"
             app:srcCompat="@drawable/menu" />
@@ -96,9 +99,9 @@
                 android:id="@+id/clock_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/task_icon_size"
-                android:layout_marginLeft="@dimen/activity_horizontal_spacing"
                 android:layout_marginStart="@dimen/activity_horizontal_spacing"
                 android:layout_marginTop="24dp"
+                android:contentDescription="@string/due_date_txt"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/calendar_clock" />
@@ -225,6 +228,7 @@
                     android:layout_height="@dimen/task_icon_size"
                     android:layout_marginLeft="16dp"
                     android:layout_marginStart="16dp"
+                    android:contentDescription="@string/reminder_txt"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:srcCompat="@drawable/repeat_reminder" />
@@ -237,6 +241,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
+                android:contentDescription="@string/vibration_txt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_reminder_holder"
@@ -272,6 +277,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
+                android:contentDescription="@string/note_txt"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/bottom_sheet_vibration_txt"

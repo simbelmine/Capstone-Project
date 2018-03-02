@@ -24,14 +24,15 @@
             android:textSize="@dimen/splash_1_title_text_size"
             android:text="@string/app_name"
             />
+
         <ImageView
             android:layout_width="@dimen/splash_1_icon_size"
             android:layout_height="@dimen/splash_1_icon_size"
             android:layout_below="@+id/splash1_title"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/activity_vertical_spacing"
-            android:src="@drawable/ic_splash"
-            />
+            android:contentDescription="@string/app_icon"
+            android:src="@drawable/ic_splash" />
     </RelativeLayout>
 
     <RelativeLayout

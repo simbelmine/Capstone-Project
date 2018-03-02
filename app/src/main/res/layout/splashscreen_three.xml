@@ -27,13 +27,13 @@
             android:id="@+id/matrix_image"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:src="@drawable/eisen_matrix"
             android:layout_below="@+id/splash_3_title"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/activity_vertical_spacing"
+            android:contentDescription="@string/tutorial_eisen_matrix"
             android:paddingLeft="@dimen/activity_horizontal_spacing"
             android:paddingRight="@dimen/activity_horizontal_spacing"
-            android:layout_marginTop="@dimen/activity_vertical_spacing"
-            />
+            android:src="@drawable/eisen_matrix" />
 
         <LinearLayout
             android:layout_width="wrap_content"

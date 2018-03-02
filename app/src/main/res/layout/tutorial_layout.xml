@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|center"
-            android:text="Skip"
+            android:text="@string/skip"
             android:textColor="@color/white" />
 
         <LinearLayout
@@ -52,7 +52,8 @@
                 android:layout_height="8dp"
                 android:layout_marginEnd="@dimen/activity_half_spacing"
                 android:layout_marginRight="@dimen/activity_half_spacing"
-                android:background="@drawable/indicator_unselected" />
+                android:background="@drawable/indicator_unselected"
+                android:contentDescription="@string/tutorial_page_one" />
 
             <ImageView
                 android:id="@+id/intro_indicator_1"
@@ -60,7 +61,8 @@
                 android:layout_height="8dp"
                 android:layout_marginEnd="@dimen/activity_half_spacing"
                 android:layout_marginRight="@dimen/activity_half_spacing"
-                android:background="@drawable/indicator_unselected" />
+                android:background="@drawable/indicator_unselected"
+                android:contentDescription="@string/tutorial_page_two" />
         </LinearLayout>
 
         <!-- This overlaps the next button in the last slide -->
@@ -70,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|center"
-            android:text="Finish"
+            android:text="@string/finish"
             android:textColor="@color/white"
             android:visibility="gone" />
 
@@ -80,6 +82,7 @@
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_gravity="end|center"
+            android:contentDescription="@string/tutorial_page_next"
             android:padding="@dimen/activity_horizontal_spacing"
             android:src="@mipmap/chevron_right"
             android:tint="@color/white" />

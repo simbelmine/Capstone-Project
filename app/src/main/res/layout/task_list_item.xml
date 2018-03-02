@@ -72,7 +72,7 @@
                 android:layout_height="23dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="7dp"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/delete"
                 app:srcCompat="@drawable/delete" />
 
             <ImageView
@@ -81,7 +81,8 @@
                 android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="7dp" />
+                android:layout_marginRight="7dp"
+                android:contentDescription="@string/action_icon" />
 
         </RelativeLayout>
 
@@ -177,6 +178,7 @@
                 android:layout_marginRight="@dimen/card_padding"
                 android:layout_marginTop="2dp"
                 android:background="@color/white"
+                android:contentDescription="@string/done_cross_line"
                 android:visibility="visible" />
         </RelativeLayout>
 
