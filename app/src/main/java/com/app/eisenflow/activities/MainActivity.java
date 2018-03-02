@@ -4,11 +4,9 @@ import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -88,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.material_calendar_view) MaterialCalendarView mMaterialCalendarView;
     @BindView(R.id.tasks_recycler_view) RecyclerView mTasksRecyclerView;
     @BindView(R.id.refresh_container) SwipeRefreshLayout mRefreshContainer;
+    @BindView(R.id.no_tasks_tip_layout) LinearLayout mNoTasksTip;
 
     private ActionBarDrawerToggle mToggle;
     private RecyclerView.LayoutManager mLinearLayoutManager;
@@ -348,6 +347,11 @@ public class MainActivity extends AppCompatActivity implements
                 mTasksAdapter.swapCursor(data);
                 mMaterialCalendarView.removeDecorators();
                 new EventDecoratorFeederTask(mMaterialCalendarView).execute();
+                if (data.getCount() > 0) {
+                    mNoTasksTip.setVisibility(View.INVISIBLE);
+                } else {
+                    mNoTasksTip.setVisibility(View.VISIBLE);
+                }
                 break;
             default:
                 throw new IllegalArgumentException("no loader id handled!");

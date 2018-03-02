@@ -69,6 +69,8 @@
     <string name="share_task_title">Share EisenFlow task</string>
     <string name="share_task_message">Delegated task from EisenFlow. \n\n
         To Do: %1$s \nDue date: %2$s@%3$s \nNote: %4$s</string>
+    <string name="no_tasks_msg">No tasks to show</string>
+    <string name="no_tasks_add_msg">\"Get specific about your goals \nand keep them visible\"</string>
 
     <!-- Bottom Sheet -->
     <string name="vibration_on">ON</string>
@@ -112,4 +114,7 @@
     <string name="settings_task_filter">Main Settings</string>
     <string name="settings_filter_title">Task Filter</string>
     <string name="settings_filter_summary">Task filter will affect both app and widget.</string>
+
+    <!-- Widget -->
+    <string name="widget_empty_view">No tasks to show</string>
 </resources>

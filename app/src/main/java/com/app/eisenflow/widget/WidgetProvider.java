@@ -49,6 +49,10 @@ public class WidgetProvider extends AppWidgetProvider {
         // Set the adapter to listview of the widget.
         views.setRemoteAdapter(appWidgetId, R.id.widget_list_view,
                 serviceIntent);
+        // Set an empty view in case of no data.
+        views.setEmptyView(R.id.widget_list_view, R.id.empty_view);
+        views.setTextViewText(R.id.empty_view, context.getResources().getString(R.string.widget_empty_view));
+        views.setTextColor(R.id.empty_view, context.getResources().getColor(R.color.colorPrimary));
 
         // Create template to handle the click listener for each list item.
         Intent clickIntentTemplate = new Intent(context, WidgetProvider.class);
