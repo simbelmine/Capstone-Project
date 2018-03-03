@@ -34,6 +34,7 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.ScrollToDateTask;
@@ -47,6 +48,7 @@ import com.app.eisenflow.utils.Utils;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import java.util.Calendar;
 
@@ -62,6 +64,7 @@ import static com.app.eisenflow.utils.Constants.EXTRA_TASK_PRIORITY;
 import static com.app.eisenflow.utils.Constants.IS_BOTTOM_SHEET_OPEN;
 import static com.app.eisenflow.utils.Constants.LOADER_ID;
 import static com.app.eisenflow.utils.Constants.PREF_FIRST_TIME_USER;
+import static com.app.eisenflow.utils.DateTimeUtils.getMonthName;
 import static com.app.eisenflow.utils.TaskUtils.bulkDoneTasksDelete;
 import static com.app.eisenflow.utils.Utils.getAppVersionString;
 import static com.app.eisenflow.utils.Utils.getDeviceOS;
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity implements
         AppBarLayout.OnOffsetChangedListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnDateSelectedListener,
+        OnMonthChangedListener,
         LoaderManager.LoaderCallbacks<Cursor> {
     @BindView(R.id.toolbar) Toolbar mToolbar;
     @BindView(R.id.fab) FloatingActionButton mFab;
@@ -82,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.nav_view) NavigationView mNavigationView;
     @BindView(R.id.app_bar_layout) AppBarLayout mAppBarLayout;
     @BindView(R.id.toolbar_month_container) LinearLayout mToolbarMonthContainer;
+    @BindView(R.id.toolbar_month) TextView mToolbarMonth;
     @BindView(R.id.toolbar_arrow) ImageView mToolbarArrow;
     @BindView(R.id.material_calendar_view) MaterialCalendarView mMaterialCalendarView;
     @BindView(R.id.tasks_recycler_view) RecyclerView mTasksRecyclerView;
@@ -122,6 +127,9 @@ public class MainActivity extends AppCompatActivity implements
 
         // Add Event decorators.
         new EventDecoratorFeederTask(mMaterialCalendarView).execute();
+
+        // Set current month in toolblar.
+        mToolbarMonth.setText(getMonthName(Calendar.getInstance()));
 
         if (savedInstanceState != null) {
             isBottomSheetOpen = savedInstanceState.getBoolean(IS_BOTTOM_SHEET_OPEN);
@@ -185,6 +193,7 @@ public class MainActivity extends AppCompatActivity implements
         mRefreshContainer.setOnRefreshListener(this);
 
         mMaterialCalendarView.setOnDateChangedListener(this);
+        mMaterialCalendarView.setOnMonthChangedListener(this);
     }
 
     @Override
@@ -372,6 +381,11 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
         new ScrollToDateTask(this, mLinearLayoutManager, date).execute();
+    }
+
+    @Override
+    public void onMonthChanged(MaterialCalendarView widget, CalendarDay date) {
+        mToolbarMonth.setText(getMonthName(date.getCalendar()));
     }
 
     private void rotateMonthArrow(boolean isExpanded) {
