@@ -13,6 +13,12 @@
         android:roundIcon="@mipmap/ic_launcher_app_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <!-- Google play services used version -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value=""/>
+
         <activity
             android:name=".activities.LaunchActivity"
             android:label="@string/app_name"

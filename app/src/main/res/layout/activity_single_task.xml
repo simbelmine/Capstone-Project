@@ -358,9 +358,9 @@
                 android:layout_width="@dimen/task_icon_size"
                 android:layout_height="@dimen/task_icon_size"
                 android:layout_marginStart="@dimen/activity_horizontal_spacing"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/reminder_holder"
+                app:layout_constraintTop_toBottomOf="@+id/location_holder"
                 app:srcCompat="@mipmap/ic_vibration_black" />
 
             <TextView
@@ -368,11 +368,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_half_spacing"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:text="@string/vibration_txt"
-                android:textSize="16sp"
+                android:textSize="@dimen/task_font_size"
                 app:layout_constraintStart_toEndOf="@+id/vibration_img"
-                app:layout_constraintTop_toBottomOf="@+id/reminder_holder" />
+                app:layout_constraintTop_toBottomOf="@+id/location_holder" />
 
             <Switch
                 android:id="@+id/vibration_switch"
@@ -380,11 +380,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/activity_double_spacing"
                 android:layout_marginStart="101dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:checked="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/vibration_lbl"
-                app:layout_constraintTop_toBottomOf="@+id/reminder_holder" />
+                app:layout_constraintTop_toBottomOf="@+id/location_holder" />
 
             <ImageView
                 android:id="@+id/note_img"
@@ -405,7 +405,7 @@
                 android:layout_marginTop="24dp"
                 android:gravity="center"
                 android:text="@string/note_txt"
-                android:textSize="16sp"
+                android:textSize="@dimen/task_font_size"
                 app:layout_constraintStart_toEndOf="@+id/note_img"
                 app:layout_constraintTop_toBottomOf="@+id/vibration_lbl" />
 
@@ -454,7 +454,7 @@
                     android:layout_marginStart="@dimen/activity_half_spacing"
                     android:layout_marginTop="@dimen/activity_vertical_spacing"
                     android:text="@string/reminder_txt"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/task_font_size"
                     app:layout_constraintStart_toEndOf="@+id/reminder_icon" />
 
                 <RadioGroup
@@ -627,6 +627,51 @@
                 </TableLayout>
 
             </android.support.constraint.ConstraintLayout>
+
+            <FrameLayout
+                android:id="@+id/location_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/reminder_holder">
+
+                <LinearLayout
+                    android:id="@+id/location_views"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="@dimen/task_icon_size"
+                        android:layout_height="@dimen/task_icon_size"
+                        android:src="@mipmap/ic_location_black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_half_spacing"
+                        android:text="@string/location"
+                        android:textSize="@dimen/task_font_size" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/map_fragment_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+                    <fragment
+                        android:id="@+id/map"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/map_view_height"
+                        tools:context=".MapsActivity"
+                        tools:layout_editor_absoluteX="125dp" />
+                </FrameLayout>
+            </FrameLayout>
 
 
         </android.support.constraint.ConstraintLayout>
