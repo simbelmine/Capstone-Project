@@ -39,6 +39,7 @@
                     android:layout_width="0dp"
                     android:layout_height="170dp"
                     android:background="@color/default_title_holder"
+                    android:contentDescription="@string/title_holder"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -264,6 +265,7 @@
                 android:layout_height="0.9dp"
                 android:layout_marginTop="80dp"
                 android:background="@color/divider_border"
+                android:contentDescription="@string/divider"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -274,6 +276,7 @@
                 android:layout_height="@dimen/task_icon_size"
                 android:layout_marginStart="@dimen/activity_horizontal_spacing"
                 android:layout_marginTop="24dp"
+                android:contentDescription="@string/due_date_txt"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/priority_divider"
                 app:srcCompat="@drawable/calendar_clock" />
@@ -313,7 +316,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/activity_horizontal_spacing"
                     android:layout_marginStart="@dimen/activity_horizontal_spacing"
-                    android:text="Fri, May 27, 2016"
                     android:textColor="@color/colorAccent"
                     android:textSize="17sp"
                     tools:layout_editor_absoluteX="50dp"
@@ -344,7 +346,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="07:41 PM"
                     android:textColor="@color/colorAccent"
                     android:textSize="17sp"
                     tools:layout_editor_absoluteX="370dp"
@@ -359,6 +360,7 @@
                 android:layout_height="@dimen/task_icon_size"
                 android:layout_marginStart="@dimen/activity_horizontal_spacing"
                 android:layout_marginTop="24dp"
+                android:contentDescription="@string/vibration_txt"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/location_holder"
                 app:srcCompat="@mipmap/ic_vibration_black" />
@@ -390,9 +392,9 @@
                 android:id="@+id/note_img"
                 android:layout_width="@dimen/task_icon_size"
                 android:layout_height="@dimen/task_icon_size"
-                android:layout_marginLeft="@dimen/activity_horizontal_spacing"
                 android:layout_marginStart="@dimen/activity_horizontal_spacing"
                 android:layout_marginTop="24dp"
+                android:contentDescription="@string/note_txt"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/vibration_img"
                 app:srcCompat="@drawable/note" />
@@ -444,6 +446,7 @@
                     android:layout_width="@dimen/task_icon_size"
                     android:layout_height="@dimen/task_icon_size"
                     android:layout_marginStart="@dimen/activity_horizontal_spacing"
+                    android:contentDescription="@string/reminder_txt"
                     app:layout_constraintStart_toStartOf="parent"
                     app:srcCompat="@drawable/repeat_reminder" />
 
@@ -628,10 +631,11 @@
 
             </android.support.constraint.ConstraintLayout>
 
-            <FrameLayout
+            <LinearLayout
                 android:id="@+id/location_holder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
@@ -639,30 +643,46 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/reminder_holder">
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/location_views"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:id="@+id/location_icon"
                         android:layout_width="@dimen/task_icon_size"
                         android:layout_height="@dimen/task_icon_size"
+                        android:layout_alignParentLeft="true"
+                        android:contentDescription="@string/location"
                         android:src="@mipmap/ic_location_black" />
 
                     <TextView
+                        android:id="@+id/location_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/location_icon"
                         android:layout_marginLeft="@dimen/activity_half_spacing"
                         android:text="@string/location"
                         android:textSize="@dimen/task_font_size" />
-                </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/location_delete"
+                        android:layout_width="@dimen/task_icon_size"
+                        android:layout_height="@dimen/task_icon_size"
+                        android:layout_alignParentRight="true"
+                        android:contentDescription="@string/location_delete"
+                        app:srcCompat="@drawable/delete"
+                        android:visibility="invisible"/>
+                </RelativeLayout>
 
                 <FrameLayout
                     android:id="@+id/map_fragment_holder"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone">
+                    android:layout_marginTop="@dimen/activity_half_spacing"
+                    android:clickable="true"
+                    android:visibility="gone" android:focusable="true">
                     <fragment
                         android:id="@+id/map"
                         android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -671,7 +691,7 @@
                         tools:context=".MapsActivity"
                         tools:layout_editor_absoluteX="125dp" />
                 </FrameLayout>
-            </FrameLayout>
+            </LinearLayout>
 
 
         </android.support.constraint.ConstraintLayout>

@@ -63,6 +63,7 @@
     <string name="add_task_time_alert">Your time is in the past.</string>
     <string name="priority_0_tip_snackbar">To help your productivity, schedule \'Do it now\' just for the next day.</string>
     <string name="location">Add location</string>
+    <string name="no_place_selected">No place selected</string>
     <!-- Content Descriptions -->
     <string name="close_button_description">Close Single Task Activity</string>
     <string name="save_button_description">Save Task and Exit</string>
@@ -147,5 +148,7 @@
     <string name="tutorial_page_next">Next page</string>
     <string name="widget_done_check">Done check</string>
     <string name="preview_title">Preview Title</string>
-
+    <string name="title_holder">Task title</string>
+    <string name="divider">Divider</string>
+    <string name="location_delete">Delete location</string>
 </resources>

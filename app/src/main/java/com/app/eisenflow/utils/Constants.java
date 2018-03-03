@@ -25,6 +25,9 @@ public class Constants {
     public static final String TASK_PERSISTENT_OBJECT = "TaskPersistentObject";
     public static final String TASK_PERSISTENT_PRIORITY = "TaskPersistentPriority";
     public static final String IS_FROM_PREVIEW = "isFromPreview";
+    public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;
+    public static final float DEFAULT_MAP_ZOOM = 12.0f;
+
     /**
      * EisenContent Provider
      */

@@ -1,6 +1,7 @@
 package com.app.eisenflow.activities;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentUris;
@@ -16,6 +17,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -26,18 +28,33 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.app.eisenflow.R;
 import com.app.eisenflow.Task;
 import com.app.eisenflow.helpers.TaskReminderHelper;
+import com.app.eisenflow.utils.Constants;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.utils.DateTimeUtils;
 import com.app.eisenflow.utils.Utils;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -68,8 +85,10 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_
 import static com.app.eisenflow.database.EisenContract.TaskEntry.buildFlavorsUri;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.getCursor;
+import static com.app.eisenflow.utils.Constants.DEFAULT_MAP_ZOOM;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.Constants.IS_FROM_PREVIEW;
+import static com.app.eisenflow.utils.Constants.PLACE_AUTOCOMPLETE_REQUEST_CODE;
 import static com.app.eisenflow.utils.Constants.TASK_PERSISTENT_OBJECT;
 import static com.app.eisenflow.utils.Constants.TASK_PERSISTENT_PRIORITY;
 import static com.app.eisenflow.utils.Constants.WEEKLY_OCCURRENCE;
@@ -87,7 +106,7 @@ import static com.app.eisenflow.utils.Utils.showAlertMessage;
  * Created on 12/21/17.
  */
 
-public class SingleTaskActivity extends AppCompatActivity {
+public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyCallback {
     @BindView(R.id.single_task_holder) CoordinatorLayout mSingleTaskHolder;
     @BindView(R.id.single_task_app_bar) AppBarLayout mAppBarLayout;
     @BindView(R.id.single_task_toolbar) Toolbar mToolbar;
@@ -113,6 +132,10 @@ public class SingleTaskActivity extends AppCompatActivity {
     @BindView(R.id.sun_cb) CheckBox mSunCheckBox;
     @BindView(R.id.vibration_switch) Switch mVibrationSwitch;
     @BindView(R.id.note_edit_text) EditText mNoteEditText;
+    @BindView(R.id.location_views) RelativeLayout mLocationViews;
+    @BindView(R.id.map_fragment_holder) FrameLayout mMapFragmentHolder;
+    @BindView(R.id.location_text) TextView mLocationText;
+    @BindView(R.id.location_delete) ImageView mDeleteLocationButton;
 
     private Task mTask;
     private DataUtils.Priority mPriority;
@@ -124,6 +147,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     private boolean isRedTipShown;
     private boolean isTaskSaved;
     private boolean isOpenedFromPreview;
+    private Place mPlace;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -213,7 +237,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick (R.id.do_it_holder)
+    @OnClick(R.id.do_it_holder)
     public void onDoItHolderClick() {
         mPriority = DataUtils.Priority.ONE;
         setBgPriorityColor();
@@ -221,7 +245,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         setViewVisibility(mReminderHolder, View.GONE);
     }
 
-    @OnClick (R.id.decide_holder)
+    @OnClick(R.id.decide_holder)
     public void onDecideHolderClick() {
         mPriority = TWO;
         setBgPriorityColor();
@@ -229,7 +253,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         setViewVisibility(mReminderHolder, View.VISIBLE);
     }
 
-    @OnClick (R.id.delegate_holder)
+    @OnClick(R.id.delegate_holder)
     public void onDelegateHolderClick() {
         mPriority = DataUtils.Priority.THREE;
         setBgPriorityColor();
@@ -237,7 +261,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         setViewVisibility(mReminderHolder, View.GONE);
     }
 
-    @OnClick (R.id.dump_it_holder)
+    @OnClick(R.id.dump_it_holder)
     public void onDumpItHolderClick() {
         mPriority = DataUtils.Priority.FOUR;
         setBgPriorityColor();
@@ -245,17 +269,39 @@ public class SingleTaskActivity extends AppCompatActivity {
         setViewVisibility(mReminderHolder, View.GONE);
     }
 
-    @OnClick (R.id.date_holder)
+    @OnClick(R.id.date_holder)
     public void onDateHolderClick() {
         openDatePickerDialog();
     }
 
-    @OnClick (R.id.time_holder)
+    @OnClick(R.id.time_holder)
     public void onTimeHolderClick() {
         openTimePickerDialog();
     }
 
-    @OnCheckedChanged ({R.id.daily_rb, R.id.weekly_rb, R.id.monthly_rb, R.id.yearly_rb})
+    @OnClick(R.id.location_views)
+    public void onLocationClick() {
+        try {
+            Intent intent =
+                    new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
+                            .build(this);
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            Log.e(Constants.TAG, "GooglePlayServicesRepairableException: " + e.getMessage());
+        } catch (GooglePlayServicesNotAvailableException e) {
+            Log.e(Constants.TAG, "GooglePlayServicesNotAvailableException: " + e.getMessage());
+        }
+    }
+
+    @OnClick(R.id.location_delete)
+    public void onDeleteLocation() {
+        mLocationText.setText(getResources().getString(R.string.location));
+        mMapFragmentHolder.setVisibility(View.GONE);
+        mDeleteLocationButton.setVisibility(View.INVISIBLE);
+        mPlace = null;
+    }
+
+    @OnCheckedChanged({R.id.daily_rb, R.id.weekly_rb, R.id.monthly_rb, R.id.yearly_rb})
     public void onOccurrenceChecked(CompoundButton button, boolean checked) {
         if (checked) {
             if (checked) {
@@ -270,7 +316,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         }
     }
 
-    @OnCheckedChanged ({R.id.mon_cb, R.id.tue_cb, R.id.wed_cb, R.id.thu_cb, R.id.fri_cb, R.id.sat_cb, R.id.sun_cb})
+    @OnCheckedChanged({R.id.mon_cb, R.id.tue_cb, R.id.wed_cb, R.id.thu_cb, R.id.fri_cb, R.id.sat_cb, R.id.sun_cb})
     public void onDayOfWeekChecked(CompoundButton button, boolean checked) {
         int buttonIdx = Integer.valueOf(button.getTag().toString());
         if (checked) {
@@ -281,19 +327,19 @@ public class SingleTaskActivity extends AppCompatActivity {
         mTask.setReminderWhen(integerCollectionToString(mCheckedDaysOfWeek));
     }
 
-    @OnCheckedChanged ({R.id.vibration_switch})
+    @OnCheckedChanged({R.id.vibration_switch})
     public void onVibrationSwitchChecked(CompoundButton button, boolean checked) {
         mTask.setVibrationEnabled(DataUtils.getBooleanValue(checked));
     }
 
-    @OnTextChanged (R.id.task_name)
-    public void onTaskTitleChanged (CharSequence text) {
+    @OnTextChanged(R.id.task_name)
+    public void onTaskTitleChanged(CharSequence text) {
         String featureName = text.toString();
         mTask.setTitle(featureName);
     }
 
-    @OnTextChanged (R.id.note_edit_text)
-    public void onTaskNoteChanged (CharSequence text) {
+    @OnTextChanged(R.id.note_edit_text)
+    public void onTaskNoteChanged(CharSequence text) {
         String featureName = text.toString();
         mTask.setNote(featureName);
     }
@@ -326,6 +372,43 @@ public class SingleTaskActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null && data.getExtras() != null) {
+                mMapFragmentHolder.setVisibility(View.VISIBLE);
+                mDeleteLocationButton.setVisibility(View.VISIBLE);
+
+                mPlace = PlaceAutocomplete.getPlace(this, data);
+                mLocationText.setText(mPlace.getAddress());
+
+                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                        .findFragmentById(R.id.map);
+                mapFragment.getMapAsync(this);
+
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(this, data);
+                Log.e(Constants.TAG, "PlacesAutocomplete: Something went wrong." + status);
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                Toast.makeText(
+                        this,
+                        getResources().getString(R.string.no_place_selected),
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        if (mPlace != null) {
+            LatLng location = mPlace.getLatLng();
+            googleMap.clear();
+            googleMap.addMarker(new MarkerOptions().position(location));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_MAP_ZOOM));
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         super.onBackPressed();
         navigateBackIfRoot();
@@ -343,7 +426,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         if (isTaskRoot()) {
             Intent upIntent = new Intent(this, LaunchActivity.class);
             startActivity(upIntent);
-        } else if(isTablet(this) && isOpenedFromPreview) {
+        } else if (isTablet(this) && isOpenedFromPreview) {
             backToPreview();
         }
     }
@@ -473,7 +556,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         String time = mTask.getTime();
         Date timeToReturn;
-        if(time != null) {
+        if (time != null) {
             timeToReturn = DateTimeUtils.getTime(time);
             if (timeToReturn == null) {
                 return cal;
@@ -498,7 +581,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     }
 
     private void saveTask() {
-        if(isDataValid()) {
+        if (isDataValid()) {
             // Show tip message for Urgent-Important tasks.
             // Ideally this tasks should be scheduled for next day in order to have better performance.
             if (isRedTask() && isScheduledTooInAdvance() && !isRedTipShown) {
@@ -563,7 +646,7 @@ public class SingleTaskActivity extends AppCompatActivity {
             showAlertMessage(alertMessage);
             return false;
         }
-        if(mTask.getPriority() == -1) {
+        if (mTask.getPriority() == -1) {
             Object alertMessage = createAlertMessage(
                     this,
                     mSingleTaskHolder,
@@ -585,7 +668,7 @@ public class SingleTaskActivity extends AppCompatActivity {
             return false;
         }
 
-        if(!checkDateTime()) {
+        if (!checkDateTime()) {
             return false;
         }
         return true;
@@ -621,11 +704,11 @@ public class SingleTaskActivity extends AppCompatActivity {
 
     private boolean isScheduledTooInAdvance() {
         Calendar currDate = Calendar.getInstance();
-        Calendar date  = Calendar.getInstance();
+        Calendar date = Calendar.getInstance();
         date.setTime(DateTimeUtils.getDate(mTask.getDate()));
 
         return date.get(Calendar.MONTH) >= currDate.get(Calendar.MONTH) &&
-                date.get(Calendar.DAY_OF_MONTH) >= (currDate.get(Calendar.DAY_OF_MONTH)+2);
+                date.get(Calendar.DAY_OF_MONTH) >= (currDate.get(Calendar.DAY_OF_MONTH) + 2);
     }
 
     private List<CheckBox> getWeekDaysList() {
@@ -645,7 +728,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         getContentResolver().update(uri, values, null, null);
     }
 
-    private Uri insertData(ContentValues values){
+    private Uri insertData(ContentValues values) {
         return getContentResolver().insert(CONTENT_URI, values);
     }
 
@@ -707,7 +790,7 @@ public class SingleTaskActivity extends AppCompatActivity {
         int radioButtonId;
         switch (choice) {
             case 1:
-                radioButtonId =  R.id.weekly_rb;
+                radioButtonId = R.id.weekly_rb;
                 break;
             case 2:
                 radioButtonId = R.id.monthly_rb;
@@ -723,7 +806,7 @@ public class SingleTaskActivity extends AppCompatActivity {
     }
 
     private void setReminderWhenChoice() {
-        mCheckedDaysOfWeek = (HashSet<Integer>)DataUtils.stringToIntegerCollection(mTask.getReminderWhen());
+        mCheckedDaysOfWeek = (HashSet<Integer>) DataUtils.stringToIntegerCollection(mTask.getReminderWhen());
         if (mCheckedDaysOfWeek != null && mCheckedDaysOfWeek.size() > 0) {
             for (CheckBox cb : mWeekDays) {
                 int idx = Integer.valueOf((String) cb.getTag());
