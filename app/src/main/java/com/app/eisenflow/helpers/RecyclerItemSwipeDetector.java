@@ -213,6 +213,7 @@ public class RecyclerItemSwipeDetector implements View.OnTouchListener {
             @Override
             public void run() {
                 if(mHolder.mDeleteActionLayout.getVisibility() == View.VISIBLE) {
+                    mHolder.getAdapter().getBottomSheet().closeBottomSheet();
                     mHolder.mTaskProgress.setVisibility(View.INVISIBLE);
                     mHolder.mDeleteActionLayout.setVisibility(View.INVISIBLE);
                     mHolder.mUndoLayout.setVisibility(View.VISIBLE);
