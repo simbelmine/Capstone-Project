@@ -682,7 +682,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_half_spacing"
                     android:clickable="true"
-                    android:visibility="gone" android:focusable="true">
+                    android:visibility="gone"
+                    android:focusable="true">
                     <fragment
                         android:id="@+id/map"
                         android:name="com.google.android.gms.maps.SupportMapFragment"

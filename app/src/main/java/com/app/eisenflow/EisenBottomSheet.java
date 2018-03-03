@@ -10,18 +10,26 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.app.eisenflow.activities.SingleTaskActivity;
 import com.app.eisenflow.utils.DataUtils;
 import com.app.eisenflow.widget.WidgetProvider;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,9 +38,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ADDRESS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_VIBRATION_ENABLED;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_LOCATION;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_NOTE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PROGRESS;
@@ -42,10 +52,12 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ROW_ID;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TIME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TITLE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_TOTAL_DAYS_PERIOD;
+import static com.app.eisenflow.utils.Constants.DEFAULT_MAP_ZOOM;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.DataUtils.Occurrence.WEEKLY;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.DataUtils.getBooleanState;
+import static com.app.eisenflow.utils.DataUtils.getTaskLocation;
 import static com.app.eisenflow.utils.DataUtils.stringToIntegerCollection;
 import static com.app.eisenflow.utils.TaskUtils.addProgressAction;
 import static com.app.eisenflow.utils.TaskUtils.calculateProgress;
@@ -76,6 +88,8 @@ public class EisenBottomSheet {
     @BindView(R.id.bottom_sheet_done_btn) ImageView mTaskDoneButton;
     @BindView(R.id.bottom_sheet_menu_btn) ImageView mTaskMenuButton;
     @BindView(R.id.bottom_sheet_edit_btn) ImageView mTaskEditButton;
+    @BindView(R.id.bottom_sheet_map_fragment_holder) LinearLayout mMapInfoHolder;
+    @BindView(R.id.bottom_sheet_location_text) TextView mLocationText;
 
     public static final String EXTRA_TRANSITION_NAME = "ExtraTransitionName";
     private Activity mActivity;
@@ -245,6 +259,7 @@ public class EisenBottomSheet {
             mTaskNote.setText(note);
             isDone = DataUtils.getBooleanState(done);
             updateDoneButton(isDone);
+            setTaskLocation();
 
             DataUtils.Priority priorityType = DataUtils.Priority.valueOf(priority);
             if (priorityType == TWO) {
@@ -357,4 +372,33 @@ public class EisenBottomSheet {
         mCursor = cursor;
         setTaskDetails();
     }
+
+    private void setTaskLocation() {
+        SupportMapFragment mapFragment = (SupportMapFragment) ((AppCompatActivity)mActivity).getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(onMapReadyCallback);
+    }
+
+    private OnMapReadyCallback onMapReadyCallback = new OnMapReadyCallback() {
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            if (mCursor != null && mCursor.moveToPosition(mTaskPosition)) {
+                String locationTxt = mCursor.getString(mCursor.getColumnIndex(KEY_LOCATION));
+                LatLng location = getTaskLocation(locationTxt);
+                String address = mCursor.getString(mCursor.getColumnIndex(KEY_ADDRESS));
+
+                if (location != null) {
+                    googleMap.clear();
+                    googleMap.addMarker(new MarkerOptions().position(location));
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_MAP_ZOOM));
+                    mMapInfoHolder.setVisibility(View.VISIBLE);
+                }
+                if (address != null) {
+                    mLocationText.setText(address);
+                }
+            } else {
+                mMapInfoHolder.setVisibility(View.GONE);
+            }
+        }
+    };
 }
