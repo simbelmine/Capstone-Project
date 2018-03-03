@@ -18,6 +18,8 @@ public class Task implements Parcelable {
     private String mReminderWhen = "";
     private String mReminderDate;
     private String mReminderTime;
+    private String mAddress;
+    private String mLocation;
     private String mNote;
     private int mProgress = -1;
     private int isDone = -1;
@@ -35,6 +37,8 @@ public class Task implements Parcelable {
         this.mReminderWhen = in.readString();
         this.mReminderDate = in.readString();
         this.mReminderTime = in.readString();
+        this.mAddress = in.readString();
+        this.mLocation = in.readString();
         this.mNote = in.readString();
         this.mProgress = in.readInt();
         this.isDone = in.readInt();
@@ -54,6 +58,8 @@ public class Task implements Parcelable {
         dest.writeString(mReminderWhen);
         dest.writeString(mReminderDate);
         dest.writeString(mReminderTime);
+        dest.writeString(mAddress);
+        dest.writeString(mLocation);
         dest.writeString(mNote);
         dest.writeInt(mProgress);
         dest.writeInt(isDone);
@@ -65,9 +71,7 @@ public class Task implements Parcelable {
         return 0;
     }
 
-    static final Parcelable.Creator<Task> CREATOR
-            = new Parcelable.Creator<Task>() {
-
+    static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {
         @Override
         public Task createFromParcel(Parcel in) {
             return new Task(in);
@@ -168,6 +172,22 @@ public class Task implements Parcelable {
 
     public void setReminderTime(String reminderTime) {
         this.mReminderTime = reminderTime;
+    }
+
+    public String getAddress () {
+        return mAddress;
+    }
+
+    public void setAddress(String address) {
+        this.mAddress = address;
+    }
+
+    public String getLocation() {
+        return mLocation;
+    }
+
+    public void setLocation(String location) {
+        this.mLocation = location;
     }
 
     public String getNote() {

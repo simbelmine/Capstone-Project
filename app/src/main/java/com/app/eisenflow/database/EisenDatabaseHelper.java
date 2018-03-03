@@ -4,10 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ADDRESS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE_MILLIS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_DONE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_VIBRATION_ENABLED;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_LOCATION;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_NOTE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PROGRESS;
@@ -53,6 +56,8 @@ public class EisenDatabaseHelper extends SQLiteOpenHelper {
                     + KEY_DATE_MILLIS + " integer, "
                     + KEY_REMINDER_OCCURRENCE + " integer, "
                     + KEY_REMINDER_WHEN + " text not null, "
+                    + KEY_ADDRESS +  " text, "
+                    + KEY_LOCATION +  " text, "
                     + KEY_NOTE + " text, "
                     + KEY_PROGRESS + " integer default 0, "
                     + KEY_IS_DONE + " integer default 0, "

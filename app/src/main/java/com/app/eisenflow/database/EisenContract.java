@@ -30,6 +30,8 @@ public class EisenContract {
         public static final String KEY_TIME = "time";
         public static final String KEY_REMINDER_OCCURRENCE = "reminderOccurrence";
         public static final String KEY_REMINDER_WHEN = "reminderWhen";
+        public static final String KEY_ADDRESS = "address";
+        public static final String KEY_LOCATION = "location";
         public static final String KEY_NOTE = "note";
         public static final String KEY_PROGRESS = "progress";
         public static final String KEY_IS_DONE = "done";
@@ -53,7 +55,8 @@ public class EisenContract {
 
         public static String[] Columns = new String[]{
                 KEY_ROW_ID, KEY_PRIORITY, KEY_TITLE, KEY_DATE,
-                KEY_DATE_MILLIS, KEY_TIME, KEY_REMINDER_OCCURRENCE, KEY_REMINDER_WHEN, KEY_NOTE,
+                KEY_DATE_MILLIS, KEY_TIME, KEY_REMINDER_OCCURRENCE,
+                KEY_REMINDER_WHEN, KEY_ADDRESS, KEY_LOCATION, KEY_NOTE,
                 KEY_PROGRESS, KEY_IS_DONE, KEY_TOTAL_DAYS_PERIOD, KEY_IS_VIBRATION_ENABLED
         };
 
@@ -78,6 +81,8 @@ public class EisenContract {
                     cursor.getString(cursor.getColumnIndex(KEY_TIME)),
                     cursor.getString(cursor.getColumnIndex(KEY_REMINDER_OCCURRENCE)),
                     cursor.getString(cursor.getColumnIndex(KEY_REMINDER_WHEN)),
+                    cursor.getString(cursor.getColumnIndex(KEY_ADDRESS)),
+                    cursor.getString(cursor.getColumnIndex(KEY_LOCATION)),
                     cursor.getString(cursor.getColumnIndex(KEY_NOTE)),
                     cursor.getString(cursor.getColumnIndex(KEY_PROGRESS)),
                     cursor.getString(cursor.getColumnIndex(KEY_IS_DONE)),
@@ -96,6 +101,8 @@ public class EisenContract {
             long dateMillis = cursor.getLong(cursor.getColumnIndex(KEY_DATE_MILLIS));
             int reminderOccurrence = cursor.getInt(cursor.getColumnIndex(KEY_REMINDER_OCCURRENCE));
             String reminderWhen = cursor.getString(cursor.getColumnIndex(KEY_REMINDER_WHEN));
+            String address = cursor.getString(cursor.getColumnIndex(KEY_ADDRESS));
+            String location = cursor.getString(cursor.getColumnIndex(KEY_LOCATION));
             String note = cursor.getString(cursor.getColumnIndex(KEY_NOTE));
             int progress = cursor.getInt(cursor.getColumnIndex(KEY_PROGRESS));
             int isDone = cursor.getInt(cursor.getColumnIndex(KEY_IS_DONE));
@@ -110,6 +117,8 @@ public class EisenContract {
             task.setDateMillis(dateMillis);
             task.setReminderOccurrence(reminderOccurrence);
             task.setReminderWhen(reminderWhen);
+            task.setAddress(address);
+            task.setLocation(location);
             task.setNote(note);
             task.setProgress(progress);
             task.setIsDone(isDone);

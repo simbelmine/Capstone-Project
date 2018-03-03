@@ -28,7 +28,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
@@ -72,9 +71,11 @@ import butterknife.OnTextChanged;
 import static android.text.TextUtils.isEmpty;
 import static com.app.eisenflow.EisenBottomSheet.EXTRA_TRANSITION_NAME;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.CONTENT_URI;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_ADDRESS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_DATE_MILLIS;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_IS_VIBRATION_ENABLED;
+import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_LOCATION;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_NOTE;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_PRIORITY;
 import static com.app.eisenflow.database.EisenContract.TaskEntry.KEY_REMINDER_OCCURRENCE;
@@ -93,6 +94,7 @@ import static com.app.eisenflow.utils.Constants.TASK_PERSISTENT_OBJECT;
 import static com.app.eisenflow.utils.Constants.TASK_PERSISTENT_PRIORITY;
 import static com.app.eisenflow.utils.Constants.WEEKLY_OCCURRENCE;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
+import static com.app.eisenflow.utils.DataUtils.getTaskLocation;
 import static com.app.eisenflow.utils.DataUtils.integerCollectionToString;
 import static com.app.eisenflow.utils.DataUtils.setViewVisibility;
 import static com.app.eisenflow.utils.DateTimeUtils.getDateString;
@@ -147,7 +149,6 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
     private boolean isRedTipShown;
     private boolean isTaskSaved;
     private boolean isOpenedFromPreview;
-    private Place mPlace;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -164,7 +165,6 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
 
         setTransitionName();
         getCurrentPosition();
-
 
         if (savedInstanceState != null) {
             mTask = savedInstanceState.getParcelable(TASK_PERSISTENT_OBJECT);
@@ -295,10 +295,11 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
 
     @OnClick(R.id.location_delete)
     public void onDeleteLocation() {
+        mTask.setLocation(null);
+        mTask.setAddress(null);
         mLocationText.setText(getResources().getString(R.string.location));
         mMapFragmentHolder.setVisibility(View.GONE);
         mDeleteLocationButton.setVisibility(View.INVISIBLE);
-        mPlace = null;
     }
 
     @OnCheckedChanged({R.id.daily_rb, R.id.weekly_rb, R.id.monthly_rb, R.id.yearly_rb})
@@ -366,25 +367,23 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
             case R.id.action_save_task:
                 saveTask();
                 return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return true;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE && resultCode == RESULT_OK) {
             if (data != null && data.getExtras() != null) {
-                mMapFragmentHolder.setVisibility(View.VISIBLE);
-                mDeleteLocationButton.setVisibility(View.VISIBLE);
+                Place place = PlaceAutocomplete.getPlace(this, data);
+                Log.v(Constants.TAG, "Location: " + place.getAddress() + ", " + place.getLatLng());
 
-                mPlace = PlaceAutocomplete.getPlace(this, data);
-                mLocationText.setText(mPlace.getAddress());
-
-                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.map);
-                mapFragment.getMapAsync(this);
-
+                LatLng location = place.getLatLng();
+                isTaskSaved = true;
+                mTask.setAddress(place.getAddress().toString());
+                mTask.setLocation(location.latitude + "," + location.longitude);
+                //setTaskLocation();
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(this, data);
                 Log.e(Constants.TAG, "PlacesAutocomplete: Something went wrong." + status);
@@ -400,11 +399,18 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        if (mPlace != null) {
-            LatLng location = mPlace.getLatLng();
+        LatLng location = getTaskLocation(mTask.getLocation());
+        String address = mTask.getAddress();
+
+        if (location != null) {
             googleMap.clear();
             googleMap.addMarker(new MarkerOptions().position(location));
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, DEFAULT_MAP_ZOOM));
+            mMapFragmentHolder.setVisibility(View.VISIBLE);
+            mDeleteLocationButton.setVisibility(View.VISIBLE);
+        }
+        if (address != null) {
+            mLocationText.setText(address);
         }
     }
 
@@ -742,6 +748,8 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
         values.put(KEY_DATE_MILLIS, mTask.getDateMillis());
         values.put(KEY_REMINDER_OCCURRENCE, mTask.getReminderOccurrence());
         values.put(KEY_REMINDER_WHEN, mTask.getReminderWhen());
+        values.put(KEY_ADDRESS, mTask.getAddress());
+        values.put(KEY_LOCATION, mTask.getLocation());
         values.put(KEY_TOTAL_DAYS_PERIOD, mTask.getTotalDaysPeriod());
         values.put(KEY_IS_VIBRATION_ENABLED, mTask.isVibrationEnabled());
         values.put(KEY_NOTE, mTask.getNote());
@@ -766,6 +774,7 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
         mTaskTitle.setText(mTask.getTitle());
         initDateTime();
         setReminderOccurrenceAndWhen(mPriority);
+        setTaskLocation();
         setVibration();
         mNoteEditText.setText(mTask.getNote());
         isTaskSaved = false;
@@ -815,6 +824,12 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
                 }
             }
         }
+    }
+
+    private void setTaskLocation() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     private void setVibration() {

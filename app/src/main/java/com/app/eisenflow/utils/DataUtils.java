@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.app.eisenflow.ApplicationEisenFlow;
 import com.app.eisenflow.R;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -152,5 +153,15 @@ public class DataUtils {
         totalWidth += chView.getMeasuredWidth();
 
         return totalWidth;
+    }
+
+    public static LatLng getTaskLocation(String location) {
+        if (location == null) {
+            return null;
+        }
+        String[] latLongArray = location.split(",");
+        double latitude = Double.valueOf(latLongArray[0]);
+        double longitude = Double.valueOf(latLongArray[1]);
+        return new LatLng(latitude, longitude);
     }
 }
