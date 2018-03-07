@@ -64,6 +64,9 @@
     <string name="priority_0_tip_snackbar">To help your productivity, schedule \'Do it now\' just for the next day.</string>
     <string name="location">Add location</string>
     <string name="no_place_selected">No place selected</string>
+    <string name="close_dialog_text">Are you sure you want to discard this task?</string>
+    <string name="discard_button">Discard</string>
+    <string name="keep_edit">Keep editing</string>
     <!-- Content Descriptions -->
     <string name="close_button_description">Close Single Task Activity</string>
     <string name="save_button_description">Save Task and Exit</string>

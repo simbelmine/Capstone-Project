@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -361,8 +363,7 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                navigateBackIfRoot();
-                backWithTransition();
+                showDialogOnClose();
                 return true;
             case R.id.action_save_task:
                 saveTask();
@@ -417,7 +418,7 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        navigateBackIfRoot();
+        showDialogOnClose();
     }
 
     @Override
@@ -834,5 +835,23 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
 
     private void setVibration() {
         mVibrationSwitch.setChecked(DataUtils.getBooleanState(mTask.isVibrationEnabled()));
+    }
+
+    private void showDialogOnClose() {
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.close_dialog_text)
+                .setPositiveButton(R.string.discard_button, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        navigateBackIfRoot();
+                        backWithTransition();
+                    }
+                })
+                .setNegativeButton(R.string.keep_edit, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
     }
 }
