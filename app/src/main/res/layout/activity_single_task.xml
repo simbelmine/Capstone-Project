@@ -655,7 +655,7 @@
                         android:layout_height="@dimen/task_icon_size"
                         android:layout_alignParentLeft="true"
                         android:contentDescription="@string/location"
-                        android:src="@mipmap/ic_location_black" />
+                        app:srcCompat="@drawable/location" />
 
                     <TextView
                         android:id="@+id/location_text"
