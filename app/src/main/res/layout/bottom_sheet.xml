@@ -102,6 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/task_icon_size"
                 android:layout_marginStart="@dimen/activity_horizontal_spacing"
+                android:layout_marginLeft="@dimen/activity_horizontal_spacing"
                 android:layout_marginTop="24dp"
                 android:contentDescription="@string/due_date_txt"
                 app:layout_constraintStart_toStartOf="parent"
@@ -128,6 +129,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginStart="@dimen/activity_double_spacing"
+                android:layout_marginLeft="@dimen/activity_double_spacing"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -191,16 +193,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/activity_half_spacing"
+                    android:layout_marginLeft="@dimen/activity_half_spacing"
                     android:text="@string/reminder_txt"
                     android:textSize="16sp"
-                    app:layout_constraintStart_toEndOf="@+id/reminder_icon"
-                    app:layout_constraintTop_toBottomOf="@+id/date_holder" />
+                    app:layout_constraintStart_toEndOf="@+id/reminder_icon" />
 
                 <TextView
                     android:id="@+id/bottom_sheet_when_txt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="44dp"
+                    android:layout_marginLeft="44dp"
                     android:layout_marginTop="8dp"
                     android:textColor="@color/bottom_sheet_data_color"
                     android:textSize="17sp"
@@ -213,6 +216,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="44dp"
+                    android:layout_marginLeft="44dp"
                     android:layout_marginTop="8dp"
                     android:textColor="@color/bottom_sheet_data_color"
                     android:textSize="17sp"
