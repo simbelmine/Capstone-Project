@@ -11,10 +11,34 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
+
+    signingConfigs {
+        release {
+            Properties props = new Properties()
+            props.load(new FileInputStream(project.rootProject.file("signing.properties")))
+            storeFile file("${props.get("signing.storeFile")}")
+            storePassword "${props.get("signing.storePass")}"
+            keyAlias "${props.get("signing.storeAlias")}"
+            keyPassword "${props.get("signing.keyPass")}"
+        }
+        debug {
+            Properties props = new Properties()
+            props.load(new FileInputStream(project.rootProject.file("signing.properties")))
+            storeFile file("${props.get("signing.storeFile")}")
+            storePassword "${props.get("signing.storePass")}"
+            keyAlias "${props.get("signing.storeAlias")}"
+            keyPassword "${props.get("signing.keyPass")}"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 }
