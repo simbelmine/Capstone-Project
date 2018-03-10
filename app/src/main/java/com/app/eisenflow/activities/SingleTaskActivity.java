@@ -417,7 +417,6 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         showDialogOnClose();
     }
 
@@ -843,15 +842,16 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
         builder.setMessage(R.string.close_dialog_text)
                 .setPositiveButton(R.string.discard_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        navigateBackIfRoot();
                         backWithTransition();
                     }
                 })
                 .setNegativeButton(R.string.keep_edit, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
+                        navigateBackIfRoot();
                     }
                 })
+                .setCancelable(false)
                 .show();
     }
 }
