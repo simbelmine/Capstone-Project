@@ -131,7 +131,7 @@
     <string name="widget_empty_view">No tasks to show</string>
 
     <!-- About Dialog -->
-    <string name="about_version">Version </string>
+    <string name="about_version">Version &#160;</string>
     <string name="about_info">Eisen Flow is an productivity application based on Eisenhower\'s productivity matrix.</string>
 
     <!-- Content Description -->
