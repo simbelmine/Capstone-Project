@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 
 import com.app.eisenflow.ApplicationEisenFlow;
@@ -38,6 +39,7 @@ import static com.app.eisenflow.database.EisenContract.TaskEntry.cursorToTask;
 import static com.app.eisenflow.helpers.TaskReminderHelper.cancelReminder;
 import static com.app.eisenflow.helpers.TaskReminderHelper.cancelRepeatingReminder;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
+import static com.app.eisenflow.utils.Constants.TAG;
 import static com.app.eisenflow.utils.DataUtils.Priority.TWO;
 import static com.app.eisenflow.utils.DataUtils.getBooleanState;
 import static com.app.eisenflow.utils.DataUtils.getBooleanValue;
@@ -120,13 +122,12 @@ public class TaskUtils {
     }
 
     public static double getTotalDays(String date) {
-        DecimalFormat precision = new DecimalFormat(PRECISSION_FORMAT);
         Calendar calNow = Calendar.getInstance();
         Calendar calDate = Calendar.getInstance();
         calDate.setTime(DateTimeUtils.getDate(date));
 
         double diff = calDate.getTimeInMillis() - calNow.getTimeInMillis();
-        return Double.valueOf(precision.format((diff / (24 * 60 * 60 * 1000)) + 1));
+        return (diff / DateTimeUtils.MILLIS_IN_A_DAY) + (diff % DateTimeUtils.MILLIS_IN_A_DAY > 0 ? 1 : 0);
     }
 
     public static int getIncreasedTaskProgress(Cursor cursor, int position) {
@@ -203,7 +204,13 @@ public class TaskUtils {
         Calendar cal = DateTimeUtils.getCalendar(date, time);
 
         DateTime startDate = DateTime.now();
-        DateTime endDate = new DateTime(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DAY_OF_MONTH), 0, 0);
+        DateTime endDate = null;
+        try {
+            endDate = new DateTime(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH) + 1, cal.get(Calendar.DAY_OF_MONTH), 0, 0);
+        } catch (NullPointerException e) {
+            Log.v(TAG, "npe : " + date  + " " + time);
+            throw e;
+        }
 
         Period period = new Period(startDate, endDate);
 

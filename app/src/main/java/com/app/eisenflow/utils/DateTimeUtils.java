@@ -2,6 +2,7 @@ package com.app.eisenflow.utils;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 
 import com.app.eisenflow.ApplicationEisenFlow;
@@ -27,11 +28,14 @@ public class DateTimeUtils {
     private static final String DATE_FORMAT = "EEE, MMM dd, yyyy";
     private static final String TIME_FORMAT_24 = "kk:mm";
     private static final String TIME_FORMAT_AP_PM = "hh:mm a";
-    public static final String DAILY_REMINDER = "Daily";
-    public static final String WEEKLY_REMINDER = "Weekly";
-    public static final String MONTHLY_REMINDER = "Monthly";
-    public static final String YEARLY_REMINDER = "Yearly";
+    public static final long MILLIS_IN_A_DAY = 24 * 60 * 60 * 1000;
     public HashMap<String, Integer> dayOfMonthsMap = new HashMap<>();
+
+    private static Pattern pattern24 = null;
+    private static final String TIME24HOURS_PATTERN_ONLY =
+            "^([01]?[0-9]|2[0-3]):[0-5][0-9]$";
+    private static final String TIME24HOURS_PATTERN =
+            "([01]?[0-9]|2[0-3]):[0-5][0-9]";
 
     private Context context;
 
@@ -53,7 +57,7 @@ public class DateTimeUtils {
 
     public static Date getDate(String dateStr) {
         if(dateStr != null && !"".equals(dateStr)) {
-            SimpleDateFormat postFormatter = new SimpleDateFormat(DATE_FORMAT);
+            SimpleDateFormat postFormatter = new SimpleDateFormat(DATE_FORMAT, Locale.US);
             try {
                 return postFormatter.parse(dateStr);
             } catch (ParseException ex) {
@@ -65,7 +69,7 @@ public class DateTimeUtils {
     }
 
     public static String getDateString(Calendar cal) {
-        SimpleDateFormat postFormatter = new SimpleDateFormat(DATE_FORMAT);
+        SimpleDateFormat postFormatter = new SimpleDateFormat(DATE_FORMAT, Locale.US);
         return postFormatter.format(cal.getTime());
     }
 
@@ -103,52 +107,28 @@ public class DateTimeUtils {
     public static String getTimeString(Calendar cal) {
         SimpleDateFormat postFormatter;
         if(isSystem24hFormat()) {
-            postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
+            postFormatter = new SimpleDateFormat(TIME_FORMAT_24, Locale.US);
         }
         else {
-            postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM);
+            postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM, Locale.US);
         }
         return postFormatter.format(cal.getTime());
-    }
-
-    public String getTimeString24Only(Calendar cal) {
-        SimpleDateFormat postFormatter;
-        postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
-
-        return postFormatter.format(cal.getTime());
-    }
-
-    public String getAMPMTimeString(String time) {
-//        SimpleDateFormat _24HourSDF = new SimpleDateFormat("HH:mm");
-//        SimpleDateFormat _12HourSDF = new SimpleDateFormat("hh:mm a");
-        SimpleDateFormat _24HourSDF = new SimpleDateFormat(TIME_FORMAT_24);
-        SimpleDateFormat _12HourSDF = new SimpleDateFormat(TIME_FORMAT_AP_PM);
-
-        try {
-            Date _24HourDt = _24HourSDF.parse(time);
-            return _12HourSDF.format(_24HourDt);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     public static Date getTime(String timeStr) {
         SimpleDateFormat postFormatter;
         if(isSystem24hFormat()) {
             if(isString24(timeStr)) {
-                postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
+                postFormatter = new SimpleDateFormat(TIME_FORMAT_24, Locale.US);
             } else {
-                postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM);
+                postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM, Locale.US);
             }
         }
         else {
             if(!isString24(timeStr)) {
-                postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM);
+                postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM, Locale.US);
             } else {
-                postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
+                postFormatter = new SimpleDateFormat(TIME_FORMAT_24, Locale.US);
             }
         }
 
@@ -162,17 +142,18 @@ public class DateTimeUtils {
         return null;
     }
 
-    private static boolean isString24(String timeStr) {
-        String[] separated = timeStr.split(":");
-        String hours = separated[0];
-        int hoursValue = Integer.valueOf(hours);
-        return (hoursValue > 12 || hoursValue == 0) ? true : false;
+    @VisibleForTesting
+    public static boolean isString24(String timeStr) {
+        if (pattern24 == null) {
+            pattern24 = Pattern.compile(TIME24HOURS_PATTERN_ONLY);
+        }
+        return pattern24.matcher(timeStr).find();
     }
 
 
     public static Date getTime24(String timeStr) {
         SimpleDateFormat postFormatter;
-        postFormatter = new SimpleDateFormat(TIME_FORMAT_24);
+        postFormatter = new SimpleDateFormat(TIME_FORMAT_24, Locale.US);
 
         try {
             return postFormatter.parse(timeStr);
@@ -186,7 +167,7 @@ public class DateTimeUtils {
 
     public static Date getTime12(String timeStr) {
         SimpleDateFormat postFormatter;
-        postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM);
+        postFormatter = new SimpleDateFormat(TIME_FORMAT_AP_PM, Locale.US);
 
         try {
             return postFormatter.parse(timeStr);
@@ -205,40 +186,21 @@ public class DateTimeUtils {
     }
 
     public static Calendar getCalendar(String date, String time) {
-        return strToCalendar(date + " " + time);
-    }
-
-    public String calendarToStr(Calendar cal) {
+        String dateTime = date + " " + time;
         SimpleDateFormat postFormatter;
         String newFormat;
-
-        if(isSystem24hFormat()) {
+        if(isString24(time)) {
             newFormat = DATE_FORMAT + " " + TIME_FORMAT_24;
-            postFormatter = new SimpleDateFormat(newFormat);
+            postFormatter = new SimpleDateFormat(newFormat, Locale.US);
         }
         else {
             newFormat = DATE_FORMAT + " " + TIME_FORMAT_AP_PM;
-            postFormatter = new SimpleDateFormat(newFormat);
-        }
-
-        return postFormatter.format(cal.getTime());
-    }
-
-    public static Calendar strToCalendar(String calStr) {
-        SimpleDateFormat postFormatter;
-        String newFormat;
-        if(isSystem24hFormat()) {
-            newFormat = DATE_FORMAT + TIME_FORMAT_24;
-            postFormatter = new SimpleDateFormat(newFormat);
-        }
-        else {
-            newFormat = DATE_FORMAT + TIME_FORMAT_AP_PM;
-            postFormatter = new SimpleDateFormat(newFormat);
+            postFormatter = new SimpleDateFormat(newFormat, Locale.US);
         }
 
         try {
             Calendar cal = Calendar.getInstance();
-            Date calDate = postFormatter.parse(calStr);
+            Date calDate = postFormatter.parse(dateTime);
             if(calDate != null) {
                 cal.setTime(calDate);
                 return cal;
@@ -273,13 +235,6 @@ public class DateTimeUtils {
         cal.set(Calendar.MONTH, month);
 
         return cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-    }
-
-    public int getDayOfMonth(String date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(getDate(date));
-
-        return cal.get(Calendar.DAY_OF_MONTH);
     }
 
     public static Calendar getCalendarTime(String time) {
@@ -338,31 +293,6 @@ public class DateTimeUtils {
         return str.replaceFirst("^0+(?!$)", "");
     }
 
-    public boolean isLeapYear(int year) {
-        GregorianCalendar cal = new GregorianCalendar();
-        return cal.isLeapYear(year);
-    }
-
-    public int getYear(String date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(getDate(date));
-
-        return cal.get(Calendar.YEAR);
-    }
-
-    public ArrayList<String> getWeekDaysList(String reminderWhen) {
-        ArrayList<String> weekDays = new ArrayList<>();
-
-        if(!"".equals(reminderWhen)) {
-            String[] splitReminderWhen = reminderWhen.split(",");
-            for (int i = 0; i < splitReminderWhen.length; i++) {
-                weekDays.add(splitReminderWhen[i]);
-            }
-        }
-
-        return weekDays;
-    }
-
     public static boolean isPastDate(Calendar calDate){
         Calendar now = Calendar.getInstance();
         long nowInMillis = now.getTimeInMillis();
@@ -370,25 +300,6 @@ public class DateTimeUtils {
 
         return (dateInMillis < nowInMillis);
     }
-
-    public String getDatePostfix(int dateNum) {
-        char[] dateArray = String.valueOf(dateNum).toCharArray();
-        char lastChar = dateArray[dateArray.length-1];
-        switch (lastChar) {
-            case '1':
-                return "st";
-            case '2':
-                return "nd";
-            case '3':
-                return "rd";
-            default:
-                return "th";
-        }
-    }
-
-
-    private static final String TIME24HOURS_PATTERN =
-            "([01]?[0-9]|2[0-3]):[0-5][0-9]";
 
     public static String getActualTime(String time) {
         if(time != null && time.length() != 0) {
@@ -434,6 +345,6 @@ public class DateTimeUtils {
     }
 
     public static String getCorrectTimerTimeValue(long value) {
-        return String.format("%02d", value);
+        return String.format(Locale.US, "%02d", value);
     }
 }
