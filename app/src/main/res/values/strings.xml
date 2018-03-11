@@ -154,4 +154,5 @@
     <string name="title_holder">Task title</string>
     <string name="divider">Divider</string>
     <string name="location_delete">Delete location</string>
+    <string name="fab_action">Create new task</string>
 </resources>
