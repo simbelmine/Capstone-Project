@@ -5,46 +5,46 @@
         <item
             android:id="@+id/nav_view_all"
             android:icon="@mipmap/view_all"
-            android:title="Show all tasks" />
+            android:title="@string/show_all" />
         <item
             android:id="@+id/nav_show_do_it"
             android:icon="@mipmap/do_it"
-            android:title="Do It Now" />
+            android:title="@string/do_it_now" />
         <item
             android:id="@+id/nav_show_decide"
             android:icon="@mipmap/decide"
-            android:title="Decide When" />
+            android:title="@string/decide_when" />
         <item
             android:id="@+id/nav_show_delegate"
             android:icon="@mipmap/delegate"
-            android:title="Delegate It" />
+            android:title="@string/delegate_it" />
         <item
             android:id="@+id/nav_show_drop_it"
             android:icon="@mipmap/drop_it"
-            android:title="Drop It" />
+            android:title="@string/drop_it" />
         <item
             android:id="@+id/clear_all_done"
             android:icon="@mipmap/clear_all"
-            android:title="Clear Done tasks"
+            android:title="@string/clear_done"
             />
     </group>
 
-    <item android:title="More">
+    <item android:title="@string/additional_menu">
         <menu>
             <item
                 android:id="@+id/nav_open_tutorial"
                 android:icon="@mipmap/tutorial"
-                android:title="Tutorial" />
+                android:title="@string/tutorial" />
             <item android:id="@+id/nav_rate_app"
                 android:icon="@mipmap/rate"
-                android:title="Rate Eisen Flow" />
+                android:title="@string/rate_app" />
             <item android:id="@+id/nav_send_feedback"
                 android:icon="@mipmap/feedback"
-                android:title="Send feedback" />
+                android:title="@string/send_feedback" />
             <item
                 android:id="@+id/nav_info"
                 android:icon="@mipmap/information"
-                android:title="About" />
+                android:title="@string/about" />
         </menu>
     </item>
 

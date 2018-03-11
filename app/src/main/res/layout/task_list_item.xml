@@ -48,6 +48,7 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="0dp"
+            android:layout_marginStart="0dp"
             android:textColor="@color/date"
             card_view:layout_constraintLeft_toLeftOf="parent"
             card_view:layout_constraintTop_toBottomOf="@+id/card_day_of_month"
@@ -72,6 +73,7 @@
                 android:layout_height="23dp"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="7dp"
+                android:layout_marginStart="7dp"
                 android:contentDescription="@string/delete"
                 app:srcCompat="@drawable/delete" />
 
@@ -80,8 +82,10 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="7dp"
+                android:layout_marginEnd="7dp"
                 android:contentDescription="@string/action_icon" />
 
         </RelativeLayout>
@@ -104,8 +108,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
                 android:gravity="center"
-                android:text="undo"
+                android:text="@string/undo_button_text"
                 android:textAllCaps="true"
                 android:textColor="@color/firstQuadrant" />
 
@@ -114,9 +119,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:gravity="center"
-                android:text="undo"
+                android:text="@string/undo_button_text"
                 android:textAllCaps="true"
                 android:textColor="@color/firstQuadrant" />
 
@@ -144,7 +151,7 @@
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:ellipsize="end"
-                android:text="Release Main Project 2.1"
+                tools:text="Release Main Project 2.1"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
@@ -154,7 +161,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/task_title"
-                android:text="May 2, 16:00"
+                tools:text="May 2, 16:00"
                 android:textColor="@color/white" />
 
             <TextView
@@ -162,6 +169,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginLeft="@dimen/card_padding"
                 android:layout_marginRight="@dimen/card_padding"
                 android:text=""
@@ -173,9 +181,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1.4dp"
                 android:layout_above="@+id/task_time_txt"
-                android:layout_gravity="center_vertical|left"
+                android:layout_gravity="center_vertical|start"
                 android:layout_marginBottom="8dp"
                 android:layout_marginRight="@dimen/card_padding"
+                android:layout_marginEnd="@dimen/card_padding"
                 android:layout_marginTop="2dp"
                 android:background="@color/white"
                 android:contentDescription="@string/done_cross_line"

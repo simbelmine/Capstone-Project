@@ -11,6 +11,7 @@
         android:layout_height="20dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/activity_half_spacing"
+        android:layout_marginStart="@dimen/activity_half_spacing"
         android:contentDescription="@string/widget_done_check"
         android:src="@mipmap/not_done_dark" />
     <LinearLayout
@@ -18,7 +19,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/activity_half_spacing"
+        android:layout_marginStart="@dimen/activity_half_spacing"
         android:layout_toRightOf="@id/widget_done_check_box"
+        android:layout_toEndOf="@id/widget_done_check_box"
         android:orientation="vertical"
         android:layout_centerVertical="true">
         <FrameLayout
@@ -52,7 +55,9 @@
         android:layout_height="wrap_content"
         tools:text="5%"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginRight="@dimen/activity_half_spacing"
+        android:layout_marginEnd="@dimen/activity_half_spacing"
         android:layout_centerVertical="true"
         android:textColor="@color/colorPrimaryDark"/>
 </RelativeLayout>

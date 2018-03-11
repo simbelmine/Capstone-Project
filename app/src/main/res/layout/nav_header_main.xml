@@ -26,7 +26,9 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:layout_toRightOf="@+id/app_name_title"
+        android:layout_toEndOf="@id/app_name_title"
         android:paddingLeft="@dimen/activity_horizontal_spacing"
+        android:paddingStart="@dimen/activity_horizontal_spacing"
         android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
     </RelativeLayout>

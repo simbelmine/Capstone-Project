@@ -42,8 +42,10 @@
             android:orientation="vertical"
             android:layout_marginTop="30dp"
             android:layout_marginRight="@dimen/splash_3_margin_right"
+            android:layout_marginEnd="@dimen/splash_3_margin_right"
             android:layout_below="@+id/matrix_image"
             android:paddingLeft="@dimen/activity_horizontal_spacing"
+            android:paddingStart="@dimen/activity_horizontal_spacing"
             android:layout_centerHorizontal="true"
             >
             <TextView

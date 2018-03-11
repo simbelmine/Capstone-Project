@@ -58,6 +58,7 @@
             android:gravity="center"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="100dp"
+            android:layout_marginStart="100dp"
             android:textColor="@color/splascreen_text1"
             android:fontFamily="sans-serif-light"
             android:textSize="@dimen/splash_content_text_size_small"

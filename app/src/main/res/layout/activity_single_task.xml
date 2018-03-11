@@ -664,6 +664,7 @@
                         android:layout_width="@dimen/task_icon_size"
                         android:layout_height="@dimen/task_icon_size"
                         android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
                         android:contentDescription="@string/location"
                         app:srcCompat="@drawable/location" />
 
@@ -672,7 +673,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@+id/location_icon"
+                        android:layout_toEndOf="@id/location_icon"
                         android:layout_marginLeft="@dimen/activity_half_spacing"
+                        android:layout_marginStart="@dimen/activity_half_spacing"
                         android:text="@string/location"
                         android:textSize="@dimen/task_font_size" />
 
@@ -681,6 +684,7 @@
                         android:layout_width="@dimen/task_icon_size"
                         android:layout_height="@dimen/task_icon_size"
                         android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:contentDescription="@string/location_delete"
                         app:srcCompat="@drawable/delete"
                         android:visibility="invisible"/>
