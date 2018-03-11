@@ -758,7 +758,7 @@ public class SingleTaskActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private boolean isNewTask() {
-        return mCurrentPosition == -1 ? true : false;
+        return mCurrentPosition == -1;
     }
 
     private void populateData() {
