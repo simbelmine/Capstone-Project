@@ -25,8 +25,6 @@ public class PlaceholderFragment extends Fragment {
     int[] layouts = new int[] {R.layout.splashscreen_two, R.layout.splashscreen_three};
     private int number;
 
-    public PlaceholderFragment() {}
-
     /**
      * Returns a new instance of this fragment for the given section
      * number.
