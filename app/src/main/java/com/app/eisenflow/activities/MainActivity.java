@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -63,7 +64,9 @@ import static com.app.eisenflow.utils.Constants.EXTRA_TASK_POSITION;
 import static com.app.eisenflow.utils.Constants.EXTRA_TASK_PRIORITY;
 import static com.app.eisenflow.utils.Constants.IS_BOTTOM_SHEET_OPEN;
 import static com.app.eisenflow.utils.Constants.LOADER_ID;
+import static com.app.eisenflow.utils.Constants.MONTH_PICKER;
 import static com.app.eisenflow.utils.Constants.PREF_FIRST_TIME_USER;
+import static com.app.eisenflow.utils.Constants.SCROLL_POSITION;
 import static com.app.eisenflow.utils.DateTimeUtils.getMonthName;
 import static com.app.eisenflow.utils.TaskUtils.bulkDoneTasksDelete;
 import static com.app.eisenflow.utils.Utils.getAppVersionString;
@@ -99,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements
     private int mTaskPosition = -1;
     private boolean isBottomSheetOpen;
     private boolean isLoaderSet;
+    private Calendar mPickedDate;
 
     public enum State {
         EXPANDED,
@@ -128,11 +132,17 @@ public class MainActivity extends AppCompatActivity implements
         // Add Event decorators.
         new EventDecoratorFeederTask(mMaterialCalendarView).execute();
 
-        // Set current month in toolblar.
-        mToolbarMonth.setText(getMonthName(Calendar.getInstance()));
-
         if (savedInstanceState != null) {
-            isBottomSheetOpen = savedInstanceState.getBoolean(IS_BOTTOM_SHEET_OPEN);
+            if (savedInstanceState.containsKey(IS_BOTTOM_SHEET_OPEN)) {
+                isBottomSheetOpen = savedInstanceState.getBoolean(IS_BOTTOM_SHEET_OPEN);
+            }
+            if (savedInstanceState.containsKey(MONTH_PICKER)) {
+                mPickedDate = (Calendar) savedInstanceState.getSerializable(MONTH_PICKER);
+            }
+            if (savedInstanceState.containsKey(SCROLL_POSITION)) {
+                Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable(SCROLL_POSITION);
+                mTasksRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+            }
         } else {
             mTaskPosition = getIntent().getIntExtra(EXTRA_TASK_POSITION, -1);
         }
@@ -143,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v(Constants.TAG, "onResume");
         applyFilter(DataUtils.Priority.valueOf(getFilterValue()));
 
         if (Utils.isServiceRunning(TimerService.class)) {
@@ -158,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements
                 mTasksAdapter.getBottomSheet().openBottomSheet(mTaskPosition);
             }
         }
-        setCalendarCurrentDate();
+        setCalendarDate();
     }
 
     @Override
@@ -173,6 +182,10 @@ public class MainActivity extends AppCompatActivity implements
         if (mTasksAdapter != null) {
             outState.putBoolean(IS_BOTTOM_SHEET_OPEN, mTasksAdapter.getBottomSheet().isBottomSheetExpanded());
         }
+        // Save picked calendar month.
+        outState.putSerializable(MONTH_PICKER, mPickedDate);
+        // Save list scroll position.
+        outState.putParcelable(SCROLL_POSITION, mTasksRecyclerView.getLayoutManager().onSaveInstanceState());
     }
 
     private void initViews() {
@@ -215,7 +228,8 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(new Intent(this, Settings.class));
                 return true;
             case R.id.action_today:
-                setCalendarCurrentDate();
+                mPickedDate = Calendar.getInstance();
+                setCalendarDate();
                 scrollListToCurrentMonth();
                 return true;
         }
@@ -380,6 +394,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+        mPickedDate = date.getCalendar();
         new ScrollToDateTask(this, mLinearLayoutManager, date).execute();
     }
 
@@ -404,9 +419,17 @@ public class MainActivity extends AppCompatActivity implements
         return itemCount;
     }
 
-    private void setCalendarCurrentDate() {
-        mMaterialCalendarView.setCurrentDate(Calendar.getInstance());
-        mMaterialCalendarView.setSelectedDate(Calendar.getInstance());
+    private void setCalendarDate() {
+        //Log.v(Constants.TAG, "Picked Date : " + mPickedDate.get(Calendar.MONTH) + "   " + mPickedDate.get(Calendar.DAY_OF_MONTH));
+        if (mPickedDate != null) {
+            mToolbarMonth.setText(getMonthName(mPickedDate));
+            mMaterialCalendarView.setSelectedDate(mPickedDate);
+            mMaterialCalendarView.setCurrentDate(mPickedDate);
+        } else {
+            mToolbarMonth.setText(getMonthName(Calendar.getInstance()));
+            mMaterialCalendarView.setSelectedDate(Calendar.getInstance());
+            mMaterialCalendarView.setCurrentDate(Calendar.getInstance());
+        }
     }
 
     private void scrollListToCurrentMonth() {

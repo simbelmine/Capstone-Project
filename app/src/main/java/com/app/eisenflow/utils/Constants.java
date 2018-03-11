@@ -18,6 +18,9 @@ public class Constants {
     public static final String EXTRA_TASK_PRIORITY = "TaskPriority";
     public static final String APP_EMAIL = "eisenflow.app@gmail.com";
     public static final String IS_BOTTOM_SHEET_OPEN = "isBottomSheetOpen";
+    public static final String MONTH_PICKER = "MonthPicker";
+    public static final String SCROLL_POSITION = "ScrollPosition";
+
     /**
      * SingleTask Activity
      */
